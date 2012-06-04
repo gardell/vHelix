@@ -8,11 +8,15 @@
 #include <Helix.h>
 
 /* Visual Studio 2010+ includes the tr1 or C++0x regex functionality while for gcc or other compilers we need the boost library */
-#ifdef __CLR_VER
+#ifdef _MSC_VER
 
 #include <regex>
 using std::regex;
 using std::regex_search;
+using std::regex_match;
+using std::cmatch;
+using std::sregex_iterator;
+using std::match_results;
 
 #else
 

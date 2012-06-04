@@ -8,12 +8,15 @@
 #ifndef _VHELIX_MA_PARSER_HELIX_H_
 #define _VHELIX_MA_PARSER_HELIX_H_
 
+#include <Vector.h>
+#include <Matrix.h>
+
 #include <string>
 #include <vector>
 #include <list>
 
 /* C++11 compilers and Visual Studio 2010 includes smart pointer support */
-#ifdef __CLR_VER
+#ifdef _MSC_VER
 
 #include <memory>
 using std::shared_ptr;
@@ -26,9 +29,6 @@ using std::tr1::shared_ptr;
 using std::tr1::weak_ptr;
 
 #endif
-
-#include <Vector.h>
-#include <Matrix.h>
 
 #include <exception>
 #include <iostream>

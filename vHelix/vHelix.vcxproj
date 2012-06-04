@@ -101,7 +101,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;VHELIX_EXPORTS;NT_PLUGIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\Johan\Documents\Visual Studio 2010\Projects\vHelix\include;C:\Program Files\Autodesk\Maya2011\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;C:\Program Files\Autodesk\Maya2011\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

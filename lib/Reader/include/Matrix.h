@@ -8,6 +8,8 @@
 #ifndef _VHELIX_MA_PARSER_MATRIX_H_
 #define _VHELIX_MA_PARSER_MATRIX_H_
 
+#define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <ostream>
 

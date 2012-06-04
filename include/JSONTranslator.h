@@ -26,6 +26,7 @@ namespace Helix {
 		virtual bool haveReadMethod () const;
 		virtual bool canBeOpened () const;
 		virtual MString defaultExtension () const;
+		virtual MPxFileTranslator::MFileKind identifyFile (	const MFileObject& file, const char* buffer, short size) const;
 
 		static void *creator();
 	};

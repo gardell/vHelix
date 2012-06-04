@@ -203,7 +203,7 @@ namespace Helix {
 
 			unsigned int binary_content_size = vstrands[vstrands_largest_num_element.index()] ["num"].asInt() + 1;*/
 
-			unsigned int binary_content_size = 0;
+			int binary_content_size = 0;
 
 			for(Json::ArrayIndex i = 0; i < vstrands.size(); ++i)
 				binary_content_size = MAX(binary_content_size, vstrands[i]["num"].asInt());
@@ -402,6 +402,10 @@ namespace Helix {
 							int directional_index = (i % 2 == 0) ? (index + (l == 1 ? loopIndex - k : k)) : -(index + k);
 
 							MObject helixBase;
+
+							//
+							// Helix_CreateBase is where the creation of the node is made
+							//
 
 							if (!(status = Helix_CreateBase(helix, MString(DNA::strands[l]) + "_base_" + directional_index, MVector(
 									DNA::RADIUS * cos(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
@@ -921,6 +925,11 @@ namespace Helix {
 		fileh.close();
 
 		return MStatus::kSuccess;
+	}
+
+	MPxFileTranslator::MFileKind JSONTranslator::identifyFile(const MFileObject& file, const char* buffer, short size) const {
+		MString filePath = file.resolvedFullName().toLowerCase();
+		return strstr(filePath.asChar(), ".json") != NULL ? MPxFileTranslator::kIsMyFileType : MPxFileTranslator::kNotMyFileType;
 	}
 
 	// The generic implementation part
