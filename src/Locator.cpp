@@ -23,8 +23,17 @@
 
 // I include the OpenGL headers directly for OpenGL 2.0, even though Maya has it's own definition of OpenGL calls
 
+#ifdef MAC_PLUGIN
+
+#include <OpenGL/glext.h>
+#include <OpenGL/gl.h>
+
+#else
+
 #include <GL/gl.h>
 #include <GL/glext.h>
+
+#endif /* N MAC_PLUGIN */
 
 // The Python command to get the nodes we're interested in
 
@@ -53,7 +62,8 @@ namespace Helix {
 	//MObject HelixLocator::aBases;
 	bool HelixLocator::s_gl_initialized = false, HelixLocator::s_gl_failed = false;
 	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0;
-
+	
+#ifndef MAC_PLUGIN
 	PFNGLCREATEPROGRAMPROC glCreateProgram;
 	PFNGLCREATESHADERPROC glCreateShader;
 	PFNGLATTACHSHADERPROC glAttachShader;
@@ -67,7 +77,8 @@ namespace Helix {
 	PFNGLGETSHADERIVPROC glGetShaderiv;
 	PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
 	PFNGLGETPROGRAMIVPROC glGetProgramiv;
-
+#endif /* N MAC_PLUGIN */
+	
 	HelixLocator::~HelixLocator() {
 		/*if (m_polygon)
 			delete m_polygon;*/
@@ -94,6 +105,7 @@ namespace Helix {
 		}
 #endif /* WIN* */
 
+#ifndef MAC_PLUGIN
 		if ((glCreateProgram = (PFNGLCREATEPROGRAMPROC) GETPROCADDRESS("glCreateProgram")) == NULL) {
 			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
 			s_gl_failed = true;
@@ -158,6 +170,8 @@ namespace Helix {
 			s_gl_failed = true;
 		}
 
+#endif /* N MAC_PLUGIN */
+		
 		// Setup the shaders and programs
 
 		if ((s_program = glCreateProgram()) == 0) {

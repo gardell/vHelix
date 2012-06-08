@@ -1,0 +1,393 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */; };
+		AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */; };
+		AAF468D715820E0800EC064F /* Connect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BF15820E0800EC064F /* Connect.cpp */; };
+		AAF468D815820E0800EC064F /* Creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C015820E0800EC064F /* Creator.cpp */; };
+		AAF468D915820E0800EC064F /* CreatorGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C115820E0800EC064F /* CreatorGui.cpp */; };
+		AAF468DA15820E0800EC064F /* Disconnect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C215820E0800EC064F /* Disconnect.cpp */; };
+		AAF468DB15820E0800EC064F /* DNA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C315820E0800EC064F /* DNA.cpp */; };
+		AAF468DC15820E0800EC064F /* Duplicate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C415820E0800EC064F /* Duplicate.cpp */; };
+		AAF468DD15820E0800EC064F /* ExportStrands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C515820E0800EC064F /* ExportStrands.cpp */; };
+		AAF468DE15820E0800EC064F /* ExtendGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C615820E0800EC064F /* ExtendGui.cpp */; };
+		AAF468DF15820E0800EC064F /* ExtendHelix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C715820E0800EC064F /* ExtendHelix.cpp */; };
+		AAF468E015820E0800EC064F /* FindFivePrimeEnds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */; };
+		AAF468E115820E0800EC064F /* Helix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C915820E0800EC064F /* Helix.cpp */; };
+		AAF468E215820E0800EC064F /* HelixBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CA15820E0800EC064F /* HelixBase.cpp */; };
+		AAF468E315820E0800EC064F /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CB15820E0800EC064F /* jsoncpp.cpp */; };
+		AAF468E415820E0800EC064F /* JSONTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CC15820E0800EC064F /* JSONTranslator.cpp */; };
+		AAF468E515820E0800EC064F /* Locator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CD15820E0800EC064F /* Locator.cpp */; };
+		AAF468E615820E0800EC064F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CE15820E0800EC064F /* main.cpp */; };
+		AAF468E715820E0800EC064F /* PaintStrand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CF15820E0800EC064F /* PaintStrand.cpp */; };
+		AAF468E815820E0800EC064F /* RetargetBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468D015820E0800EC064F /* RetargetBase.cpp */; };
+		AAF468E915820E0800EC064F /* ToggleCylinderBaseView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */; };
+		AAF468EA15820E0800EC064F /* ToggleLocatorRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468D215820E0800EC064F /* ToggleLocatorRender.cpp */; };
+		AAF468EB15820E0800EC064F /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468D315820E0800EC064F /* Tracker.cpp */; };
+		AAF468EC15820E0800EC064F /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468D415820E0800EC064F /* Utility.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequence.cpp; path = src/ApplySequence.cpp; sourceTree = "<group>"; };
+		AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequenceGui.cpp; path = src/ApplySequenceGui.cpp; sourceTree = "<group>"; };
+		AAF468BF15820E0800EC064F /* Connect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Connect.cpp; path = src/Connect.cpp; sourceTree = "<group>"; };
+		AAF468C015820E0800EC064F /* Creator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Creator.cpp; path = src/Creator.cpp; sourceTree = "<group>"; };
+		AAF468C115820E0800EC064F /* CreatorGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorGui.cpp; path = src/CreatorGui.cpp; sourceTree = "<group>"; };
+		AAF468C215820E0800EC064F /* Disconnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Disconnect.cpp; path = src/Disconnect.cpp; sourceTree = "<group>"; };
+		AAF468C315820E0800EC064F /* DNA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNA.cpp; path = src/DNA.cpp; sourceTree = "<group>"; };
+		AAF468C415820E0800EC064F /* Duplicate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Duplicate.cpp; path = src/Duplicate.cpp; sourceTree = "<group>"; };
+		AAF468C515820E0800EC064F /* ExportStrands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExportStrands.cpp; path = src/ExportStrands.cpp; sourceTree = "<group>"; };
+		AAF468C615820E0800EC064F /* ExtendGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtendGui.cpp; path = src/ExtendGui.cpp; sourceTree = "<group>"; };
+		AAF468C715820E0800EC064F /* ExtendHelix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtendHelix.cpp; path = src/ExtendHelix.cpp; sourceTree = "<group>"; };
+		AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindFivePrimeEnds.cpp; path = src/FindFivePrimeEnds.cpp; sourceTree = "<group>"; };
+		AAF468C915820E0800EC064F /* Helix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Helix.cpp; path = src/Helix.cpp; sourceTree = "<group>"; };
+		AAF468CA15820E0800EC064F /* HelixBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelixBase.cpp; path = src/HelixBase.cpp; sourceTree = "<group>"; };
+		AAF468CB15820E0800EC064F /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jsoncpp.cpp; path = src/jsoncpp.cpp; sourceTree = "<group>"; };
+		AAF468CC15820E0800EC064F /* JSONTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSONTranslator.cpp; path = src/JSONTranslator.cpp; sourceTree = "<group>"; };
+		AAF468CD15820E0800EC064F /* Locator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Locator.cpp; path = src/Locator.cpp; sourceTree = "<group>"; };
+		AAF468CE15820E0800EC064F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = src/main.cpp; sourceTree = "<group>"; };
+		AAF468CF15820E0800EC064F /* PaintStrand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PaintStrand.cpp; path = src/PaintStrand.cpp; sourceTree = "<group>"; };
+		AAF468D015820E0800EC064F /* RetargetBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RetargetBase.cpp; path = src/RetargetBase.cpp; sourceTree = "<group>"; };
+		AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToggleCylinderBaseView.cpp; path = src/ToggleCylinderBaseView.cpp; sourceTree = "<group>"; };
+		AAF468D215820E0800EC064F /* ToggleLocatorRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToggleLocatorRender.cpp; path = src/ToggleLocatorRender.cpp; sourceTree = "<group>"; };
+		AAF468D315820E0800EC064F /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tracker.cpp; path = src/Tracker.cpp; sourceTree = "<group>"; };
+		AAF468D415820E0800EC064F /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utility.cpp; path = src/Utility.cpp; sourceTree = "<group>"; };
+		D2AAC0630554660B00DB518D /* vHelix.bundle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = vHelix.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289988505E68E00004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* helloWorldCmdPlugin */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				8A7F063208688F460064D097 /* Mel */,
+				8A7F063308688F580064D097 /* Resources */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = helloWorldCmdPlugin;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				AAF468BD15820E0800EC064F /* ApplySequence.cpp */,
+				AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */,
+				AAF468BF15820E0800EC064F /* Connect.cpp */,
+				AAF468C015820E0800EC064F /* Creator.cpp */,
+				AAF468C115820E0800EC064F /* CreatorGui.cpp */,
+				AAF468C215820E0800EC064F /* Disconnect.cpp */,
+				AAF468C315820E0800EC064F /* DNA.cpp */,
+				AAF468C415820E0800EC064F /* Duplicate.cpp */,
+				AAF468C515820E0800EC064F /* ExportStrands.cpp */,
+				AAF468C615820E0800EC064F /* ExtendGui.cpp */,
+				AAF468C715820E0800EC064F /* ExtendHelix.cpp */,
+				AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */,
+				AAF468C915820E0800EC064F /* Helix.cpp */,
+				AAF468CA15820E0800EC064F /* HelixBase.cpp */,
+				AAF468CB15820E0800EC064F /* jsoncpp.cpp */,
+				AAF468CC15820E0800EC064F /* JSONTranslator.cpp */,
+				AAF468CD15820E0800EC064F /* Locator.cpp */,
+				AAF468CE15820E0800EC064F /* main.cpp */,
+				AAF468CF15820E0800EC064F /* PaintStrand.cpp */,
+				AAF468D015820E0800EC064F /* RetargetBase.cpp */,
+				AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */,
+				AAF468D215820E0800EC064F /* ToggleLocatorRender.cpp */,
+				AAF468D315820E0800EC064F /* Tracker.cpp */,
+				AAF468D415820E0800EC064F /* Utility.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC0630554660B00DB518D /* vHelix.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8A7F063208688F460064D097 /* Mel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Mel;
+			sourceTree = "<group>";
+		};
+		8A7F063308688F580064D097 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC0600554660B00DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC0620554660B00DB518D /* vHelix */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A7F05ED086863A70064D097 /* Build configuration list for PBXNativeTarget "vHelix" */;
+			buildPhases = (
+				D2AAC0600554660B00DB518D /* Headers */,
+				D2AAC0610554660B00DB518D /* Sources */,
+				D289988505E68E00004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vHelix;
+			productName = helloWorldCmdPlugin;
+			productReference = D2AAC0630554660B00DB518D /* vHelix.bundle */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 8A7F05F1086863A70064D097 /* Build configuration list for PBXProject "vHelix" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* helloWorldCmdPlugin */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC0620554660B00DB518D /* vHelix */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC0610554660B00DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */,
+				AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */,
+				AAF468D715820E0800EC064F /* Connect.cpp in Sources */,
+				AAF468D815820E0800EC064F /* Creator.cpp in Sources */,
+				AAF468D915820E0800EC064F /* CreatorGui.cpp in Sources */,
+				AAF468DA15820E0800EC064F /* Disconnect.cpp in Sources */,
+				AAF468DB15820E0800EC064F /* DNA.cpp in Sources */,
+				AAF468DC15820E0800EC064F /* Duplicate.cpp in Sources */,
+				AAF468DD15820E0800EC064F /* ExportStrands.cpp in Sources */,
+				AAF468DE15820E0800EC064F /* ExtendGui.cpp in Sources */,
+				AAF468DF15820E0800EC064F /* ExtendHelix.cpp in Sources */,
+				AAF468E015820E0800EC064F /* FindFivePrimeEnds.cpp in Sources */,
+				AAF468E115820E0800EC064F /* Helix.cpp in Sources */,
+				AAF468E215820E0800EC064F /* HelixBase.cpp in Sources */,
+				AAF468E315820E0800EC064F /* jsoncpp.cpp in Sources */,
+				AAF468E415820E0800EC064F /* JSONTranslator.cpp in Sources */,
+				AAF468E515820E0800EC064F /* Locator.cpp in Sources */,
+				AAF468E615820E0800EC064F /* main.cpp in Sources */,
+				AAF468E715820E0800EC064F /* PaintStrand.cpp in Sources */,
+				AAF468E815820E0800EC064F /* RetargetBase.cpp in Sources */,
+				AAF468E915820E0800EC064F /* ToggleCylinderBaseView.cpp in Sources */,
+				AAF468EA15820E0800EC064F /* ToggleLocatorRender.cpp in Sources */,
+				AAF468EB15820E0800EC064F /* Tracker.cpp in Sources */,
+				AAF468EC15820E0800EC064F /* Utility.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8A7F05EE086863A70064D097 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = bundle;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				PREBINDING = NO;
+				PRODUCT_NAME = vHelix;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		8A7F05EF086863A70064D097 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = bundle;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_MASTER_OBJECT_FILE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				PREBINDING = NO;
+				PRODUCT_NAME = vHelix;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		8A7F05F0086863A70064D097 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				EXECUTABLE_EXTENSION = bundle;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INSTALL_PATH = /usr/local/lib;
+				LIBRARY_STYLE = BUNDLE;
+				MACH_O_TYPE = mh_bundle;
+				PREBINDING = NO;
+				PRODUCT_NAME = vHelix;
+			};
+			name = Default;
+		};
+		8A7F05F2086863A70064D097 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_PLUGIN,
+					_BOOL,
+					REQUIRE_IOSTREAM,
+				);
+				HEADER_SEARCH_PATHS = (
+					include,
+					"$(MAYA_DIRECTORY)/devkit/include/",
+				);
+				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
+				LIBRARY_STYLE = BUNDLE;
+				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
+				OTHER_LDFLAGS = (
+					"-lOpenMayaUI",
+					"-framework",
+					OpenGL,
+					"-lOpenMaya",
+					"-lFoundation",
+					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
+					"-lOpenMaya",
+					"-lFoundation",
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		8A7F05F3086863A70064D097 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_PLUGIN,
+					_BOOL,
+					REQUIRE_IOSTREAM,
+				);
+				HEADER_SEARCH_PATHS = "$(MAYA_DIRECTORY)/devkit/include/";
+				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
+				LIBRARY_STYLE = BUNDLE;
+				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
+				OTHER_LDFLAGS = (
+					"-lOpenMaya",
+					"-lFoundation",
+					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
+					"-lOpenMaya",
+					"-lFoundation",
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		8A7F05F4086863A70064D097 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_PLUGIN,
+					_BOOL,
+					REQUIRE_IOSTREAM,
+				);
+				HEADER_SEARCH_PATHS = "$(MAYA_DIRECTORY)/devkit/include/";
+				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
+				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
+				OTHER_LDFLAGS = (
+					"-lOpenMaya",
+					"-lFoundation",
+					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
+					"-lOpenMaya",
+					"-lFoundation",
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8A7F05ED086863A70064D097 /* Build configuration list for PBXNativeTarget "vHelix" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A7F05EE086863A70064D097 /* Debug */,
+				8A7F05EF086863A70064D097 /* Release */,
+				8A7F05F0086863A70064D097 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		8A7F05F1086863A70064D097 /* Build configuration list for PBXProject "vHelix" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A7F05F2086863A70064D097 /* Debug */,
+				8A7F05F3086863A70064D097 /* Release */,
+				8A7F05F4086863A70064D097 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

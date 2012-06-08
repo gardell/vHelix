@@ -47,6 +47,7 @@
 #define HALO_POINT_SIZE "768.0"
 
 #define GLSL_VERTEX_SHADER		\
+		"#version 120\n"		\
 		"const float pointSize = " HALO_POINT_SIZE ";\n",	\
 		/*"varying vec2 texcoord;\n",*/	\
 		"varying vec4 color;\n",	\
@@ -62,6 +63,7 @@
 #define GLSL_FRAGMENT_SHADER	\
 		/*"varying vec2 texcoord;\n",*/	\
 		/*"#version 120\n",*/	\
+		"#version 120\n"		\
 		"const float smooth_step = 0.05, halo_radius = 0.1;\n",		\
 		"varying vec4 color;\n",	\
 		"void main() {\n",	\

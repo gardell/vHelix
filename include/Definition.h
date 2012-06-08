@@ -8,7 +8,7 @@
 #ifndef DEFINITION_H_
 #define DEFINITION_H_
 
-#if !defined(LINUX) && !defined(WIN32)
+#if !defined(LINUX) && !defined(WIN32) && !defined(MAC_PLUGIN)
 #define LINUX /* Maya needs this */
 #endif
 
