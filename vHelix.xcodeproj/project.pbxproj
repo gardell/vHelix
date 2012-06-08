@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C515823F4000F30976 /* BaseModel.cpp */; };
+		AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C615823F4000F30976 /* HelixModel.cpp */; };
+		AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C715823F4000F30976 /* MaterialModel.cpp */; };
+		AAA285CD15823F4000F30976 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C815823F4000F30976 /* ObjectModel.cpp */; };
+		AAA285CE15823F4000F30976 /* StrandModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C915823F4000F30976 /* StrandModel.cpp */; };
+		AAA285D315823F5A00F30976 /* ConnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D015823F5A00F30976 /* ConnectController.cpp */; };
+		AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D115823F5A00F30976 /* DisconnectController.cpp */; };
+		AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D215823F5A00F30976 /* PaintStrandController.cpp */; };
 		AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */; };
 		AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */; };
 		AAF468D715820E0800EC064F /* Connect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BF15820E0800EC064F /* Connect.cpp */; };
@@ -34,6 +42,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AAA285C515823F4000F30976 /* BaseModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseModel.cpp; sourceTree = "<group>"; };
+		AAA285C615823F4000F30976 /* HelixModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelixModel.cpp; sourceTree = "<group>"; };
+		AAA285C715823F4000F30976 /* MaterialModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialModel.cpp; sourceTree = "<group>"; };
+		AAA285C815823F4000F30976 /* ObjectModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectModel.cpp; sourceTree = "<group>"; };
+		AAA285C915823F4000F30976 /* StrandModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrandModel.cpp; sourceTree = "<group>"; };
+		AAA285D015823F5A00F30976 /* ConnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectController.cpp; sourceTree = "<group>"; };
+		AAA285D115823F5A00F30976 /* DisconnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisconnectController.cpp; sourceTree = "<group>"; };
+		AAA285D215823F5A00F30976 /* PaintStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaintStrandController.cpp; sourceTree = "<group>"; };
 		AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequence.cpp; path = src/ApplySequence.cpp; sourceTree = "<group>"; };
 		AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequenceGui.cpp; path = src/ApplySequenceGui.cpp; sourceTree = "<group>"; };
 		AAF468BF15820E0800EC064F /* Connect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Connect.cpp; path = src/Connect.cpp; sourceTree = "<group>"; };
@@ -86,6 +102,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AAA285CF15823F5A00F30976 /* controller */,
+				AAA285C415823F4000F30976 /* model */,
 				AAF468BD15820E0800EC064F /* ApplySequence.cpp */,
 				AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */,
 				AAF468BF15820E0800EC064F /* Connect.cpp */,
@@ -134,6 +152,30 @@
 			children = (
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		AAA285C415823F4000F30976 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				AAA285C515823F4000F30976 /* BaseModel.cpp */,
+				AAA285C615823F4000F30976 /* HelixModel.cpp */,
+				AAA285C715823F4000F30976 /* MaterialModel.cpp */,
+				AAA285C815823F4000F30976 /* ObjectModel.cpp */,
+				AAA285C915823F4000F30976 /* StrandModel.cpp */,
+			);
+			name = model;
+			path = src/model;
+			sourceTree = "<group>";
+		};
+		AAA285CF15823F5A00F30976 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				AAA285D015823F5A00F30976 /* ConnectController.cpp */,
+				AAA285D115823F5A00F30976 /* DisconnectController.cpp */,
+				AAA285D215823F5A00F30976 /* PaintStrandController.cpp */,
+			);
+			name = controller;
+			path = src/controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,6 +254,14 @@
 				AAF468EA15820E0800EC064F /* ToggleLocatorRender.cpp in Sources */,
 				AAF468EB15820E0800EC064F /* Tracker.cpp in Sources */,
 				AAF468EC15820E0800EC064F /* Utility.cpp in Sources */,
+				AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */,
+				AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */,
+				AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */,
+				AAA285CD15823F4000F30976 /* ObjectModel.cpp in Sources */,
+				AAA285CE15823F4000F30976 /* StrandModel.cpp in Sources */,
+				AAA285D315823F5A00F30976 /* ConnectController.cpp in Sources */,
+				AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */,
+				AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -144,7 +144,7 @@ namespace Helix {
 			}
 
 		private:
-			void setStatus(MStatus & status) {
+			void setStatus(MStatus status) {
 				if (status != MStatus::kSuccess)
 					m_status = status;
 			}
