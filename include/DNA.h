@@ -45,7 +45,7 @@ namespace DNA {
 	// Since Create, Extend and Import all use the properties above to generate the correct positions for each base
 	// This utility method should be used and not the parameters above
 
-	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset = 0.0);
+	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset = 0.0, double totalNumBases = 0);
 
 	const float SEQUENCE_RENDERING_Y_OFFSET = 0.22f; // Multiplied by RADIUS
 
@@ -66,7 +66,7 @@ namespace DNA {
 		Invalid = 4
 	};
 
-	static const char *strands[] = { "forv", "rev" };
+	static const char *strands[] = { "forw", "backw" };
 
 	const long CREATE_DEFAULT_NUM_BASES = 16;
 

@@ -74,12 +74,12 @@ namespace Helix {
 			MSelectionList selectionList;
 
 			if ((status = selectionList.add(base)) != MStatus::kSuccess) {
-				status.perror("MSelectionList::add");
+				status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt: MSelectionList::add");
 				return status;
 			}
 
 			if ((status = selectionList.getDagPath(0, baseDagPath)) != MStatus::kSuccess) {
-				status.perror("MSelectionList::add");
+				status.perror("MSelectionList::getDagPath");
 				return status;
 			}
 		}
@@ -88,12 +88,12 @@ namespace Helix {
 			MSelectionList selectionList;
 
 			if ((status = selectionList.add(target)) != MStatus::kSuccess) {
-				status.perror("MSelectionList::add");
+				status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt 2: MSelectionList::add");
 				return status;
 			}
 
 			if ((status = selectionList.getDagPath(0, targetDagPath)) != MStatus::kSuccess) {
-				status.perror("MSelectionList::add");
+				status.perror("RetargetBase::doIt 3: MSelectionList::add");
 				return status;
 			}
 		}

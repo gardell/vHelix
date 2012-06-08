@@ -17,6 +17,13 @@
 #include <maya/MFnDagNode.h>
 #include <maya/MDGModifier.h>
 
+#include <list>
+
+#include <model/Base.h>
+#include <controller/Disconnect.h>
+
+#include <iterator>
+
 namespace Helix {
 	Disconnect::Disconnect() {
 
@@ -24,45 +31,6 @@ namespace Helix {
 
 	Disconnect::~Disconnect() {
 
-	}
-
-	MStatus Disconnect::disconnect(const MObjectArray & targets) {
-		MStatus status;
-
-		m_disconnected.clear();
-		m_disconnect_targets.clear();
-		m_disconnect_targets.setSizeIncrement(targets.length());
-
-		for(unsigned int i = 0; i < targets.length(); ++i)
-			m_disconnect_targets.append(targets[i]);
-
-		// Ok, we have what we need, disconnect the targets forward attribute connections
-		//
-
-		unsigned int targets_length = targets.length();
-
-		MString info("Disconnecting bases");
-
-		for (unsigned int i = 0; i < targets_length; ++i) {
-			MFnDagNode dagNode(targets[i]);
-
-			info = info + " \"" + dagNode.fullPathName() + "\"";
-		}
-
-		MGlobal::displayInfo(info);
-
-		for (unsigned int i = 0; i < targets_length; ++i) {
-			MObject old_target = MObject::kNullObj;
-
-			if (!(status = DisconnectAllHelixBaseConnections(MPlug(targets[i], HelixBase::aForward), false, &old_target))) {
-				status.perror("DisconnectAllHelixBaseConnections");
-				return status;
-			}
-
-			m_disconnected.push_back(std::make_pair(old_target, targets[i]));
-		}
-
-		return MStatus::kSuccess;
 	}
 
 	MStatus Disconnect::doIt(const MArgList & args) {
@@ -74,7 +42,7 @@ namespace Helix {
 			return status;
 		}
 
-		MObjectArray targets;
+		std::list<Model::Base> targets;
 
 		if (argDatabase.isFlagSet("-t", &status)) {
 			MString target_str;
@@ -86,7 +54,7 @@ namespace Helix {
 
 			MSelectionList selectionList;
 			if (!(status = selectionList.add(target_str))) {
-				status.perror("MSelectionList::add");
+				status.perror("Disconnect::doIt: MSelectionList::add");
 				return status;
 			}
 
@@ -97,10 +65,7 @@ namespace Helix {
 				return status;
 			}
 
-			if (!(status = targets.append(target))) {
-				status.perror("MObjectArray::append");
-				return status;
-			}
+			targets.push_back(Model::Base(target));
 		}
 
 		if (!status) {
@@ -108,47 +73,62 @@ namespace Helix {
 			return status;
 		}
 
-		if (targets.length() == 0) {
+		if (targets.size() == 0) {
 			// Find out our targets by select
 			//
 
-			std::cerr << "Finding targets by select" << std::endl;
-
-			if (!(status = SelectedBases(targets))) {
-				status.perror("SelectedBases");
+			MObjectArray bases;
+			
+			if (!(status = Model::Base::AllSelected(bases))) {
+				status.perror("Base::AllSelected");
 				return status;
 			}
+
+			/*
+			 * Copy over to our std::list of Base objects
+			 */
+
+			std::copy(&bases[0], &bases[bases.length()], std::insert_iterator< std::list<Model::Base> > (targets, targets.begin()));
 		}
 
-		return disconnect(targets);
+		/*
+		 * Ok we have our targets, now actually disconnect them using the DisconnectController
+		 */
+
+		std::for_each(targets.begin(), targets.end(), m_operation.execute());
+
+		/*
+		 * Now color all the recently disconnected bases in a new color
+		 */
+
+		for_each_ref(targets.begin(), targets.end(), m_functor);
+
+		if (!m_operation.status())
+			return m_operation.status();
+
+		return m_functor.status();
 	}
 
 	MStatus Disconnect::undoIt () {
-		MStatus status;
-		MDGModifier dgModifier;
+		MStatus status = m_operation.undo();
 
-		for(std::vector<std::pair<MObject, MObject> >::iterator it = m_disconnected.begin(); it != m_disconnected.end(); ++it) {
-			if (!(status = dgModifier.connect(it->first, HelixBase::aBackward, it->second, HelixBase::aForward)))
-				status.perror("MDGModifier::connect");
-		}
-
-		if (!(status = dgModifier.doIt())) {
-			status.perror("MDGModifier::doIt");
+		if (!status) {
+			status.perror("Controller::Disconnect::undo");
 			return status;
 		}
 
-		return MStatus::kSuccess;
+		return m_functor.undo();
 	}
 
 	MStatus Disconnect::redoIt () {
-		// Ok, this is a bit ugly, but since we're passing as a reference, we must copy it
+		MStatus status = m_operation.redo();
 
-		MObjectArray new_targets;
-		new_targets.setSizeIncrement(m_disconnect_targets.length());
+		if (!status) {
+			status.perror("Controller::Disconnect::redo");
+			return status;
+		}
 
-		for(unsigned int i = 0; i < m_disconnect_targets.length(); ++i)
-			new_targets.append(m_disconnect_targets[i]);
-		return disconnect(new_targets);
+		return m_functor.redo();
 	}
 
 	bool Disconnect::isUndoable () const {

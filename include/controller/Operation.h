@@ -22,7 +22,9 @@
  */
 namespace Helix {
 	namespace Controller {
-		template<typename ElementT, typename UndoDataT, typename RedoDataT>
+		class Empty { };
+
+		template<typename ElementT, typename UndoDataT = Empty, typename RedoDataT = Empty>
 		class Operation {
 		public:
 			class Do {
@@ -70,41 +72,75 @@ namespace Helix {
 			/*
 			 * These must be implemented by the algorithm
 			 */
+		protected:
+
 			virtual MStatus doExecute(ElementT & element) = 0;
 			virtual MStatus doUndo(ElementT & element, UndoDataT & undoData) = 0;
 			virtual MStatus doRedo(ElementT & element, RedoDataT & redoData) = 0;
+
+		public:
 
 			/*
 			 * Use execute with the STL algorithms such as std::for_each
 			 */
 			Do execute() {
 				m_status = MStatus::kSuccess;
+				
 				return Do(*this);
 			}
 
 			/*
 			 * While undo and redo will iterate on all added undoable/redoable objects
 			 */
-			Undo undo() {
+			const MStatus & undo() {
 				m_status = MStatus::kSuccess;
+
 				std::for_each(m_undoRedoData.begin(), m_undoRedoData.end(), Undo(*this));
+
+				return m_status;
 			}
 
-			Undo redo() {
+			const MStatus & redo() {
 				m_status = MStatus::kSuccess;
 				std::for_each(m_undoRedoData.begin(), m_undoRedoData.end(), Redo(*this));
+
+				return m_status;
 			}
 
 			/*
 			 * After an iteration has been completed, status can be queried
 			 */
-			MStatus status();
+			MStatus status() {
+				return m_status;
+			}
+
+			/*
+			 * The execute method resets the history, using the reset method
+			 */
+
+			void reset() {
+				m_undoRedoData.clear();
+			}
+
+		protected:
 
 			/*
 			 * The execute method can save undo/redo state by calling this method
 			 */
 			void saveUndoRedo(ElementT & element, UndoDataT & undoData, RedoDataT & redoData) {
 				m_undoRedoData.push_back(std::pair<ElementT, std::pair<UndoDataT, RedoDataT> >(element, std::make_pair(undoData, redoData)));
+			}
+
+			/*
+			 * These two are just convenience methods when we have UndoDataT or RedoDataT set to the Empty class
+			 */
+
+			void saveUndoRedo(ElementT & element, UndoDataT & undoData) {
+				m_undoRedoData.push_back(std::pair<ElementT, std::pair<UndoDataT, RedoDataT> >(element, std::make_pair(undoData, RedoDataT())));
+			}
+
+			void saveUndoRedo(ElementT & element) {
+				m_undoRedoData.push_back(std::pair<ElementT, std::pair<UndoDataT, RedoDataT> >(element, std::make_pair(UndoDataT(), RedoDataT())));
 			}
 
 		private:

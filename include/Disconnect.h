@@ -21,6 +21,8 @@
 #include <maya/MObject.h>
 #include <maya/MObjectArray.h>
 
+#include <controller/Disconnect.h>
+
 #define MEL_DISCONNECTBASE_COMMAND "disconnectBase"
 
 namespace Helix {
@@ -39,10 +41,13 @@ namespace Helix {
 		static void *creator();
 
 	private:
-		MStatus disconnect(const MObjectArray & targets);
+		Controller::Disconnect m_operation;
+		Controller::PaintMultipleStrandsWithNewColorFunctor m_functor;
+
+		/*MStatus disconnect(const MObjectArray & targets);
 
 		std::vector<std::pair<MObject, MObject> > m_disconnected; // For undo/redo
-		MObjectArray m_disconnect_targets;
+		MObjectArray m_disconnect_targets;*/
 	};
 }
 

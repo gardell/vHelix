@@ -22,6 +22,12 @@
     <Filter Include="Header Files\json">
       <UniqueIdentifier>{38b6a143-58e4-47b6-bf79-580e8145b425}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\controller">
+      <UniqueIdentifier>{a41a9320-6dc8-4972-8227-16c31a937ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{2508124a-c87b-4d73-9289-64e8bd2c07d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ApplySequence.h">
@@ -120,6 +126,12 @@
     <ClInclude Include="..\include\json\json-forwards.h">
       <Filter>Header Files\json</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\controller\Disconnect.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\controller\Connect.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -193,6 +205,30 @@
     </ClCompile>
     <ClCompile Include="..\src\Utility.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\HelixModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\BaseModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\MaterialModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\ObjectModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\model\StrandModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\PaintStrandController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\DisconnectController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\ConnectController.cpp">
+      <Filter>Source Files\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

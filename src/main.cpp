@@ -83,6 +83,15 @@
 //#define MEL_APPLYSEQUENCE_GUI_COMMAND MEL_APPLYSEQUENCE_COMMAND "_gui"
 //#define MEL_EXTENDHELIX_GUI_COMMAND MEL_EXTENDHELIX_COMMAND "_gui"
 
+/*
+ * There's a bug in the halo rendering on Mac OS X right now
+ */
+#ifdef MAC_PLUGIN
+#define HALOS_CHECKED 0
+#else
+#define HALOS_CHECKED 1
+#endif /* N MAC_PLUGIN */
+
 #define MENU_ITEMS	\
 {	"Create helix", "Create a new helix", MEL_CREATEHELIX_COMMAND, MEL_CREATEHELIX_GUI_COMMAND, false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'n' },	\
 {	"Duplicate helices", "Duplicate all or the selected helices", MEL_DUPLICATEHELICES_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'd' },	\
@@ -99,7 +108,7 @@
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Toggle cylinder or bases view", "Show the cylinder or base representation of the helices", MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -toggle true", "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 't' },	\
 {	"Render", "Toggle rendering of some of the HUD elements", "", "", false, true, false, -1, ACCEL_NONE },	\
-{	"Halo", "Display the colored halos around bases", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"halo\\\"", "", false, false, false, 1, ACCEL_NONE },	\
+{	"Halo", "Display the colored halos around bases", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"halo\\\"", "", false, false, false, HALOS_CHECKED, ACCEL_NONE },	\
 {	"Pair lines", "Display the base pair connected lines", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"pair_line\\\"", "", false, false, false, 1, ACCEL_NONE },	\
 {	"Sequence", "Display the sequence labels above bases", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"sequence\\\"", "", false, false, false, 1, ACCEL_NONE },	\
 {	"Directional arrow", "Display the helix directional arrow", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"directional_arrow\\\"", "", false, false, false, 1, ACCEL_NONE },	\

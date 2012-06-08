@@ -112,6 +112,25 @@ namespace Helix {
 	 */
 
 	MObject GetObjectOrParentsOfType(MObject & object, MTypeId & type, MStatus & status);
+
+	/*
+	 * Many methods in the new API still work with MObjectArray or MDagPathArray for performance reasons, this template converts them to containers of Model::Base or Model::Helix objects
+	 */
+
+	/*template<typename T, typename ArrayT, typename ContainerT>
+	void ArrayToContainer(const ArrayT & array, ContainerT & container) {
+		for(
+	}*/
+
+	/*
+	 * The std::for_each passes by argument, but i need to pass as reference
+	 */
+
+	template<typename It, typename Functor>
+	void for_each_ref(It it, It end, Functor & func) {
+		for(; it != end; ++it)
+			func(*it);
+	}
 }
 
 

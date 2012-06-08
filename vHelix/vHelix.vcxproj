@@ -148,6 +148,8 @@
     <ClInclude Include="..\include\ApplySequence.h" />
     <ClInclude Include="..\include\ApplySequenceGui.h" />
     <ClInclude Include="..\include\Connect.h" />
+    <ClInclude Include="..\include\controller\Connect.h" />
+    <ClInclude Include="..\include\controller\Disconnect.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
     <ClInclude Include="..\include\Creator.h" />
@@ -182,6 +184,9 @@
     <ClCompile Include="..\src\ApplySequence.cpp" />
     <ClCompile Include="..\src\ApplySequenceGui.cpp" />
     <ClCompile Include="..\src\Connect.cpp" />
+    <ClCompile Include="..\src\controller\ConnectController.cpp" />
+    <ClCompile Include="..\src\controller\DisconnectController.cpp" />
+    <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />
     <ClCompile Include="..\src\Disconnect.cpp" />
@@ -197,6 +202,11 @@
     <ClCompile Include="..\src\JSONTranslator.cpp" />
     <ClCompile Include="..\src\Locator.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\model\BaseModel.cpp" />
+    <ClCompile Include="..\src\model\HelixModel.cpp" />
+    <ClCompile Include="..\src\model\MaterialModel.cpp" />
+    <ClCompile Include="..\src\model\ObjectModel.cpp" />
+    <ClCompile Include="..\src\model\StrandModel.cpp" />
     <ClCompile Include="..\src\PaintStrand.cpp" />
     <ClCompile Include="..\src\RetargetBase.cpp" />
     <ClCompile Include="..\src\ToggleCylinderBaseView.cpp" />

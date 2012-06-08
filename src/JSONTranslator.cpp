@@ -147,6 +147,19 @@ namespace Helix {
 		return strand_a ["num"].asInt() < strand_b ["num"].asInt();
 	}*/
 
+	/*
+	 * Override the paint functor to increase the progress bar
+	 */
+
+	class PaintMultipleStrandsWithProgressBar : public Controller::PaintMultipleStrandsFunctor {
+	public:
+
+		void operator() (Model::Strand & strand) {
+			Controller::PaintMultipleStrandsFunctor::operator()(strand);
+			MProgressWindow::advanceProgress(1);
+		}
+	};
+
 	MStatus JSONTranslator::reader (const MFileObject& file, const MString & options, MPxFileTranslator::FileAccessMode mode) {
 		MStatus status;
 		static const char *str_strands[] = { "scaf", "stap" };
@@ -283,7 +296,7 @@ namespace Helix {
 
 		// Stores the bases that we need to call paintStrands on
 
-		MDagPathArray colorBases;
+		std::list<Model::Strand> colorBases;
 
 		// Preallocating increases performance
 		for(int k = 0; k < 2; ++k)
@@ -431,7 +444,8 @@ namespace Helix {
 									return status;
 								}
 
-								colorBases.append(helixBase_dagPath);
+								Model::Base helixBase_base(helixBase_dagPath);
+								colorBases.push_back(Model::Strand(helixBase_base));
 							}
 						}
 
@@ -469,6 +483,7 @@ namespace Helix {
 		//
 
 		MProgressWindow::setProgressStatus("Setting up bindings");
+		std::cerr << "Setting up bindings" << std::endl;
 
 		//MDGModifier dgModifier;
 
@@ -563,9 +578,25 @@ namespace Helix {
 			return status;
 		}*/
 
-		MProgressWindow::setProgressStatus("Coloring strands");
+		MProgressWindow::endProgress();
+		if (!MProgressWindow::reserve())
+			MGlobal::displayWarning("Can't reserve progress window, no progress information will be presented");
 
-		for(unsigned int i = 0; i < colorBases.length(); ++i) {
+		MProgressWindow::setProgressRange(0, (int) colorBases.size());
+		MProgressWindow::setTitle("Importing json (caDNAno) file...");
+		MProgressWindow::setProgressStatus(MString("Coloring strands"));
+		MProgressWindow::setInterruptable(false);
+		MProgressWindow::startProgress();
+
+		/*
+		 * Paint all strands
+		 */
+
+		std::cerr << "Coloring strands" << std::endl;
+
+		std::for_each(colorBases.begin(), colorBases.end(), PaintMultipleStrandsWithProgressBar());
+
+		/*for(unsigned int i = 0; i < colorBases.length(); ++i) {
 			PaintStrand paintStrand;
 			MDagPathArray base;
 			base.setLength(1);
@@ -575,14 +606,20 @@ namespace Helix {
 				status.perror("PaintStrand::paintStrands");
 				return status;
 			}
-		}
 
-		MProgressWindow::endProgress();
+		
+			paintStrandOperation.setMaterial(materials[rand() % numMaterials]);
+
+
+			MProgressWindow::advanceProgress(1);
+		}*/
 
 		if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"))) {
 			status.perror("MGlobal::executeCommand");
 			return status;
 		}
+
+		MProgressWindow::endProgress();
 
 		return MStatus::kSuccess;
 	}

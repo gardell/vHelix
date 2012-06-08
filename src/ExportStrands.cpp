@@ -125,7 +125,7 @@ namespace Helix {
 				MSelectionList selectionList;
 
 				if (!(status = selectionList.add(target))) {
-					status.perror("MSelectionList::add");
+					status.perror("ExportStrands::doIt: MSelectionList::add");
 					return status;
 				}
 
@@ -380,7 +380,7 @@ namespace Helix {
 			}
 
 			if (result.length() < 1) {
-				MGlobal::displayError("No valid number of files to export to");
+				//MGlobal::displayError("No valid number of files to export to");
 				return MStatus::kSuccess;
 			}
 

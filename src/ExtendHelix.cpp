@@ -302,7 +302,7 @@ namespace Helix {
 			MSelectionList selectionList;
 
 			if (!(status = selectionList.add(targetName))) {
-				status.perror("MSelectionList::add");
+				status.perror("ExtendHelix::doIt: MSelectionList::add");
 				return status;
 			}
 

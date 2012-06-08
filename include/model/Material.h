@@ -58,6 +58,14 @@ namespace Helix {
 				return *this;
 			}
 
+			inline bool operator==(const Material & material) const {
+				return m_material == material.m_material;
+			}
+
+			inline bool operator!=(const Material & material) const {
+				return !this->operator==(material);
+			}
+
 			inline const MString & getMaterial() const {
 				return m_material;
 			}

@@ -20,7 +20,7 @@ namespace Helix {
 
 		class Strand {
 		public:
-			explicit inline Strand(const Base & base) : m_base(base) {
+			inline Strand(const Base & base) : m_base(base) {
 
 			}
 
@@ -35,10 +35,9 @@ namespace Helix {
 			static const int FORWARD = 1, BACKWARD = 2;
 
 			template<int Direction>
-			class Iterator {
+			class Iterator : public std::iterator<std::forward_iterator_tag, Base> {
 				friend class Strand;
 			public:
-
 				Base & operator*() {
 					return m_targetBase;
 				}
@@ -47,17 +46,22 @@ namespace Helix {
 					return &m_targetBase;
 				}
 
-				Iterator<Direction> operator++() {
+				Iterator<Direction> operator++(int x) const {
 					switch (Direction) {
 						case FORWARD:
 							return Iterator<Direction>(*m_strand, m_targetBase.forward());
+							break;
 						case BACKWARD:
 							return Iterator<Direction>(*m_strand, m_targetBase.backward());
+							break;
+						default:
+							std::cerr << "ERROR BROKEN ITERATOR" << std::endl; // Mostly just because VC++ complains about not returning a value
+							return Iterator<Direction>(*m_strand, m_targetBase.forward());
 							break;
 					}
 				}
 
-				Iterator<Direction> & operator++(int x) {
+				Iterator<Direction> & operator++() {
 					switch (Direction) {
 						case FORWARD:
 							m_targetBase = m_targetBase.forward();
@@ -65,6 +69,8 @@ namespace Helix {
 						case BACKWARD:
 							m_targetBase = m_targetBase.backward();
 							break;
+						default:
+							std::cerr << "ERROR BROKEN ITERATOR" << std::endl; // Mostly just because VC++ complains about not returning a value
 					}
 
 					m_firstTarget = false;
@@ -72,7 +78,7 @@ namespace Helix {
 					return *this;
 				}
 
-				bool operator==(const Iterator<Direction> & it) const {
+				bool operator==(const Iterator<Direction> & it) {
 					if (m_isEnd) {
 						if (it.m_isEnd)
 							return m_strand == it.m_strand;
@@ -88,12 +94,17 @@ namespace Helix {
 							if (m_targetBase == m_strand->m_base && !m_firstTarget)
 								// This is a loop and we're back in the beginning
 								return true;
+							bool areWeThereYet = !m_targetBase;
 							return !m_targetBase;
 						}
 						else
 							// None of the compared iterators are end iterators, just do a regular comparison
 							return m_strand == it.m_strand && m_targetBase == it.m_targetBase && m_isEnd == it.m_isEnd;
 					}
+				}
+
+				bool operator!=(const Iterator<Direction> & it) {
+					return !this->operator==(it);
 				}
 
 				/*
@@ -146,6 +157,14 @@ namespace Helix {
 
 			inline BackwardIterator reverse_end() {
 				return BackwardIterator(*this, true);
+			}
+
+			Base & getDefiningBase() {
+				return m_base;
+			}
+
+			void setDefiningBase(const Base & base) {
+				m_base = base;
 			}
 
 		protected:

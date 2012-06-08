@@ -14,6 +14,12 @@
 
 #include <Definition.h>
 
+/*
+ * Implementing the new cleaner MVC interface
+ */
+
+#include <model/Helix.h>
+
 #include <iostream>
 
 #include <maya/MPxCommand.h>
@@ -40,9 +46,18 @@ namespace Helix {
 		static int default_bases; // If no argument is given, uses this. It is initialized to DNA::CREATE_DEFAULT_NUM_BASES on startup
 
 	private:
+		/*
+		 * Before calling, the m_materials must be set
+		 */
+
 		MStatus createHelix(int bases);
-		MObject m_helix;
-		//MObjectArray m_undoObjects; // Objects to be deleted by the undo proc
+
+		/*
+		 * These are for the redo/undo functionality
+		 */
+
+		Model::Helix m_helix;
+		Model::Material m_materials[2];
 	};
 }
 

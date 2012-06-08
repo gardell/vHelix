@@ -53,7 +53,7 @@ namespace Helix {
 		MProgressWindow::setProgressRange(0, bases * 2);
 		MProgressWindow::startProgress();
 
-		MFnDagNode helix_dagNode;
+		/*MFnDagNode helix_dagNode;
 		m_helix = helix_dagNode.create(Helix::id, MObject::kNullObj, &status);
 
 		if (!status) {
@@ -77,7 +77,10 @@ namespace Helix {
 		// This is still easiest to do using MEL for a lot of reasons
 
 		if (!(status = MGlobal::executeCommand(
-				MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -heightRatio " + (DNA::STEP * bases / DNA::RADIUS) + (" -name \"cylinderRepresentation\" -axis 0.0 0.0 1.0`;\n"
+				MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -ch false -heightRatio " + (DNA::STEP * bases / DNA::RADIUS) + (" -name \"cylinderRepresentation\" -axis 0.0 0.0 1.0`;\n"
+				"$topCap = `planarSrf -name \"cylinderRepresentation_topCap\" -ch false ($cylinder[0] + \".u[0]\")`;\n"
+				"$bottomCap = `planarSrf -name \"cylinderRepresentation_bottomCap\" -ch false ($cylinder[0] + \".u[") + (DNA::STEP * bases) + ("]\")`;\n"
+				"parent -relative $topCap[0] $bottomCap[0] $cylinder[0];\n"
 				"$parented_cylinder = `parent -relative $cylinder[0] ") + helix_dagNode.fullPathName() + ("`;\n"
 				"move -relative 0.0 0.0 ") + (DNA::STEP * bases / 2.0) + "$parented_cylinder[0]\n"
 				))) {
@@ -148,23 +151,12 @@ namespace Helix {
 				return status;
 			}
 
-			/*if (!(status = dgModifier.connect(all_base_objects[0][i + 1], HelixBase::aHelix_Backward, all_base_objects[0][i], HelixBase::aHelix_Forward))) {
-				status.perror("MDGModifier:connect");
-				return status;
-			}*/
-
 			MProgressWindow::advanceProgress(1);
 
 			if (!(status = dgModifier.connect(all_base_objects[1][i], HelixBase::aBackward, all_base_objects[1][i + 1], HelixBase::aForward))) {
 				status.perror("MDGModifier:connect");
 				return status;
 			}
-
-			// The helix_* are only modified on creation, and are used to "remember" the initial helix structure (used by export functions)
-			/*if (!(status = dgModifier.connect(all_base_objects[1][i], HelixBase::aHelix_Backward, all_base_objects[1][i + 1], HelixBase::aHelix_Forward))) {
-				status.perror("MDGModifier:connect");
-				return status;
-			}*/
 
 			MProgressWindow::advanceProgress(1);
 		}
@@ -180,10 +172,6 @@ namespace Helix {
 
 		// Due to a an issue that didn't exist in the Python/PyMEL API for some reason, there's no material assigned to the bases. So we color them here using the PaintStrand command
 
-		/*return MGlobal::executeCommand(MString(MEL_PAINTSTRAND_COMMAND " -target ") + MFnDagNode(all_base_objects[0][0]).fullPathName() + ";\n" +
-									   MString(MEL_PAINTSTRAND_COMMAND " -target ") + MFnDagNode(all_base_objects[1][0]).fullPathName() + ";\n" +
-									   (MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"));*/
-
 		for(int i = 0; i < 2; ++i) {
 			PaintStrand paintStrands;
 			MDagPathArray endBases;
@@ -197,12 +185,89 @@ namespace Helix {
 			if (!(status = paintStrands.paintStrands(endBases))) {
 				status.perror("PaintStrands::paintStrands");
 			}
+		}*/
+
+		/*
+		 * Create the helix
+		 */
+
+		if (!(status = Model::Helix::Create("vHelix", MMatrix::identity, m_helix))) {
+			status.perror("Helix::Create");
+			return status;
+		}
+
+		/*
+		 * Add the bases
+		 */
+
+		MVector basePositions[2];
+		Model::Base base_objects[2], last_base_objects[2];
+
+		for(int i = 0; i < bases; ++i) {
+			/*
+			 * Get the positions for the bases from DNA.h
+			 */
+
+			if (!(status = DNA::CalculateBasePairPositions(double(i), basePositions[0], basePositions[1], 0.0, bases))) {
+				status.perror("DNA::CalculateBasePairPositions");
+				return status;
+			}
+
+			/*
+			 * Now create the two base pairs
+			 */
+
+			for(int j = 0; j < 2; ++j) {
+				MString strand(DNA::strands[j]);
+
+				if (!(status = Model::Base::Create(m_helix, strand + "_" + (i + 1), basePositions[j], base_objects[j]))) {
+					status.perror("Base::Create");
+					return status;
+				}
+					
+				if (!(status = base_objects[j].setMaterial(m_materials[j]))) {
+					status.perror("Base::setMaterial");
+					return status;
+				}
+
+				MProgressWindow::advanceProgress(1);
+			}
+
+			/*
+			 * Now connect the two base pairs
+			 */
+
+			if (!(status = base_objects[0].connect_opposite(base_objects[1]))) {
+				status.perror("Base::connect_opposite");
+				return status;
+			}
+
+			/*
+			 * Now connect the previous bases to the newly created ones
+			 */
+
+			if (last_base_objects[0]) {
+				if (!(status = last_base_objects[0].connect_forward (base_objects[0]))) {
+					status.perror("Base::connect_forward 0");
+					return status;
+				}
+
+				if (!(status = base_objects[1].connect_forward (last_base_objects[1]))) {
+					status.perror("Base::connect_forward 1");
+					return status;
+				}
+			}
+
+			for(int j = 0; j < 2; ++j)
+				last_base_objects[j] = base_objects[j];
 		}
 
 		if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"))) {
 			status.perror("MGlobal::executeCommand");
 			return status;
 		}
+
+		MProgressWindow::endProgress();
 
 		return MStatus::kSuccess;
 	}
@@ -230,101 +295,51 @@ namespace Helix {
 			return MStatus::kFailure;
 		}
 
+		/*
+		 * Pick two materials by random
+		 */
+			
+		Model::Material *materials;
+		size_t numMaterials;
+
+		if (!(status = Model::Material::GetAllMaterials(&materials, numMaterials))) {
+			status.perror("Material::GetAllMaterials");
+			return status;
+		}
+
+		for(int i = 0; i < 2; ++i)
+			m_materials[0] = Model::Material();
+
+		if (numMaterials == 1) {
+			for(int i = 0; i < 2; ++i)
+				m_materials[i] = materials[0];
+		}
+		else if(numMaterials >= 2) {
+
+			/*
+			 * Pick out two by random, not the same ones twice!
+			 */
+
+			unsigned int indices[] = { rand() % numMaterials, 0 };
+			do { indices[1] = rand() % numMaterials; } while (indices[0] == indices[1]);
+
+			for(int i = 0; i < 2; ++i)
+				m_materials[i] = materials[indices[i]];
+		}
+
+		/*
+		 * Create the helix with the set materials and the given number of bases
+		 */
+
 		return createHelix(bases);
 	}
 
 	MStatus Creator::undoIt () {
 		MStatus status;
-
-		if (m_helix != MObject::kNullObj) {
-			// There's a bug, Maya crashes if we do this, use MEL instead...
-
-			/*MDGModifier dgModifier;
-
-			if (!(status = dgModifier.deleteNode(m_helix))) {
-				status.perror("MDGModifier::deleteNode");
-				return status;
-			}
-
-			if (!(status = dgModifier.doIt())) {
-				status.perror("MDGModifier::doIt");
-				return status;
-			}*/
-
-			// Delete all it's children
-			/*MDagModifier dagModifier;
-
-			for(size_t i = 0; i < m_undoObjects.length(); ++i) {
-				if (!(status = dagModifier.deleteNode(m_undoObjects[i]))) {
-					status.perror("MDagModifier::deleteNode");
-					return status;
-				}
-			}
-
-			if (!(status = dagModifier.doIt())) {
-				status.perror("MDagModifier::doIt");
-				return status;
-			}*/
-
-			/*MFnDagNode helix_dagNode(m_helix);
-
-			size_t childCount = helix_dagNode.childCount(&status);
-
-			if (!status) {
-				status.perror("MFnDagNode::childCount");
-				return status;
-			}
-
-			for(size_t i = 0; i < childCount; ++i) {
-				MObject child_object = helix_dagNode.child(i, &status);
-
-				if (!status) {
-					status.perror("MFnDagNode::child");
-					return status;
-				}
-
-				MDagModifier dagModifier;
-
-				if (!(status = dagModifier.deleteNode(child_object))) {
-					status.perror("MDagModifier::deleteNode 1");
-					return status;
-				}
-
-				if (!(status = dagModifier.doIt())) {
-					status.perror("MDagModifier::doIt");
-					return status;
-				}
-			}
-
-			MDagModifier dagModifier;
-
-			if (!(status = dagModifier.deleteNode(m_helix))) {
-				status.perror("MDagModifier::deleteNode 2");
-				return status;
-			}
-
-			if (!(status = dagModifier.doIt())) {
-				status.perror("MDagModifier::doIt");
-				return status;
-			}*/
-
-			/*MFnDagNode helix_dagNode(m_helix);
-
-			if (!(status = MGlobal::executeCommand(MString("delete ") + helix_dagNode.fullPathName() + "|*;\n" + MString("delete ") + helix_dagNode.fullPathName()))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
-			}*/
-
-			/*if (!(status = MGlobal::deleteNode(m_helix))) {
-				status.perror("MGlobal::deleteNode");
-				return status;
-			}*/
-
-			// It reeeallly doesn't work
-
-			MGlobal::displayError(MString("Undo " MEL_CREATEHELIX_COMMAND " is not available yet. Delete the ") + MFnDagNode(m_helix).fullPathName() + " manually");
-
-			m_helix = MObject::kNullObj;
+		
+		if (!(status = m_helix.deleteNode())) {
+			status.perror("Helix::deleteNode");
+			return status;
 		}
 
 		return MStatus::kSuccess;

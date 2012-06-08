@@ -59,7 +59,7 @@ namespace Helix {
 
 			MSelectionList selectionList;
 			if (!(status = selectionList.add(target_str))) {
-				status.perror("MSelectionList::add");
+				status.perror("Duplicate::doIt: MSelectionList::add");
 				return status;
 			}
 

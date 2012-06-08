@@ -20,7 +20,7 @@
 
 namespace Helix {
 	namespace Model {
-
+		class Helix;
 		/*
 		 * Base: Defines the interface for manipulating helix bases
 		 */
@@ -34,9 +34,11 @@ namespace Helix {
 				END = 3
 			};
 
+			static MStatus Create(Helix & helix, const MString & name, const MVector & translation, Base & base);
+
 			DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(Base)
 
-			MStatus AllSelected(MObjectArray & selectedBases);
+			static MStatus AllSelected(MObjectArray & selectedBases);
 
 			/*
 			 * Handle materials (colors) of the base
@@ -58,6 +60,8 @@ namespace Helix {
 			MStatus connect_forward(Base & target);
 			MStatus disconnect_forward();
 			MStatus disconnect_backward();
+			MStatus connect_opposite(Base & target);
+			MStatus disconnect_opposite();
 
 			/*
 			 * Labels

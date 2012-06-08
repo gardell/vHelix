@@ -12,7 +12,11 @@
 #include <maya/MGlobal.h>
 
 namespace Helix {
+#ifndef MAC_PLUGIN
 	unsigned int ToggleLocatorRender::CurrentRender = kRenderAll;
+#else
+	unsigned int ToggleLocatorRender::CurrentRender = kRenderPairLines | kRenderSequence | kRenderDirectionalArrow;
+#endif /* MAC_PLUGIN */
 
 	ToggleLocatorRender::ToggleLocatorRender() {
 

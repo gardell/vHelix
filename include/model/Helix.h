@@ -26,7 +26,7 @@ namespace Helix {
 			 * Create: Creates a new helix node, attach a locator node and transforms it to the given position
 			 */
 
-			static MStatus Create(const MString & name, MMatrix & transform, Helix & helix);
+			static MStatus Create(const MString & name, const MMatrix & transform, Helix & helix);
 
 			/*
 			 * Select: Give any object that either identifies a helix or it's children and get a handle to the helix manipulator

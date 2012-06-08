@@ -32,7 +32,7 @@
 
 namespace DNA {
 
-	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset) {
+	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset, double totalNumBases) {
 		/*
 
 x=xstart+(1-sphereRadius)*math.sin(i*(self.PITCH/360.0)*2*math.pi)
@@ -54,13 +54,13 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 
 		forward.x = ONE_MINUS_SPHERE_RADIUS * sin(rad);
 		forward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);
-		forward.z = index * STEP + 0.165;
+		forward.z = index * STEP + 0.165 - totalNumBases * STEP / 2;
 
 		rad += DEG2RAD(155.0);
 
 		backward.x = ONE_MINUS_SPHERE_RADIUS * sin(rad);
 		backward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);
-		backward.z = index * STEP + 0.165;
+		backward.z = index * STEP + 0.165 - totalNumBases * STEP / 2;
 
 		return MStatus::kSuccess;
 	}
@@ -114,7 +114,7 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 		MSelectionList selectionList;
 
 		if (!(status = selectionList.add(name, false))) {
-			status.perror("MSelectionList::add");
+			status.perror("GetDagPathFromString: MSelectionList::add");
 			return status;
 		}
 
@@ -224,7 +224,7 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 			MSelectionList selectionList;
 
 			if (!(status = selectionList.add(result[0], false))) {
-				status.perror("MSelectionList::add");
+				status.perror("LoadMoleculeAndArrowModels: MSelectionList::add");
 				return status;
 			}
 
