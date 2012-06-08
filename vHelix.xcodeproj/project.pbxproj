@@ -300,6 +300,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
 				LIBRARY_STYLE = BUNDLE;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
 				OTHER_LDFLAGS = (
 					"-lOpenMayaUI",
@@ -311,7 +312,7 @@
 					"-lOpenMaya",
 					"-lFoundation",
 				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};

@@ -31,49 +31,21 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 360844752;
-			PBXWorkspaceStateSaveDate = 360844752;
+			PBXPerProjectTemplateStateSaveDate = 360856127;
+			PBXWorkspaceStateSaveDate = 360856127;
 		};
 		perUserProjectItems = {
-			AA97685A15820CAD0049D263 = AA97685A15820CAD0049D263 /* PBXTextBookmark */;
-			AA97685B15820CAD0049D263 = AA97685B15820CAD0049D263 /* PBXTextBookmark */;
-			AAF468F215820E4C00EC064F /* XCBuildMessageTextBookmark */ = AAF468F215820E4C00EC064F /* XCBuildMessageTextBookmark */;
-			AAF468F315820E4C00EC064F /* PBXTextBookmark */ = AAF468F315820E4C00EC064F /* PBXTextBookmark */;
-			AAF4693E15820F1E00EC064F /* XCBuildMessageTextBookmark */ = AAF4693E15820F1E00EC064F /* XCBuildMessageTextBookmark */;
-			AAF4694315820F9900EC064F /* PBXTextBookmark */ = AAF4694315820F9900EC064F /* PBXTextBookmark */;
-			AAF4694515820F9900EC064F /* XCBuildMessageTextBookmark */ = AAF4694515820F9900EC064F /* XCBuildMessageTextBookmark */;
-			AAF4694615820F9900EC064F /* PBXTextBookmark */ = AAF4694615820F9900EC064F /* PBXTextBookmark */;
-			AAF4694B15820FB500EC064F /* PBXTextBookmark */ = AAF4694B15820FB500EC064F /* PBXTextBookmark */;
-			AAF4695A1582136D00EC064F /* XCBuildMessageTextBookmark */ = AAF4695A1582136D00EC064F /* XCBuildMessageTextBookmark */;
-			AAF4696F1582140900EC064F /* PBXTextBookmark */ = AAF4696F1582140900EC064F /* PBXTextBookmark */;
-			AAF469721582140900EC064F /* PBXTextBookmark */ = AAF469721582140900EC064F /* PBXTextBookmark */;
-			AAF469741582140900EC064F /* PBXTextBookmark */ = AAF469741582140900EC064F /* PBXTextBookmark */;
-			AAF469A31582261F00EC064F /* XCBuildMessageTextBookmark */ = AAF469A31582261F00EC064F /* XCBuildMessageTextBookmark */;
-			AAF469A41582264900EC064F /* PBXTextBookmark */ = AAF469A41582264900EC064F /* PBXTextBookmark */;
-			AAF469A51582264900EC064F /* PBXTextBookmark */ = AAF469A51582264900EC064F /* PBXTextBookmark */;
-			AAF469A61582264900EC064F /* PBXTextBookmark */ = AAF469A61582264900EC064F /* PBXTextBookmark */;
-			AAF469A81582264900EC064F /* XCBuildMessageTextBookmark */ = AAF469A81582264900EC064F /* XCBuildMessageTextBookmark */;
-			AAF469A91582264900EC064F /* PBXTextBookmark */ = AAF469A91582264900EC064F /* PBXTextBookmark */;
-			AAF469AC1582265600EC064F /* PBXTextBookmark */ = AAF469AC1582265600EC064F /* PBXTextBookmark */;
-			AAF469AD1582268A00EC064F /* PBXTextBookmark */ = AAF469AD1582268A00EC064F /* PBXTextBookmark */;
-			AAF469AF1582268A00EC064F /* PBXTextBookmark */ = AAF469AF1582268A00EC064F /* PBXTextBookmark */;
-			AAF469BD1582277400EC064F /* PBXTextBookmark */ = AAF469BD1582277400EC064F /* PBXTextBookmark */;
+			AAA2854E1582390C00F30976 = AAA2854E1582390C00F30976 /* PBXTextBookmark */;
+			AAA285501582390C00F30976 = AAA285501582390C00F30976 /* PBXTextBookmark */;
+			AAA2855815823A4C00F30976 /* PBXTextBookmark */ = AAA2855815823A4C00F30976 /* PBXTextBookmark */;
+			AAA2855B15823A4C00F30976 /* PBXTextBookmark */ = AAA2855B15823A4C00F30976 /* PBXTextBookmark */;
+			AAA2855C15823A4C00F30976 /* PBXTextBookmark */ = AAA2855C15823A4C00F30976 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AAF469E81582384C00EC064F = AAF469E81582384C00EC064F /* PBXTextBookmark */;
+			AAF469EA1582384C00EC064F = AAF469EA1582384C00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
-		};
-	};
-	100000000000000000000001 /* helloWorldCmd.cpp */ = {
-		isa = PBXFileReference;
-		fileEncoding = 4;
-		lastKnownFileType = sourcecode.cpp.cpp;
-		name = helloWorldCmd.cpp;
-		path = /Users/johangardell/Documents/vHelix/helloWorldCmd.cpp;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {551, 585}}";
-			sepNavSelRange = "{1040, 0}";
-			sepNavVisRange = "{850, 432}";
 		};
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
@@ -90,25 +62,67 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	AA97685A15820CAD0049D263 /* PBXTextBookmark */ = {
+	AAA2854E1582390C00F30976 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 100000000000000000000001 /* helloWorldCmd.cpp */;
-		name = "helloWorldCmd.cpp: 1";
+		fRef = AAA2854F1582390C00F30976 /* Locator.h */;
+		name = "Locator.h: 71";
 		rLen = 0;
-		rLoc = 0;
+		rLoc = 2715;
 		rType = 0;
-		vrLen = 728;
-		vrLoc = 0;
+		vrLen = 1466;
+		vrLoc = 1907;
 	};
-	AA97685B15820CAD0049D263 /* PBXTextBookmark */ = {
+	AAA2854F1582390C00F30976 /* Locator.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = Locator.h;
+		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1251, 1391}}";
+			sepNavSelRange = "{2715, 0}";
+			sepNavVisRange = "{2560, 1225}";
+		};
+	};
+	AAA285501582390C00F30976 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = 100000000000000000000001 /* helloWorldCmd.cpp */;
-		name = "helloWorldCmd.cpp: 35";
+		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
+		name = "Locator.cpp: 659";
 		rLen = 0;
-		rLoc = 1040;
+		rLoc = 19445;
 		rType = 0;
-		vrLen = 432;
-		vrLoc = 850;
+		vrLen = 1275;
+		vrLoc = 17837;
+	};
+	AAA2855815823A4C00F30976 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA2854F1582390C00F30976 /* Locator.h */;
+		name = "Locator.h: 71";
+		rLen = 0;
+		rLoc = 2715;
+		rType = 0;
+		vrLen = 1225;
+		vrLoc = 2560;
+	};
+	AAA2855B15823A4C00F30976 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
+		name = "Locator.cpp: 659";
+		rLen = 0;
+		rLoc = 19445;
+		rType = 0;
+		vrLen = 1274;
+		vrLoc = 17837;
+	};
+	AAA2855C15823A4C00F30976 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
+		name = "Locator.cpp: 618";
+		rLen = 0;
+		rLoc = 18351;
+		rType = 0;
+		vrLen = 1274;
+		vrLoc = 17837;
 	};
 	AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {
 		uiCtxt = {
@@ -119,275 +133,20 @@
 	};
 	AAF468CD15820E0800EC064F /* Locator.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 9412}}";
-			sepNavSelRange = "{5687, 0}";
-			sepNavVisRange = "{4833, 1758}";
+			sepNavIntBoundsRect = "{{0, 0}, {1205, 9672}}";
+			sepNavSelRange = "{18351, 0}";
+			sepNavVisRange = "{17837, 1274}";
 			sepNavWindowFrame = "{{215, 119}, {1264, 735}}";
 		};
 	};
-	AAF468F215820E4C00EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "ApplySequence.h: No such file or directory";
-		fRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 7;
-		rType = 1;
-	};
-	AAF468F315820E4C00EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */;
-		name = "ApplySequence.cpp: 8";
-		rLen = 0;
-		rLoc = 82;
-		rType = 0;
-		vrLen = 261;
-		vrLoc = 0;
-	};
-	AAF4693E15820F1E00EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "GL/gl.h: No such file or directory";
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 32;
-		rType = 1;
-	};
-	AAF4694315820F9900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF4694415820F9900EC064F /* Intrinsic.h */;
-		name = "Intrinsic.h: 158";
-		rLen = 0;
-		rLoc = 5318;
-		rType = 0;
-		vrLen = 413;
-		vrLoc = 5341;
-	};
-	AAF4694415820F9900EC064F /* Intrinsic.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = Intrinsic.h;
-		path = /Developer/SDKs/MacOSX10.6.sdk/usr/include/X11/Intrinsic.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 32331}}";
-			sepNavSelRange = "{5318, 0}";
-			sepNavVisRange = "{1614, 1645}";
-			sepNavWindowFrame = "{{113, 137}, {1264, 735}}";
-		};
-	};
-	AAF4694515820F9900EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "'PFNGLCREATEPROGRAMPROC' does not name a type";
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 66;
-		rType = 1;
-	};
-	AAF4694615820F9900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		name = "Locator.cpp: 66";
-		rLen = 0;
-		rLoc = 1864;
-		rType = 0;
-		vrLen = 426;
-		vrLoc = 1654;
-	};
-	AAF4694B15820FB500EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		name = "Locator.cpp: 34";
-		rLen = 5;
-		rLoc = 681;
-		rType = 0;
-		vrLen = 1253;
-		vrLoc = 0;
-	};
-	AAF4695A1582136D00EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "'PFNGLCREATEPROGRAMPROC' does not name a type";
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 66;
-		rType = 1;
-	};
-	AAF4696F1582140900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		name = "Locator.cpp: 28";
-		rLen = 0;
-		rLoc = 617;
-		rType = 0;
-		vrLen = 1305;
-		vrLoc = 79;
-	};
-	AAF469721582140900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469731582140900EC064F /* glext.h */;
-		name = "glext.h: 5924";
-		rLen = 0;
-		rLoc = 249645;
-		rType = 0;
-		vrLen = 1804;
-		vrLoc = 740;
-	};
-	AAF469731582140900EC064F /* glext.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = glext.h;
-		path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glext.h;
-		sourceTree = "<absolute>";
-	};
-	AAF469741582140900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469751582140900EC064F /* glext.h */;
-		name = "glext.h: 5924";
-		rLen = 0;
-		rLoc = 249645;
-		rType = 0;
-		vrLen = 2033;
-		vrLoc = 2152;
-	};
-	AAF469751582140900EC064F /* glext.h */ = {
-		isa = PBXFileReference;
-		name = glext.h;
-		path = /System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/glext.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1636, 158015}}";
-			sepNavSelRange = "{249645, 0}";
-			sepNavVisRange = "{255450, 3895}";
-			sepNavWindowFrame = "{{143, 115}, {1264, 735}}";
-		};
-	};
-	AAF469791582145300EC064F /* MacTypes.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = MacTypes.h;
-		path = /Developer/SDKs/MacOSX10.6.sdk/System/Library/Frameworks/CoreServices.framework/Headers/../Frameworks/CarbonCore.framework/Headers/MacTypes.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1248, 10127}}";
-			sepNavSelRange = "{10596, 0}";
-			sepNavVisRange = "{10406, 416}";
-			sepNavWindowFrame = "{{397, 153}, {1264, 735}}";
-		};
-	};
-	AAF469A21582261F00EC064F /* MNativeWindowHdl.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = MNativeWindowHdl.h;
-		path = /Applications/Autodesk/maya2011/devkit/include/maya/MNativeWindowHdl.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 1131}}";
-			sepNavSelRange = "{2251, 28}";
-			sepNavVisRange = "{934, 1683}";
-			sepNavWindowFrame = "{{274, 29}, {1264, 735}}";
-		};
-	};
-	AAF469A31582261F00EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "In file included from /Applications/Autodesk/maya2011/devkit/include/maya/MNativeWindowHdl.h";
-		fRef = AAF469A21582261F00EC064F /* MNativeWindowHdl.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 53;
-		rType = 1;
-	};
-	AAF469A41582264900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		name = "Locator.cpp: 67";
-		rLen = 0;
-		rLoc = 1864;
-		rType = 0;
-		vrLen = 503;
-		vrLoc = 1521;
-	};
-	AAF469A51582264900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF4694415820F9900EC064F /* Intrinsic.h */;
-		name = "Intrinsic.h: 158";
-		rLen = 0;
-		rLoc = 5318;
-		rType = 0;
-		vrLen = 242;
-		vrLoc = 5160;
-	};
-	AAF469A61582264900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469A71582264900EC064F /* M3dView.h */;
-		name = "M3dView.h: 286";
-		rLen = 0;
-		rLoc = 10585;
-		rType = 0;
-		vrLen = 363;
-		vrLoc = 10500;
-	};
-	AAF469A71582264900EC064F /* M3dView.h */ = {
-		isa = PBXFileReference;
-		name = M3dView.h;
-		path = /Applications/Autodesk/maya2011/devkit/include/maya/M3dView.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1248, 5928}}";
-			sepNavSelRange = "{10585, 0}";
-			sepNavVisRange = "{10500, 316}";
-		};
-	};
-	AAF469A81582264900EC064F /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "'Boolean' has a previous declaration as 'typedef unsigned char Boolean'";
-		fRef = AAF469791582145300EC064F /* MacTypes.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 278;
-		rType = 1;
-	};
-	AAF469A91582264900EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469791582145300EC064F /* MacTypes.h */;
-		name = "MacTypes.h: 279";
-		rLen = 0;
-		rLoc = 10596;
-		rType = 0;
-		vrLen = 416;
-		vrLoc = 10406;
-	};
-	AAF469AC1582265600EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469A21582261F00EC064F /* MNativeWindowHdl.h */;
-		name = "MNativeWindowHdl.h: 54";
-		rLen = 28;
-		rLoc = 2251;
-		rType = 0;
-		vrLen = 1683;
-		vrLoc = 934;
-	};
-	AAF469AD1582268A00EC064F /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAF469AE1582268A00EC064F /* Definition.h */;
-		rLen = 0;
-		rLoc = 9223372036854775831;
-		rType = 0;
-	};
-	AAF469AE1582268A00EC064F /* Definition.h */ = {
+	AAF469B01582268A00EC064F /* Definition.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
 		name = Definition.h;
 		path = /Users/johangardell/Documents/vHelix/include/Definition.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {913, 489}}";
-			sepNavSelRange = "{184, 0}";
-			sepNavVisRange = "{0, 387}";
-		};
 	};
-	AAF469AF1582268A00EC064F /* PBXTextBookmark */ = {
+	AAF469CA158233EA00EC064F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = AAF469B01582268A00EC064F /* Definition.h */;
 		name = "Definition.h: 11";
@@ -397,21 +156,32 @@
 		vrLen = 387;
 		vrLoc = 0;
 	};
-	AAF469B01582268A00EC064F /* Definition.h */ = {
+	AAF469E81582384C00EC064F /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF469E91582384C00EC064F /* Locator.h */;
+		name = "Locator.h: 71";
+		rLen = 0;
+		rLoc = 2715;
+		rType = 0;
+		vrLen = 1500;
+		vrLoc = 1907;
+	};
+	AAF469E91582384C00EC064F /* Locator.h */ = {
 		isa = PBXFileReference;
-		name = Definition.h;
-		path = /Users/johangardell/Documents/vHelix/include/Definition.h;
+		lastKnownFileType = sourcecode.c.h;
+		name = Locator.h;
+		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
 		sourceTree = "<absolute>";
 	};
-	AAF469BD1582277400EC064F /* PBXTextBookmark */ = {
+	AAF469EA1582384C00EC064F /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = AAF469AE1582268A00EC064F /* Definition.h */;
-		name = "Definition.h: 11";
+		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
+		name = "Locator.cpp: 659";
 		rLen = 0;
-		rLoc = 184;
+		rLoc = 19445;
 		rType = 0;
-		vrLen = 387;
-		vrLoc = 0;
+		vrLen = 1232;
+		vrLoc = 17880;
 	};
 	D2AAC0620554660B00DB518D /* vHelix */ = {
 		activeExec = 0;
