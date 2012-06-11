@@ -8,6 +8,8 @@
 #ifndef _CONTROLLER_PAINTSTRAND_H_
 #define _CONTROLLER_PAINTSTRAND_H_
 
+#include <Utility.h>
+
 #include <controller/Operation.h>
 #include <model/Material.h>
 #include <model/Base.h>
@@ -64,7 +66,7 @@ namespace Helix {
 				m_operation.setMaterial(m_materials[rand() % m_numMaterials]);
 
 				Model::Strand::ForwardIterator it = strand.forward_begin();
-				std::for_each(it, strand.forward_end(), m_operation.execute());
+				for_each_itref(it, strand.forward_end(), m_operation.execute());
 
 				if (!(m_status = m_operation.status())) {
 					m_status.perror("PaintStrandOperation::status 1");
@@ -131,7 +133,7 @@ namespace Helix {
 				m_operation.setMaterial(m_materials[rand() % m_numMaterials]);
 
 				Model::Strand::ForwardIterator it = strand.forward_begin();
-				std::for_each(it, strand.forward_end(), m_operation.execute());
+				for_each_itref(it, strand.forward_end(), m_operation.execute());
 
 
 				if (!(m_status = m_operation.status())) {
@@ -140,6 +142,7 @@ namespace Helix {
 				}
 
 				if (!it.loop()) {
+
 					// Step back a step so that we don't color our base again. In the case of an end base with no backward connection, the loop will just be empty
 					strand.setDefiningBase(strand.getDefiningBase().backward());
 					

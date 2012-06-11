@@ -150,6 +150,7 @@
     <ClInclude Include="..\include\Connect.h" />
     <ClInclude Include="..\include\controller\Connect.h" />
     <ClInclude Include="..\include\controller\Disconnect.h" />
+    <ClInclude Include="..\include\controller\Duplicate.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
     <ClInclude Include="..\include\Creator.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="..\src\Connect.cpp" />
     <ClCompile Include="..\src\controller\ConnectController.cpp" />
     <ClCompile Include="..\src\controller\DisconnectController.cpp" />
+    <ClCompile Include="..\src\controller\DuplicateController.cpp" />
     <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />

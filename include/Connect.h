@@ -14,6 +14,9 @@
 
 #include <Definition.h>
 
+#include <controller/Connect.h>
+#include <controller/PaintStrand.h>
+
 #include <iostream>
 
 #include <maya/MPxCommand.h>
@@ -37,9 +40,8 @@ namespace Helix {
 		static void *creator();
 
 	private:
-		MStatus connect(const MObject & target, const MObject & source);
-
-		MObject m_connected_target, m_connected_source, m_old_target, m_old_source; // Used for undo/redo
+		Controller::Connect m_operation;
+		Controller::PaintMultipleStrandsWithNewColorFunctor m_functor;
 	};
 }
 

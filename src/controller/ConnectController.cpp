@@ -33,10 +33,10 @@ namespace Helix {
 			}
 
 			m_previous_connections[1].reserve(status ? 2 : 1);
-			m_previous_connections[0].push_back(target);
+			m_previous_connections[1].push_back(target);
 
 			if (status)
-				m_previous_connections[0].push_back(previous_source);
+				m_previous_connections[1].push_back(previous_source);
 
 			return redo();
 		}
@@ -57,14 +57,18 @@ namespace Helix {
 			 * Make the old connections. Note that there is no connect_backward method, thus the indices have been switched
 			 */
 
-			if (!(status = m_previous_connections[0][0].connect_forward(m_previous_connections[0][1]))) {
-				status.perror("Base::connect_forward 1");
-				return status;
+			if (m_previous_connections[0].size() > 1) {
+				if (!(status = m_previous_connections[0][0].connect_forward(m_previous_connections[0][1]))) {
+					status.perror("Base::connect_forward 1");
+					return status;
+				}
 			}
 
-			if (!(status = m_previous_connections[1][1].connect_forward(m_previous_connections[1][0]))) {
-				status.perror("Base::connect_forward 2");
-				return status;
+			if (m_previous_connections[1].size() > 1) {
+				if (!(status = m_previous_connections[1][1].connect_forward(m_previous_connections[1][0]))) {
+					status.perror("Base::connect_forward 2");
+					return status;
+				}
 			}
 
 			return MStatus::kSuccess;
@@ -82,10 +86,14 @@ namespace Helix {
 				 * The base is connected, acting as the source
 				 */
 
+				std::cerr << "The source is already connected, calling disconnect_forward" << std::endl;
+
 				if (!(status = m_previous_connections[0][0].disconnect_forward())) {
 					status.perror("Base::disconnect_forward");
 					return status;
 				}
+
+				std::cerr << "disconnect_forward done" << std::endl;
 			}
 
 			if (m_previous_connections[1].size() > 1) {
@@ -93,20 +101,28 @@ namespace Helix {
 				 * This base too, is already connected, acting as the target
 				 */
 
+				std::cerr << "The destination is already connected, calling disconnect_backward on the target" << std::endl;
+
 				if (!(status = m_previous_connections[1][0].disconnect_backward())) {
 					status.perror("Base::disconnect_backward");
 					return status;
 				}
+
+				std::cerr << "disconnect_backward done" << std::endl;
 			}
 
 			/*
 			 * Connect the source to its new destination
 			 */
 
+			std::cerr << "connect_forward" << std::endl;
+
 			if (!(status = m_previous_connections[0][0].connect_forward(m_previous_connections[1][0]))) {
 				status.perror("Base::connect_forward");
 				return status;
 			}
+
+			std::cerr << "Done" << std::endl;
 
 			return MStatus::kSuccess;
 		}

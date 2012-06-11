@@ -44,6 +44,8 @@ namespace Helix {
 	void MNode_NodePreRemovalCallbackFunc(MObject & node, void *clientData) {
 		BaseBeingRemoved = node;
 		BaseDeletionInProgress = true;
+
+		std::cerr << __FUNCTION__ << std::endl;
 	}
 
 	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel;//, HelixBase::aHelix_Backward, HelixBase::aHelix_Forward;
@@ -65,6 +67,7 @@ namespace Helix {
 		MObject thisObject = thisMObject();
 
 		MNodeMessage::addNodePreRemovalCallback(thisObject, &MNode_NodePreRemovalCallbackFunc, this, &status);
+		
 		if (!status)
 			status.perror("MNodeMessage::addNodePreRemovalCallback");
 	}
@@ -190,16 +193,25 @@ namespace Helix {
 				}*/
 
 				if (BaseDeletionInProgress) {
+					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND" << std::endl;
+
 					if (!(status = MGlobal::executeCommandOnIdle(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
 						status.perror("MGlobal::executeCommandOnIdle");
 						return status;
 					}
+
+					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND DONE" << std::endl;
+
+					BaseDeletionInProgress = false;
 				}
 				else {
+					std::cerr << "RETARGETING BASE IMMEDIATELY" << std::endl;
 					if (!(status = MGlobal::executeCommand(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
 						status.perror("MGlobal::executeCommandOnIdle");
 						return status;
 					}
+
+					std::cerr << "RETARGETING BASE IMMEDIATELY DONE" << std::endl;
 				}
 			}
 		}

@@ -53,140 +53,6 @@ namespace Helix {
 		MProgressWindow::setProgressRange(0, bases * 2);
 		MProgressWindow::startProgress();
 
-		/*MFnDagNode helix_dagNode;
-		m_helix = helix_dagNode.create(Helix::id, MObject::kNullObj, &status);
-
-		if (!status) {
-			status.perror("MFnDagNode::create");
-			return status;
-		}
-
-		// Do a setAttr m_helix.displayHandle true equivalent
-		//
-
-		{
-			MPlug displayHandle(m_helix, MPxTransform::displayHandle);
-
-			if (!(status = displayHandle.setBool(true)))
-				status.perror("MPlug::setBool");
-		}
-
-		// Now generate a helix cylinder
-		//
-
-		// This is still easiest to do using MEL for a lot of reasons
-
-		if (!(status = MGlobal::executeCommand(
-				MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -ch false -heightRatio " + (DNA::STEP * bases / DNA::RADIUS) + (" -name \"cylinderRepresentation\" -axis 0.0 0.0 1.0`;\n"
-				"$topCap = `planarSrf -name \"cylinderRepresentation_topCap\" -ch false ($cylinder[0] + \".u[0]\")`;\n"
-				"$bottomCap = `planarSrf -name \"cylinderRepresentation_bottomCap\" -ch false ($cylinder[0] + \".u[") + (DNA::STEP * bases) + ("]\")`;\n"
-				"parent -relative $topCap[0] $bottomCap[0] $cylinder[0];\n"
-				"$parented_cylinder = `parent -relative $cylinder[0] ") + helix_dagNode.fullPathName() + ("`;\n"
-				"move -relative 0.0 0.0 ") + (DNA::STEP * bases / 2.0) + "$parented_cylinder[0]\n"
-				))) {
-			status.perror("MGlobal::executeCommand");
-			return status;
-		}
-
-		// Now generate the helix locator node that will display visual information
-		//
-
-		MFnDagNode locator_dagNode;
-		MObject locator_object = locator_dagNode.create(HelixLocator::id, m_helix, &status);
-
-		if (!status) {
-			status.perror("MFnDagNode::create");
-			return status;
-		}
-
-		// Store the objects here
-		MObjectArray all_base_objects[2];
-
-		MDGModifier dgModifier;
-
-		for (int i = 0; i < bases; ++i) {
-			MObject base_objects[2];
-
-			// Get the positions for the bases from DNA.h
-
-			MVector basePositions[2];
-			if (!(status = DNA::CalculateBasePairPositions(double(i), basePositions[0], basePositions[1]))) {
-				status.perror("DNA::CalculateBasePairPositions");
-				return status;
-			}
-
-			for(int j = 0; j < 2; ++j) {
-				// Create the base
-				//
-
-				if (!(status = Helix_CreateBase(m_helix,
-												MString(DNA::strands[j]) + "_" + ((bases - i) * j + (i + 1) * ((j + 1) % 2)),
-												basePositions[j],
-												//MVector(DNA::RADIUS * cos(DEG2RAD(DNA::PITCH * i + 180.0 * j)), DNA::RADIUS * sin(DEG2RAD(DNA::PITCH * i + 180.0 * j)), DNA::STEP * i),
-												base_objects[j]))) {
-					status.perror("Helix_CreateBase");
-					return status;
-				}
-
-				all_base_objects[j].append(base_objects[j]);
-
-				MProgressWindow::advanceProgress(1);
-			}
-
-			if (!(status = dgModifier.connect(base_objects[0], HelixBase::aLabel, base_objects[1], HelixBase::aLabel))) {
-				status.perror("MDGModifier::connect");
-				return status;
-			}
-		}
-
-		// Now, connect the bases
-		//
-
-		MProgressWindow::setProgress(0);
-		MProgressWindow::setProgressStatus("Connecting helix bases");
-
-		for(int i = 0; i < bases - 1; ++i) {
-			if (!(status = dgModifier.connect(all_base_objects[0][i + 1], HelixBase::aBackward, all_base_objects[0][i], HelixBase::aForward))) {
-				status.perror("MDGModifier:connect");
-				return status;
-			}
-
-			MProgressWindow::advanceProgress(1);
-
-			if (!(status = dgModifier.connect(all_base_objects[1][i], HelixBase::aBackward, all_base_objects[1][i + 1], HelixBase::aForward))) {
-				status.perror("MDGModifier:connect");
-				return status;
-			}
-
-			MProgressWindow::advanceProgress(1);
-		}
-
-		// Finally, realize all the MDGModifier commands
-
-		if (!(status = dgModifier.doIt())) {
-			status.perror("MDGModifier::doIt");
-			return status;
-		}
-
-		MProgressWindow::endProgress();
-
-		// Due to a an issue that didn't exist in the Python/PyMEL API for some reason, there's no material assigned to the bases. So we color them here using the PaintStrand command
-
-		for(int i = 0; i < 2; ++i) {
-			PaintStrand paintStrands;
-			MDagPathArray endBases;
-
-			endBases.setLength(1);
-			if (!(status = MFnDagNode(all_base_objects[i][0]).getPath(endBases[0]))) {
-				status.perror("MFnDagNode::getPath");
-				return status;
-			}
-
-			if (!(status = paintStrands.paintStrands(endBases))) {
-				status.perror("PaintStrands::paintStrands");
-			}
-		}*/
-
 		/*
 		 * Create the helix
 		 */
@@ -268,6 +134,13 @@ namespace Helix {
 		}
 
 		MProgressWindow::endProgress();
+
+		/*
+		 * Select the newly created Helix
+		 */
+
+		if (!(status = Model::Object::Select(&m_helix, &m_helix + 1)))
+			status.perror("Object::Select");
 
 		return MStatus::kSuccess;
 	}

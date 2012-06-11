@@ -28,53 +28,6 @@ namespace Helix {
 
 	}
 
-	MStatus Connect::connect(const MObject & target, const MObject & source) {
-		MStatus status;
-
-		m_connected_target = target;
-		m_connected_source = source;
-		m_old_source = MObject::kNullObj;
-		m_old_target = MObject::kNullObj;
-
-		// Ok, we have the required arguments
-		//
-
-		MGlobal::displayInfo(MString("Connecting base \"") + MFnDagNode(source).fullPathName() + "\" to \"" + MFnDagNode(target).fullPathName());
-
-		MPlug forwardPlug (source, HelixBase::aForward),
-			  backwardPlug (target, HelixBase::aBackward);
-
-		// Disconnect all old connections
-
-		if (!(status = DisconnectAllHelixBaseConnections(forwardPlug, false, &m_old_target))) {
-			status.perror("DisconnectAllHelixBaseConnections");
-			return status;
-		}
-
-		if (!(status = DisconnectAllHelixBaseConnections(backwardPlug, true, &m_old_source))) {
-			status.perror("DisconnectAllHelixBaseConnections");
-			return status;
-		}
-
-		// Make the new connection
-
-		MDGModifier dgModifier;
-
-		//std::cerr << "connectAttr " << MFnDagNode(target).fullPathName().asChar() << " " << MFnDagNode(source).fullPathName().asChar() << std::endl;
-
-		if (!(status = dgModifier.connect(backwardPlug, forwardPlug))) {
-			status.perror("MDGModifier::connect");
-			return status;
-		}
-
-		if (!(status = dgModifier.doIt())) {
-			status.perror("MDGModifier::doIt @");
-			return status;
-		}
-
-		return MStatus::kSuccess;
-	}
-
 	MStatus Connect::doIt(const MArgList & args) {
 		MObject targets[] = { MObject::kNullObj, MObject::kNullObj };
 		static const char *flags[] = { "-f", "-s" };
@@ -109,7 +62,7 @@ namespace Helix {
 			}
 		}
 
-		// If arguments are missing, compensate by using selected bases
+		// If arguments are missing, use the first two currently selected bases
 		//
 
 		size_t missingObjects_count = 0;
@@ -141,70 +94,46 @@ namespace Helix {
 			}
 		}
 
-		return connect(targets[1], targets[0]);
+		/*
+		 * Make the connection
+		 */
+
+		Model::Base source(targets[0]); // Because the functor takes Strand and the Strand constructor from Base passes by reference
+
+		if (!(status = m_operation.connect(source, targets[1]))) {
+			status.perror("Connect::connect");
+			return status;
+		}
+
+		m_functor(source);
+
+		return m_functor.status();
 	}
 
 	MStatus Connect::undoIt () {
 		MStatus status;
-
-		// In the, unlikely event, that the connected pair is already connected. An error would occur if we didn't take care of this here
-		//
-
-		if (m_connected_source == m_old_source && m_connected_target == m_old_target) {
-			std::cerr << "No need to undo, we're just reverting back to the same state" << std::endl;
-			return MStatus::kSuccess;
+		if (!(status = m_operation.undo())) {
+			status.perror("Connect::undo");
+			return status;
 		}
 
-		{
-			MDGModifier dgModifier;
-
-			// Disconnect the newly created connections
-
-			std::cerr << "Disconnecting: " << MFnDagNode(m_connected_target).fullPathName().asChar() << ".backward " << MFnDagNode(m_connected_source).fullPathName().asChar() << ".forward" << std::endl;
-
-			if (!(status = dgModifier.disconnect(m_connected_target, HelixBase::aBackward, m_connected_source, HelixBase::aForward))) {
-				status.perror("MDGModifier::disconnect");
-				return status;
-			}
-
-			if (!(status = dgModifier.doIt())) {
-				status.perror("MDGModifier::doIt 1");
-				return status;
-			}
-
-			// Because connectionBroken can't clean up the aimConstraints anymore, we have to do it here (there's a bug in Maya that makes in crash)
-		}
-
-		{
-			MDGModifier dgModifier;
-
-			if (m_old_target != MObject::kNullObj) {
-				if (!(status = dgModifier.connect(m_old_target, HelixBase::aBackward, m_connected_source, HelixBase::aForward))) {
-					status.perror("MDGModifier::connect");
-					return status;
-				}
-			}
-
-			if (m_old_source != MObject::kNullObj) {
-				if (!(status = dgModifier.connect(m_connected_target, HelixBase::aBackward, m_old_source, HelixBase::aForward))) {
-					status.perror("MDGModifier::connect");
-					return status;
-				}
-			}
-
-			if (!(status = dgModifier.doIt())) {
-				status.perror("MDGModifier::doIt");
-				return status;
-			}
+		if (!(status = m_functor.undo())) {
+			status.perror("PaintMultipleStrandsWithNewColor::undo");
+			return status;
 		}
 
 		return MStatus::kSuccess;
 	}
 
 	MStatus Connect::redoIt () {
-		// FIXME:
+		MStatus status;
 
-		return MStatus::kSuccess;
+		if (!(status = m_operation.redo())) {
+			status.perror("Connect::redo");
+			return status;
+		}
+
+		return m_functor.redo();
 	}
 
 	bool Connect::isUndoable () const {

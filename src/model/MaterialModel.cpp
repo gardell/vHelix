@@ -29,6 +29,9 @@
 	"}\n"	\
 	"ls $colors;\n"
 
+#define MEL_MATERIALS_EXIST_COMMAND			\
+	"ls -mat \"DNA*\";"
+
 namespace Helix {
 	namespace Model {
 		std::vector<Material> Material::s_materials;
@@ -63,6 +66,29 @@ namespace Helix {
 			MStatus status;
 			MCommandResult commandResult;
 			MStringArray materialNames;
+
+			/*
+			 * Make sure the materials exist
+			 */
+
+			{
+				if (!(status = MGlobal::executeCommand(MEL_MATERIALS_EXIST_COMMAND, commandResult))) {
+					status.perror("MGlobal::executeCommand 1");
+					return status;
+				}
+
+				MStringArray result;
+
+				if (!(status = commandResult.getResult(result))) {
+					status.perror("MCommandResult::getResult");
+					return status;
+				}
+
+				if (result.length() == 0) {
+					s_materials.clear();
+					ResetMaterialFilesLoaded();
+				}
+			}
 
 			while(s_materials.size() == 0) {
 				CacheMaterials();
@@ -148,6 +174,12 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
+		}
+
+		void Material::ResetMaterialFilesLoaded() {
+			for(std::vector<std::pair<MString, bool> >::iterator it = s_materialFiles.begin(); it != s_materialFiles.end(); ++it) {
+				it->second = false;
+			}
 		}
 
 		Material::RegisterMaterialFile defaultMaterialFile(DNASHADERS_SOURCE_FILE);

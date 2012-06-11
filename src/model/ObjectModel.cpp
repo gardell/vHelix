@@ -15,6 +15,8 @@ namespace Helix {
 					status.perror("Object::LoadObjectFromDagPath");
 			}
 
+			status = MStatus::kSuccess;
+
 			return m_object;
 		}
 
@@ -30,6 +32,8 @@ namespace Helix {
 				if (!(status = LoadAnyDagPathFromObject()))
 					status.perror("Object::LoadAnyDagPathFromObject");
 			}
+
+			status = MStatus::kSuccess;
 
 			return m_dagPath;
 		}

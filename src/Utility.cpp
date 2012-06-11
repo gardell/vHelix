@@ -18,12 +18,15 @@
 #include <maya/MCommandResult.h>
 #include <maya/MFnSet.h>
 #include <maya/MDagModifier.h>
+#include <maya/MItDag.h>
 
 #include <HelixBase.h>
 #include <Helix.h>
 #include <DNA.h>
 
 #include <limits>
+
+#include <Model/Helix.h>
 
 namespace Helix {
 	/*
@@ -323,7 +326,7 @@ namespace Helix {
 						MFnDagNode parent_parent_dagNode(parent_object);
 
 						if (parent_parent_dagNode.typeId(&status) == Helix::id) {
-							std::cerr << "Found parent base named: " << parent_parent_dagNode.name() << std::endl;
+							std::cerr << "Found parent base named: " << parent_parent_dagNode.name().asChar() << std::endl;
 
 							if (!(status = result.append(parent_object))) {
 								status.perror("MObjectArray::append");
@@ -1232,6 +1235,13 @@ namespace Helix {
 			MObject child_object = this_dagNode.child(i, &status);
 
 			if (!status) {
+				if (status == MStatus::kInvalidParameter) {
+					/*
+					 * There seems to be a bug in Maya when opening an already existing file that nodes are reported to have children but the MFnDagNode::child will fail
+					 */
+
+					return MStatus::kSuccess;
+				}
 				status.perror("MFnDagNode::child");
 				return status;
 			}
@@ -1286,5 +1296,62 @@ namespace Helix {
 		}
 
 		return MStatus::kSuccess;
+	}
+
+	void MSceneMessage_AfterImportOpen_CallbackFunc(void *callbackData) {
+		std::cerr << "After import or open" << std::endl;
+
+		MStatus status;
+
+		MItDag it(MItDag::kBreadthFirst, MFn::kTransform, &status);
+
+		if (!status) {
+			status.perror("MItDag::#ctor");
+			return;
+		}
+
+		for(; !it.isDone(); it.next()) {
+			MObject object = it.item(&status);
+
+			if (!status) {
+				status.perror("MObject::item");
+				return;
+			}
+
+			/*
+			 * Make sure the object is a Helix
+			 */
+
+			MFnDagNode dagNode(object);
+
+			if (dagNode.typeId(&status) == ::Helix::Helix::id) {
+				/*
+				 * This object is a helix, iterate over all of its bases and set their translation
+				 */
+
+				Model::Helix helix(object);
+
+				for(Model::Helix::BaseIterator it = helix.begin(); it != helix.end(); ++it) {
+					MFnTransform base_transform(it->getDagPath(status));
+
+					if (!status) {
+						status.perror("MFnTransform::getDagPath");
+						return;
+					}
+
+					MVector translation = base_transform.getTranslation(MSpace::kTransform, &status);
+
+					if (!status) {
+						status.perror("MFnTransform::getTranslation");
+						return;
+					}
+
+					if (!(status = base_transform.setTranslation(translation, MSpace::kTransform))) {
+						status.perror("MFnTransform::setTranslation");
+						return;
+					}
+				}
+			}
+		}
 	}
 }

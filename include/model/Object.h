@@ -15,6 +15,7 @@
 #include <maya/MObject.h>
 #include <maya/MDGModifier.h>
 #include <maya/MGlobal.h>
+#include <maya/MSelectionList.h>
 
 /*
  * Object: Base class for Helix and Base objects in the Model namespace.
@@ -22,7 +23,7 @@
  */
 
 /*
- * Because it has many constructors. This macro helps
+ * Because it has many constructors and operators. These macros helps
  */
 
 #define DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(ClassName)																				\
@@ -35,12 +36,51 @@
 	inline Object & operator=(const MObject & object) { Object::operator=(object); return *this; }											\
 	inline Object & operator=(const MDagPath & dagPath) { Object::operator=(dagPath); return *this; }										\
 	inline bool operator==(ClassName & object) { return Object::operator==(object); }														\
-	inline bool operator!=(ClassName & object) { return Object::operator!=(object); }
+	inline bool operator!=(ClassName & object) { return Object::operator!=(object); }														\
+	inline bool operator==(const MObject & object) { return Object::operator==(object); }													\
+	inline bool operator==(const MDagPath & dagPath) { return Object::operator==(dagPath); }												\
+
+// With some std::find and other STL operators, we need to declare the operators backward (i.e. for example MObject == Helix::Base)
+#define DEFINE_DEFAULT_INHERITED_OBJECT_INVERSED_ORDER_OPERATORS(ClassName)																	\
+	inline bool operator==(MObject object, ClassName & _this) { return _this == object; }													\
+	inline bool operator==(MDagPath dagPath, ClassName & _this) { return _this == dagPath; }										
 
 namespace Helix {
 	namespace Model {
 		class Object {
 		public:
+
+			/*
+			 * Select: Select a list of Objects. Defined as iterators of any type, thus MObjectArray, MDagPathArray, any container of Object, Base or Helix will work
+			 */
+
+			template<typename It>
+			static MStatus Select(It it, It end) {
+				MSelectionList list;
+				MStatus status;
+
+				for(; it != end; ++it) {
+					// This is to abstract the type to Object, thus the template will work with many types as described above
+					// Notice that MSelectionList did not like add(MObject) as it didn't work. Thus using MDagPaths
+
+					MDagPath dagPath = Object(*it).getDagPath(status);
+
+					if (!status) {
+						status.perror("Object::getDagPath");
+						return status;
+					}
+
+					list.add(dagPath);
+				}
+
+				if (!(status = MGlobal::setActiveSelectionList(list))) {
+					status.perror("MGlobal::setActiveSelectionList");
+					return status;
+				}
+
+				return MStatus::kSuccess;
+			}
+
 			/*
 			 * I left these constructors non-explicit, makes it nice to use std::copy, but might confuse at times
 			 */
@@ -107,6 +147,36 @@ namespace Helix {
 
 			inline bool operator!=(Object & object) {
 				return !this->operator==(object);
+			}
+
+			inline bool operator==(const MObject & object) {
+				MStatus status;
+
+				MObject & thisObject = getObject(status);
+
+				if (!status) {
+					status.perror("Object::getObject");
+					return false;
+				}
+
+				return thisObject == object;
+			}
+
+			inline bool operator!=(const MObject & object) {
+				return !this->operator==(object);
+			}
+
+			inline bool operator==(const MDagPath & dagPath) {
+				MStatus status;
+
+				MDagPath & thisDagPath = getDagPath(status);
+
+				if (!status) {
+					status.perror("Object::getDagPath");
+					return false;
+				}
+
+				return thisDagPath == dagPath;
 			}
 
 			MObject & getObject(MStatus & status);
@@ -192,6 +262,8 @@ namespace Helix {
 			MObject m_object;
 			MDagPath m_dagPath;
 		};
+
+		DEFINE_DEFAULT_INHERITED_OBJECT_INVERSED_ORDER_OPERATORS(Object);
 	}
 }
 

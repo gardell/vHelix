@@ -43,11 +43,6 @@ namespace Helix {
 	private:
 		Controller::Disconnect m_operation;
 		Controller::PaintMultipleStrandsWithNewColorFunctor m_functor;
-
-		/*MStatus disconnect(const MObjectArray & targets);
-
-		std::vector<std::pair<MObject, MObject> > m_disconnected; // For undo/redo
-		MObjectArray m_disconnect_targets;*/
 	};
 }
 

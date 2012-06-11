@@ -43,11 +43,6 @@ namespace Helix {
 			return status;
 		}
 
-		/*leftStrandAttr.setArray(true);
-		rightStrandAttr.setArray(true);
-		leftStrandAttr.setStorable(false);
-		rightStrandAttr.setStorable(false);*/
-
 		addAttribute(aLeftStrand);
 		addAttribute(aRightStrand);
 

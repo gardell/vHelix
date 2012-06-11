@@ -93,6 +93,7 @@ namespace Helix {
 			 */
 
 			static MStatus CacheMaterials();
+			static void ResetMaterialFilesLoaded();
 			static std::vector<Material> s_materials;
 			static std::vector<std::pair<MString, bool> > s_materialFiles;
 		};

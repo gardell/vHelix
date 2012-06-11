@@ -132,6 +132,9 @@
     <ClInclude Include="..\include\controller\Connect.h">
       <Filter>Header Files\controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\controller\Duplicate.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -228,6 +231,9 @@
       <Filter>Source Files\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\src\controller\ConnectController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\DuplicateController.cpp">
       <Filter>Source Files\controller</Filter>
     </ClCompile>
   </ItemGroup>

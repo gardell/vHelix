@@ -131,6 +131,36 @@ namespace Helix {
 		for(; it != end; ++it)
 			func(*it);
 	}
+
+	/*
+	 * FIXME: Try to use the std::for_each on all, even though we really need the iterator to be passed as reference
+	 */
+
+	template<typename It, typename Functor>
+	void for_each_itref(It & it, It end, Functor func) {
+		for(; it != end; ++it)
+			func(*it);
+	}
+
+	/*
+	 * The std::find passes by const, which is not optimal as the Object class does some caching
+	 */
+
+	template<typename It, typename ElementT>
+	It find_nonconst(It it, It end, ElementT & element) {
+		for(; it != end; ++it) {
+			if (*it == element)
+				return it;
+		}
+
+		return end;
+	}
+
+	/*
+	 * This method is for solving a bug in opening Maya files containing helices. FIXME: Move function definition and declaration
+	 */
+
+	void MSceneMessage_AfterImportOpen_CallbackFunc(void *callbackData);
 }
 
 

@@ -6,6 +6,7 @@
  */
 
 #include <DNA.h>
+#include <Utility.h>
 
 #include <Locator.h>
 //#include <Tracker.h>
@@ -40,6 +41,7 @@
 #include <maya/MCommandResult.h>
 #include <maya/MPlugArray.h>
 #include <maya/MProgressWindow.h>
+#include <maya/MSceneMessage.h>
 
 #include <ctime>
 
@@ -290,6 +292,8 @@ enum {
 	ACCEL_SHIFT = 4
 };
 
+MCallbackId g_afterImport_CallbackId, g_afterOpen_CallbackId;
+
 MLL_EXPORT MStatus initializePlugin(MObject obj) {
 	MStatus status;
 
@@ -405,6 +409,24 @@ MLL_EXPORT MStatus initializePlugin(MObject obj) {
 		MProgressWindow::advanceProgress(1);
 	}
 
+	/*
+	 * There seems to be a bug with newly opened/imported files that their aimConstraints fails to retarget the bases. Thus we have to manually try to solve it after a file has been opened/imported
+	 */
+
+	g_afterImport_CallbackId = MSceneMessage::addCallback(MSceneMessage::kAfterImport, &Helix::MSceneMessage_AfterImportOpen_CallbackFunc, NULL, &status);
+
+	if (!status) {
+		status.perror("MSceneMessage::addCallback(MSceneMessage::kAfterImport, ...)");
+		return status;
+	}
+
+	g_afterOpen_CallbackId = MSceneMessage::addCallback(MSceneMessage::kAfterOpen, &Helix::MSceneMessage_AfterImportOpen_CallbackFunc, NULL, &status);
+
+	if (!status) {
+		status.perror("MSceneMessage::addCallback(MSceneMessage::kAfterOpen, ...)");
+		return status;
+	}
+
 	MProgressWindow::endProgress();
 
 	return MStatus::kSuccess;
@@ -424,7 +446,7 @@ MLL_EXPORT MStatus uninitializePlugin(MObject obj)
         static Register *register_operations[] = { REGISTER_OPERATIONS, new NullRegister() };
 
 		for(size_t i = 0; register_operations[i]->isValid(); ++i) {
-			if (!(status = register_operations[i]->doRegister(plugin)))
+			if (!(status = register_operations[i]->doDeregister(plugin)))
 				return status;
 		}
 

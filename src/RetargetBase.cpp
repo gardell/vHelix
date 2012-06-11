@@ -12,6 +12,8 @@
 #include <maya/MGlobal.h>
 #include <maya/MSelectionList.h>
 #include <maya/MDagPath.h>
+#include <maya/MFileIO.h>
+#include <maya/MFnTransform.h>
 
 #include <Utility.h>
 
@@ -74,7 +76,7 @@ namespace Helix {
 			MSelectionList selectionList;
 
 			if ((status = selectionList.add(base)) != MStatus::kSuccess) {
-				status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt: MSelectionList::add");
+				//status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt: MSelectionList::add");
 				return status;
 			}
 
@@ -88,7 +90,7 @@ namespace Helix {
 			MSelectionList selectionList;
 
 			if ((status = selectionList.add(target)) != MStatus::kSuccess) {
-				status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt 2: MSelectionList::add");
+				//status.perror("This error is normal, the object probably does not exist. RetargetBase::doIt 2: MSelectionList::add");
 				return status;
 			}
 

@@ -556,7 +556,6 @@ namespace Helix {
 			MStatus status;
 
 			MString path = getDagPath(status).fullPathName();
-			std::cerr << "Asking for forward on the base: " << path.asChar() << std::endl;
 
 			MObject thisObject = getObject(status);
 

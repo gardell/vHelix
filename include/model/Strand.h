@@ -83,19 +83,27 @@ namespace Helix {
 						if (it.m_isEnd)
 							return m_strand == it.m_strand;
 						else {
+
+							if (!it.m_targetBase)
+								return true;
+
 							if (it.m_targetBase == it.m_strand->m_base && !it.m_firstTarget)
 								// This is a loop and we're back in the beginning
 								return true;
-							return !it.m_targetBase;
+
+							return false;
 						}
 					}
 					else {
 						if (it.m_isEnd) {
+							if (!m_targetBase)
+								return true;
+
 							if (m_targetBase == m_strand->m_base && !m_firstTarget)
 								// This is a loop and we're back in the beginning
 								return true;
-							bool areWeThereYet = !m_targetBase;
-							return !m_targetBase;
+
+							return false;
 						}
 						else
 							// None of the compared iterators are end iterators, just do a regular comparison

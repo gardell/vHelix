@@ -18,6 +18,8 @@
 #include <Locator.h>
 #include <Utility.h>
 
+#include <algorithm>
+
 #define CYLINDERREPRESENTATION_NAME "cylinderRepresentation"
 
 namespace Helix {
@@ -506,6 +508,62 @@ namespace Helix {
 			return GetSelectedObjectsOfType(selectedHelices, ::Helix::Helix::id);
 		}
 
+		/*
+		 * Helper functor for finding and adding relatives
+		 */
+
+		class GetRelativesFunctor {
+		public:
+			inline GetRelativesFunctor(MObjectArray & relatives) : m_relatives(relatives) {
+
+			}
+
+			void operator() (Helix helix) {
+				if (find_nonconst(&m_relatives[0], &m_relatives[m_relatives.length()], helix) == &m_relatives[m_relatives.length()]) {
+					MObject object = helix.getObject(m_status);
+				
+					if (!m_status) {
+						m_status.perror("Helix::getObject");
+						return;
+					}
+
+					if (!(m_status = m_relatives.append(object))) {
+						m_status.perror("MObjectArray::append");
+						return;
+					}
+
+					/*
+					 * Now recursively do the same for this helix relative
+					 */
+
+					MObjectArray helix_relatives;
+
+					if (!(m_status = helix.getRelatives(helix_relatives))) {
+						m_status.perror("Helix::getRelatives");
+						return;
+					}
+
+					for_each_ref(&helix_relatives[0], &helix_relatives[helix_relatives.length()], *this);
+				}
+			}
+
+			inline MStatus status() const {
+				return m_status;
+			}
+
+		private:
+			MStatus m_status;
+			MObjectArray & m_relatives;
+		};
+
+		MStatus Helix::GetRelatives(const MObjectArray & helices, MObjectArray & relatives) {
+			GetRelativesFunctor functor(relatives);
+
+			for_each_ref(&helices[0], &helices[helices.length()], functor);
+
+			return functor.status();
+		}
+
 		/*MStatus Helix::findPrimeEnds(MObjectArray & fivePrimeEnds, MObjectArray & threePrimeEnds, Base::Type filter) {
 			MStatus status;
 			for(BaseIterator it = begin(); it != end(); ++it) {
@@ -609,6 +667,19 @@ namespace Helix {
 			}
 
 			// If the code goes through here we will be targeting numChildren, and thus we equal the end() function
+		}
+
+		
+		MStatus Helix::getRelatives(MObjectArray & helices) {
+			MStatus status;
+			MObject thisObject = getObject(status);
+
+			if (!status) {
+				status.perror("Helix::getObject");
+				return status;
+			}
+
+			return Helix_Relatives(thisObject, helices);
 		}
 	}
 }

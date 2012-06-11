@@ -23,8 +23,6 @@ namespace Helix {
 				return status;
 			}
 
-			std::cerr << "Painting with material: " << m_material.getMaterial().asChar() << ", previous: " << previous_material.getMaterial().asChar() << std::endl;
-
 			saveUndoRedo(element, previous_material, m_material);
 
 			/*
@@ -41,8 +39,9 @@ namespace Helix {
 
 		MStatus PaintStrandOperation::doUndo(Model::Base & element, Model::Material & undoData) {
 			MStatus status;
-			
-			std::cerr << "Setting previous material: " << undoData.getMaterial().asChar() << std::endl;
+
+			Model::Material oldMaterial;
+			element.getMaterial(oldMaterial);
 
 			if (!(status = element.setMaterial(undoData))) {
 				status.perror("Base::setMaterial");

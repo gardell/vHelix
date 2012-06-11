@@ -41,6 +41,13 @@ namespace Helix {
 
 			static MStatus AllSelected(MObjectArray & selectedHelices);
 
+			/*
+			 * This is an expansion of the getRelatives below, but for multiple helices. The difference is that it makes sure that all returned helices are unique
+			 * Note that the helices given will be included in the relatives array
+			 */
+
+			static MStatus GetRelatives(const MObjectArray & helices, MObjectArray & relatives);
+
 			DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(Helix)
 
 			/*
@@ -90,12 +97,12 @@ namespace Helix {
 					return !operator == (i);
 				}
 
-			protected:
-				inline BaseIterator(Helix & helix, unsigned int index) : m_helix(&helix), m_childIndex(index) {
+				inline BaseIterator(const BaseIterator & copy) : m_helix(copy.m_helix), m_childIndex(copy.m_childIndex) {
 
 				}
 
-				inline BaseIterator(const BaseIterator & copy) : m_helix(copy.m_helix), m_childIndex(copy.m_childIndex) {
+			protected:
+				inline BaseIterator(Helix & helix, unsigned int index) : m_helix(&helix), m_childIndex(index) {
 
 				}
 
@@ -111,10 +118,18 @@ namespace Helix {
 			BaseIterator begin();
 			BaseIterator end();
 
+			/*
+			 * Relatives: Get surrounding helices connected to this helix over base connections
+			 */
+
+			MStatus getRelatives(MObjectArray & helices);
+
 		private:
 			bool hasCylinder(MStatus & status);
 			MStatus createCylinder(double origo, double top);
 		};
+
+		DEFINE_DEFAULT_INHERITED_OBJECT_INVERSED_ORDER_OPERATORS(Helix);
 	}
 }
 

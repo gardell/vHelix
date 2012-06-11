@@ -236,6 +236,44 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 			}
 		}
 
+		/*
+		 * Now make the models invisible
+		 */
+
+		{
+			MFnDagNode molecule_dagNode(moleculeModel_dagPath);
+
+			MObject molecule_visibility_attribute = molecule_dagNode.attribute("visibility", &status);
+
+			if (!status) {
+				status.perror("MFnDagNode::attribute 1");
+				return status;
+			}
+
+			MPlug moleculeVisibility(moleculeModel_dagPath.node(), molecule_visibility_attribute);
+
+			if (!(status = moleculeVisibility.setBool(false))) {
+				status.perror("MPlug::setBool 1");
+				return status;
+			}
+
+			MFnDagNode arrow_dagNode(arrowModel_dagPath);
+
+			MObject arrow_visibility_attribute = arrow_dagNode.attribute("visibility", &status);
+
+			if (!status) {
+				status.perror("MFnDagNode::attribute 2");
+				return status;
+			}
+
+			MPlug arrowVisibility(arrowModel_dagPath.node(), arrow_visibility_attribute);
+
+			if (!(status = arrowVisibility.setBool(false))) {
+				status.perror("MPlug::setBool 2");
+				return status;
+			}
+		}
+
 		return MStatus::kSuccess;
 	}
 
