@@ -38,6 +38,11 @@ namespace Helix {
 
 		static MObject aForward, aBackward, aLabel;
 	};
+
+	/*
+	 * Solves a bug regarding aimConstraints, see HelixBase.h/.cpp
+	 */
+	bool HelixBase_AllowedToRetargetBase(const MObject & base);
 }
 
 

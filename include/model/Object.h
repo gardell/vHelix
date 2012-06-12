@@ -138,7 +138,7 @@ namespace Helix {
 				MObject targetObject = object.getObject(status);
 
 				if (!status) {
-					status.perror("Object::getObject() on target");
+					status.perror("This error is normal. Object::getObject() on target");
 					return false;
 				}
 

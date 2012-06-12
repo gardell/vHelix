@@ -19,6 +19,11 @@
 #include <maya/MMessage.h>
 #include <maya/MNodeMessage.h>
 
+#include <list>
+#include <algorithm>
+
+#include <model/Base.h>
+
 namespace Helix {
 	//
 	// FIXME: To fix the crashes, we need to have a callback for both the pending deletion and the deleted events
@@ -37,15 +42,39 @@ namespace Helix {
 
 	// Yes, a global variable here is not multithread aware etc, but (i think) there's no multithreading being done by Maya when nodes are deleted anyway
 	// Since there's no way in Maya to obtain an MPx*-object from a MObject, this is the easiest and fastest way of tracking the connected base
-	MObject BaseBeingRemoved;
-	bool BaseDeletionInProgress = false;
+	/*MObject BaseBeingRemoved;
+	bool BaseDeletionInProgress = false;*/
 
+	struct {
+		MObject base;
+		bool inProgress;
+		std::list<MObject> delayedModificationQueue; // The objects that is going to be modified later by an *OnIdle call
+	} g_BaseDeletion = { MObject::kNullObj, false };
+
+	bool HelixBase_AllowedToRetargetBase(const MObject & base) {
+		MStatus status;
+		
+		std::list<MObject>::iterator baseIt = std::find(g_BaseDeletion.delayedModificationQueue.begin(), g_BaseDeletion.delayedModificationQueue.end(), base);
+
+		if (baseIt != g_BaseDeletion.delayedModificationQueue.end()) {
+			g_BaseDeletion.delayedModificationQueue.erase(baseIt);
+			g_BaseDeletion.delayedModificationQueue.remove(base); // Just to make sure there are no multiple occurences
+
+			return true;
+		}
+
+		return false;
+	}
 
 	void MNode_NodePreRemovalCallbackFunc(MObject & node, void *clientData) {
-		BaseBeingRemoved = node;
-		BaseDeletionInProgress = true;
+		/*BaseBeingRemoved = node;
+		BaseDeletionInProgress = true;*/
 
-		std::cerr << __FUNCTION__ << std::endl;
+		//std::cerr << __FUNCTION__ << std::endl;
+
+		g_BaseDeletion.base = node;
+		g_BaseDeletion.inProgress = true;
+		
 	}
 
 	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel;//, HelixBase::aHelix_Backward, HelixBase::aHelix_Forward;
@@ -121,8 +150,11 @@ namespace Helix {
 				return status;
 			}*/
 
+			g_BaseDeletion.delayedModificationQueue.remove(thisObject);
+			g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
+
 			if (!(status = MGlobal::executeCommand(MString("retargetBase -base ") + this_dagPath.fullPathName() + " -target " + target_dagPath.fullPathName() + ";", false))) {
-				status.perror("MGlobal::executeCommandOnIdle");
+				status.perror("MGlobal::executeCommand");
 				return status;
 			}
 		}
@@ -141,10 +173,10 @@ namespace Helix {
 			// Remove constraints
 			//
 
-			if (BaseBeingRemoved == thisObject)
+			if (g_BaseDeletion.base == thisObject)
 				return MPxTransform::connectionBroken(plug, otherPlug, asSrc);
 
-			if (!BaseDeletionInProgress) {
+			if (!g_BaseDeletion.inProgress) {
 				if (!(status = HelixBase_RemoveAllAimConstraints(thisObject))) {
 					status.perror("removeAllAimConstraints");
 					return status;
@@ -192,7 +224,10 @@ namespace Helix {
 					}
 				}*/
 
-				if (BaseDeletionInProgress) {
+				g_BaseDeletion.delayedModificationQueue.remove(thisObject);
+				g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
+
+				if (g_BaseDeletion.inProgress) {
 					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND" << std::endl;
 
 					if (!(status = MGlobal::executeCommandOnIdle(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
@@ -202,7 +237,7 @@ namespace Helix {
 
 					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND DONE" << std::endl;
 
-					BaseDeletionInProgress = false;
+					g_BaseDeletion.inProgress = false;
 				}
 				else {
 					std::cerr << "RETARGETING BASE IMMEDIATELY" << std::endl;

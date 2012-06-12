@@ -6,6 +6,7 @@
  */
 
 #include <RetargetBase.h>
+#include <HelixBase.h>
 
 #include <maya/MSyntax.h>
 #include <maya/MArgDatabase.h>
@@ -84,6 +85,9 @@ namespace Helix {
 				status.perror("MSelectionList::getDagPath");
 				return status;
 			}
+
+			if (!HelixBase_AllowedToRetargetBase(baseDagPath.node()))
+				return MStatus::kSuccess;
 		}
 
 		if (target.length() > 0) {

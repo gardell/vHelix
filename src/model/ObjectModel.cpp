@@ -10,12 +10,14 @@
 namespace Helix {
 	namespace Model {
 		MObject & Object::getObject(MStatus & status) {
+			status = MStatus::kSuccess;						
+			
 			if (m_object.isNull()) {
-				if (!(status = LoadObjectFromDagPath()))
+				if (!m_dagPath.isValid())
+					status = MStatus::kInvalidParameter;
+				else if (!(status = LoadObjectFromDagPath()))
 					status.perror("Object::LoadObjectFromDagPath");
 			}
-
-			status = MStatus::kSuccess;
 
 			return m_object;
 		}
@@ -29,11 +31,11 @@ namespace Helix {
 			}
 
 			if (!isValid) {
-				if (!(status = LoadAnyDagPathFromObject()))
+				if (m_object.isNull())
+					status = MStatus::kInvalidParameter;
+				else if (!(status = LoadAnyDagPathFromObject()))
 					status.perror("Object::LoadAnyDagPathFromObject");
 			}
-
-			status = MStatus::kSuccess;
 
 			return m_dagPath;
 		}
