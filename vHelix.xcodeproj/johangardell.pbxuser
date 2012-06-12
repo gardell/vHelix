@@ -35,15 +35,9 @@
 			PBXWorkspaceStateSaveDate = 360857349;
 		};
 		perUserProjectItems = {
-			AAA2856A15823E5B00F30976 = AAA2856A15823E5B00F30976 /* PBXTextBookmark */;
-			AAA2856B15823E5B00F30976 = AAA2856B15823E5B00F30976 /* PBXBookmark */;
-			AAA2857915823EF600F30976 = AAA2857915823EF600F30976 /* PBXTextBookmark */;
-			AAA285E315823F9000F30976 /* XCBuildMessageTextBookmark */ = AAA285E315823F9000F30976 /* XCBuildMessageTextBookmark */;
-			AAA285E515823FA200F30976 /* XCBuildMessageTextBookmark */ = AAA285E515823FA200F30976 /* XCBuildMessageTextBookmark */;
-			AAA285E815823FCF00F30976 /* PBXTextBookmark */ = AAA285E815823FCF00F30976 /* PBXTextBookmark */;
-			AAA285ED15823FCF00F30976 /* PBXTextBookmark */ = AAA285ED15823FCF00F30976 /* PBXTextBookmark */;
-			AAA285F015823FCF00F30976 /* PBXTextBookmark */ = AAA285F015823FCF00F30976 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AAA2856A15823E5B00F30976 /* PBXTextBookmark */ = AAA2856A15823E5B00F30976 /* PBXTextBookmark */;
+			AAA285F31582400400F30976 /* PBXTextBookmark */ = AAA285F31582400400F30976 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
@@ -85,65 +79,9 @@
 		vrLen = 1196;
 		vrLoc = 2560;
 	};
-	AAA2856B15823E5B00F30976 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-	};
-	AAA2857915823EF600F30976 /* PBXTextBookmark */ = {
+	AAA285F31582400400F30976 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = AAF468CD15820E0800EC064F /* Locator.cpp */;
-		name = "Locator.cpp: 618";
-		rLen = 0;
-		rLoc = 18351;
-		rType = 0;
-		vrLen = 980;
-		vrLoc = 2262;
-	};
-	AAA285E215823F9000F30976 /* PaintStrand.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = PaintStrand.h;
-		path = include/controller/PaintStrand.h;
-		sourceTree = "<group>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 2080}}";
-			sepNavSelRange = "{1704, 68}";
-			sepNavVisRange = "{977, 1479}";
-		};
-	};
-	AAA285E315823F9000F30976 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "Instantiated from here";
-		fRef = AAA285E215823F9000F30976 /* PaintStrand.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 66;
-		rType = 1;
-	};
-	AAA285E415823FA200F30976 /* Operation.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = Operation.h;
-		path = include/controller/Operation.h;
-		sourceTree = "<group>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 2015}}";
-			sepNavSelRange = "{3539, 0}";
-			sepNavVisRange = "{2511, 1261}";
-		};
-	};
-	AAA285E515823FA200F30976 /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "No matching function for call to 'Helix::Controller::Operation<Helix::Model::Base, Helix::Model::Material, Helix::Model::Material>::setStatus(MStatus)'";
-		fRef = AAA285E415823FA200F30976 /* Operation.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 33;
-		rType = 1;
-	};
-	AAA285E815823FCF00F30976 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAA2855F15823AA800F30976 /* Locator.h */;
+		fRef = AAA285F41582400400F30976 /* Locator.h */;
 		name = "Locator.h: 71";
 		rLen = 0;
 		rLoc = 2715;
@@ -151,25 +89,11 @@
 		vrLen = 1219;
 		vrLoc = 2537;
 	};
-	AAA285ED15823FCF00F30976 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAA285E415823FA200F30976 /* Operation.h */;
-		name = "Operation.h: 147";
-		rLen = 0;
-		rLoc = 3539;
-		rType = 0;
-		vrLen = 1261;
-		vrLoc = 2511;
-	};
-	AAA285F015823FCF00F30976 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAA285E215823F9000F30976 /* PaintStrand.h */;
-		name = "PaintStrand.h: 67";
-		rLen = 68;
-		rLoc = 1704;
-		rType = 0;
-		vrLen = 1479;
-		vrLoc = 977;
+	AAA285F41582400400F30976 /* Locator.h */ = {
+		isa = PBXFileReference;
+		name = Locator.h;
+		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
+		sourceTree = "<absolute>";
 	};
 	AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {
 		uiCtxt = {
