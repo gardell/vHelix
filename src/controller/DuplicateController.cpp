@@ -29,7 +29,7 @@ namespace Helix {
 		MStatus Duplicate::redo() {
 			MStatus status;
 
-			std::unordered_map<Model::Base, Model::Base> base_translation;
+			unordered_map<Model::Base, Model::Base> base_translation;
 
 			std::cerr << "Got " << m_helices.length() << " helices to copy" << std::endl;
 
