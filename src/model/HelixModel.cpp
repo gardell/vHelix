@@ -60,6 +60,24 @@ namespace Helix {
 				return status;
 			}
 
+			/*
+			 * Set the transform
+			 */
+
+			MDagPath helix_dagPath;
+			if (!(status = helix_dagNode.getPath(helix_dagPath))) {
+				status.perror("MFnDagNode::getPath");
+				return status;
+			}
+
+			MFnTransform helix_transform(helix_dagPath);
+			MTransformationMatrix transformationMatrix(transform);
+
+			if (!(status = helix_transform.set(transformationMatrix))) {
+				status.perror("MFnTransform::set");
+				return status;
+			}
+
 			return MStatus::kSuccess;
 		}
 

@@ -14,6 +14,8 @@
 
 #include <Definition.h>
 
+#include <controller/Duplicate.h>
+
 #include <iostream>
 #include <vector>
 
@@ -39,9 +41,15 @@ namespace Helix {
 		static void *creator();
 
 	private:
-		MStatus duplicate(const MObjectArray & targets);
+		class DuplicateWithProgressBar : public Controller::Duplicate {
+			void onProgressStart(unsigned int process, unsigned int range);
+			void onProgressStep();
+			void onProgressDone();
+		} m_operation;
 
-		MObjectArray m_duplicated_helices, m_target_helices; // First is for undo, second for redo
+		/*MStatus duplicate(const MObjectArray & targets);
+
+		MObjectArray m_duplicated_helices, m_target_helices; // First is for undo, second for redo*/
 	};
 }
 

@@ -491,8 +491,9 @@ namespace Helix {
 		 */
 
 		MStatus stat;
+		bool isOrtho = false;
 
-		// Do not render if the view is not the perspective view. It needs to be taken care of differently
+		// Do not render halos if the view is not the perspective view. It needs to be taken care of differently
 		//
 
 		{
@@ -505,8 +506,7 @@ namespace Helix {
 
 			MFnCamera camera(camera_dagPath);
 
-			if (camera.isOrtho(&stat))
-				return;
+			isOrtho = camera.isOrtho(&stat);
 
 			if (!stat) {
 				stat.perror("MFnCamera::isOrtho");
@@ -658,6 +658,7 @@ namespace Helix {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable (GL_LINE_SMOOTH);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
@@ -668,7 +669,7 @@ namespace Helix {
 		// Render halos using point sprites
 		//
 
-		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderHalo) {
+		if (!isOrtho && (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderHalo)) {
 			glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
 
 			glEnable(GL_POINT_SPRITE);
@@ -704,13 +705,13 @@ namespace Helix {
 		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderDirectionalArrow) {
 			static const float direction_arrow_vertices[] =
 			{
-					0.0f, -0.05f, 0.0f,
-					0.0f, -0.1f, 1.0f,
-					0.0f, -0.2f, 1.0f,
-					0.0f, 0.0f, 1.5f,
-					0.0f, 0.2f, 1.0f,
-					0.0f, 0.1f, 1.0f,
-					0.0f, 0.05f, 0.0f
+					0.0f, -0.05f, -0.75f,
+					0.0f, -0.1f, 0.25f,
+					0.0f, -0.2f, 0.25f,
+					0.0f, 0.0f, 0.75f,
+					0.0f, 0.2f, 0.25f,
+					0.0f, 0.1f, 0.25f,
+					0.0f, 0.05f, -0.75f
 			};
 			static unsigned char direction_arrow_colors[] = {
 					0x0, 0x0, 0x0, 0x0,
@@ -719,6 +720,16 @@ namespace Helix {
 					0x0, 0xFF, 0x0, 0xFF,
 					0x0, 0x7F, 0x0, 0x7F,
 					0x0, 0x7F, 0x0, 0x7F,
+					0x0, 0x0, 0x0, 0x0
+			};
+
+			static unsigned char direction_arrow_contour_colors[] = {
+					0x0, 0x0, 0x0, 0x0,
+					0x0, 0x0, 0x0, 0x7F,
+					0x0, 0x0, 0x0, 0x7F,
+					0x0, 0x0, 0x0, 0xFF,
+					0x0, 0x0, 0x0, 0x7F,
+					0x0, 0x0, 0x0, 0x7F,
 					0x0, 0x0, 0x0, 0x0
 			};
 
@@ -735,6 +746,18 @@ namespace Helix {
 
 			//glDrawArrays(GL_LINE_LOOP, 0, 7);
 			glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_BYTE, direction_arrow_indices);
+
+			/*
+			 * Draw border surrounding the arrow
+			 */
+
+			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
+
+			glColorPointer(4, GL_UNSIGNED_BYTE, 0, direction_arrow_contour_colors);
+			/*glDisableClientState(GL_COLOR_ARRAY);
+			glColor3b(0, 0, 0);*/
+
+			glDrawArrays(GL_LINE_LOOP, 0, 7);
 		}
 
 		glPopClientAttrib();

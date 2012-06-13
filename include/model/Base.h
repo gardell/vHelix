@@ -71,14 +71,6 @@ namespace Helix {
 			MStatus getLabel(DNA::Names & label);
 
 			/*
-			 * Positions/Orientations
-			 */
-
-			MStatus getTransform(MTransformationMatrix & matrix);
-			MStatus getTranslation(MVector & vector, MSpace::Space & space);
-			MStatus getRotation(MEulerRotation & rotation);
-
-			/*
 			 * Find the next, prev or opposite bases.
 			 * If you want to iterate strands, use the Strand class as it is iterator based and works with STL
 			 */
@@ -91,6 +83,8 @@ namespace Helix {
 
 			Base opposite(MStatus & status);
 			Base opposite();
+
+			bool opposite_isDestination(MStatus & status);
 		};
 	}
 }

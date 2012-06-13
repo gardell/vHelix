@@ -37,6 +37,8 @@
 	inline Object & operator=(const MDagPath & dagPath) { Object::operator=(dagPath); return *this; }										\
 	inline bool operator==(ClassName & object) { return Object::operator==(object); }														\
 	inline bool operator!=(ClassName & object) { return Object::operator!=(object); }														\
+	inline bool operator==(const ClassName & object) const { return Object::operator==(object); }											\
+	inline bool operator!=(const ClassName & object) const { return Object::operator!=(object); }											\
 	inline bool operator==(const MObject & object) { return Object::operator==(object); }													\
 	inline bool operator==(const MDagPath & dagPath) { return Object::operator==(dagPath); }												\
 
@@ -145,7 +147,37 @@ namespace Helix {
 				return thisObject == targetObject;
 			}
 
+			/*
+			 * Some STL code requires the operator== to be const
+			 * Notice: The above code is faster as it allows for caching.
+			 * According to the specification, even though the compiler could choose the most restrictive
+			 * it will always choose the ones above when possible
+			 */
+
+			inline bool operator==(const Object & object) const {
+				MStatus status;
+				MObject thisObject = getObject(status);
+
+				if (!status) {
+					status.perror("Object::getObject() on this");
+					return false;
+				}
+
+				MObject targetObject = object.getObject(status);
+
+				if (!status) {
+					status.perror("This error is normal. Object::getObject() on target");
+					return false;
+				}
+
+				return thisObject == targetObject;
+			}
+
 			inline bool operator!=(Object & object) {
+				return !this->operator==(object);
+			}
+
+			inline bool operator!=(const Object & object) const {
 				return !this->operator==(object);
 			}
 
@@ -182,6 +214,14 @@ namespace Helix {
 			MObject & getObject(MStatus & status);
 			MDagPath & getDagPath(MStatus & status);
 
+			/*
+			 * Notice: As mentioned above, these methods are convenient in the STL library
+			 * but are slower because they're not able to cache the values for faster access
+			 */
+
+			MObject getObject(MStatus & status) const;
+			MDagPath getDagPath(MStatus & status) const;
+
 			inline operator bool() const {
 				return isValid();
 			}
@@ -193,6 +233,14 @@ namespace Helix {
 			inline bool isValid() const {
 				return !m_object.isNull() || m_dagPath.isValid();
 			}
+
+			/*
+			 * Positions/Orientations
+			 */
+
+			MStatus getTransform(MTransformationMatrix & matrix);
+			MStatus getTranslation(MVector & vector, MSpace::Space space);
+			MStatus getRotation(MEulerRotation & rotation);
 
 			/*
 			 * Note that the class invalidates itself after this

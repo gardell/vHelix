@@ -505,64 +505,6 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus Base::getTransform(MTransformationMatrix & matrix) {
-			MStatus status;
-
-			MFnTransform transform(getDagPath(status));
-
-			if (!status) {
-				status.perror("Base::getDagPath");
-				return status;
-			}
-
-			matrix = transform.transformation(&status);
-
-			if (!status) {
-				status.perror("MFnTransform::transformation");
-				return status;
-			}
-
-			return MStatus::kSuccess;
-		}
-
-		MStatus Base::getTranslation(MVector & vector, MSpace::Space & space) {
-			MStatus status;
-
-			MFnTransform transform(getDagPath(status));
-
-			if (!status) {
-				status.perror("Base::getDagPath");
-				return status;
-			}
-
-			vector = transform.getTranslation(space, &status);
-
-			if (!status) {
-				status.perror("MFnTransform::getTranslation");
-				return status;
-			}
-
-			return MStatus::kSuccess;
-		}
-
-		MStatus Base::getRotation(MEulerRotation & rotation) {
-			MStatus status;
-
-			MFnTransform transform(getDagPath(status));
-
-			if (!status) {
-				status.perror("Base::getDagPath");
-				return status;
-			}
-
-			if (!(status = transform.getRotation(rotation))) {
-				status.perror("MFnTransform::getRotation");
-				return status;
-			}
-
-			return MStatus::kSuccess;
-		}
-
 		/*
 		 * Helper method used by both forward and backward
 		 */
@@ -667,6 +609,19 @@ namespace Helix {
 			// We could at least print if there are any status errors, but speed!
 
 			return Base_target(thisObject, ::Helix::HelixBase::aLabel, status);
+		}
+
+		bool Base::opposite_isDestination(MStatus & status) {
+			MObject thisObject = getObject(status);
+
+			if (!status) {
+				status.perror("Base::getObject() this");
+				return Base();
+			}
+
+			MPlug plug(thisObject, ::Helix::HelixBase::aLabel);
+
+			return plug.isDestination(&status);
 		}
 	}
 }

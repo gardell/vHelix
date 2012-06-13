@@ -45,7 +45,7 @@ namespace Helix {
 
 	private:
 		// The NEW STL-oriented interface requires less data to be saved
-		Controller::PaintMultipleStrandsFunctor m_functor;
+		Controller::PaintMultipleStrandsWithNewColorFunctor m_functor;
 
 		// Just paint the bases given and put their old color in m_previousPaint
 		/*MStatus paintBases(MDagPathArray & dagPathArray);

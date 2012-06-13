@@ -6,25 +6,20 @@
  */
 
 #include <Duplicate.h>
-#include <Utility.h>
-#include <Helix.h>
-#include <HelixBase.h>
 #include <ToggleCylinderBaseView.h>
-#include <Locator.h>
-#include <DNA.h>
+
+#include <Helix.h>
 
 #include <maya/MSelectionList.h>
 #include <maya/MArgDatabase.h>
 #include <maya/MSyntax.h>
-#include <maya/MFnTransform.h>
-#include <maya/MDGModifier.h>
 #include <maya/MItDag.h>
-#include <maya/MSelectionList.h>
 #include <maya/MCommandResult.h>
 #include <maya/MGlobal.h>
-#include <maya/MDagModifier.h>
 #include <maya/MProgressWindow.h>
-#include <maya/MDagPathArray.h>
+#include <maya/MFnDagNode.h>
+
+#include <model/Helix.h>
 
 namespace Helix {
 	Duplicate::Duplicate() {
@@ -35,6 +30,26 @@ namespace Helix {
 
 	}
 
+	void Duplicate::DuplicateWithProgressBar::onProgressStart(unsigned int process, unsigned int range) {
+		static const char *msg[] = { "Generating new helices and bases...", "Connecting bases..." };
+
+		if (!MProgressWindow::reserve())
+			MGlobal::displayWarning("Failed to reserve the progress window");
+
+		MProgressWindow::setTitle("Duplicate helices");
+		MProgressWindow::setProgressStatus(msg[process]);
+		MProgressWindow::setProgressRange(0, range);
+		MProgressWindow::startProgress();
+	}
+
+	void Duplicate::DuplicateWithProgressBar::onProgressStep() {
+		MProgressWindow::advanceProgress(1);
+	}
+
+	void Duplicate::DuplicateWithProgressBar::onProgressDone() {
+		MProgressWindow::endProgress();
+	}
+
 	MStatus Duplicate::doIt(const MArgList & args) {
 		// Find out our targets. First either by -target or selection
 		//
@@ -42,7 +57,8 @@ namespace Helix {
 		MStatus status;
 		MArgDatabase argDatabase(syntax(), args, &status);
 
-		m_target_helices.clear();
+		//m_target_helices.clear();
+		MObjectArray target_helices;
 
 		if (!status) {
 			status.perror("MArgDatabase::#ctor");
@@ -70,21 +86,21 @@ namespace Helix {
 				return status;
 			}
 
-			if (!(status = m_target_helices.append(target))) {
+			if (!(status = target_helices.append(target))) {
 				status.perror("MObjectArray::append");
 				return status;
 			}
 		}
 
-		if (m_target_helices.length() == 0) {
+		if (target_helices.length() == 0) {
 			// Find out by select instead
 
-			if (!(status = SelectedHelices(m_target_helices))) {
-				status.perror("SelectedHelices");
+			if (!(status = Model::Helix::AllSelected(target_helices))) {
+				status.perror("Helix::AllSelected");
 				return status;
 			}
 
-			if (m_target_helices.length() == 0) {
+			if (target_helices.length() == 0) {
 				// If there's still no selected helices, duplicate the whole scene
 
 				MItDag dagIt(MItDag::kBreadthFirst, MFn::kTransform, &status);
@@ -100,7 +116,7 @@ namespace Helix {
 					MFnDagNode node_dagNode(node);
 
 					if (node_dagNode.typeId(&status) == Helix::id)
-						m_target_helices.append(node);
+						target_helices.append(node);
 				}
 			}
 		}
@@ -108,7 +124,21 @@ namespace Helix {
 		// Now find out, if there's any other connected helices connecting to one of ours. In that case, we duplicate them too
 		//
 
-		for(unsigned int i = 0; i < m_target_helices.length(); ++i) {
+		MObjectArray all_target_helices;
+
+		if (!(status = Model::Helix::GetRelatives(target_helices, all_target_helices))) {
+			status.perror("Helix::GetRelatives");
+			return status;
+		}
+
+		if (!(status = m_operation.duplicate(all_target_helices))) {
+			status.perror("Controller::Duplicate::duplicate");
+			return status;
+		}
+
+		return MStatus::kSuccess;
+
+		/*for(unsigned int i = 0; i < m_target_helices.length(); ++i) {
 			MObjectArray relatives;
 
 			if (!(status = Helix_Relatives(m_target_helices[i], relatives))) {
@@ -135,10 +165,11 @@ namespace Helix {
 			}
 		}
 
-		return duplicate(m_target_helices);
+		return duplicate(m_target_helices);*/
 	}
 
 	MStatus Duplicate::undoIt () {
+		return m_operation.undo();
 		// Delete all the duplicates helices in m_duplicated_helices
 
 		/*MStatus status;
@@ -162,13 +193,13 @@ namespace Helix {
 			return status;
 		}*/
 
-		MGlobal::displayError("Undo " MEL_DUPLICATEHELICES_COMMAND " is not available yet. Delete the helices manually");
+		/*MGlobal::displayError("Undo " MEL_DUPLICATEHELICES_COMMAND " is not available yet. Delete the helices manually");
 
-		return MStatus::kSuccess;
+		return MStatus::kSuccess;*/
 	}
 
 	MStatus Duplicate::redoIt () {
-		return duplicate(m_target_helices);
+		return m_operation.redo();
 	}
 
 	bool Duplicate::isUndoable () const {
@@ -193,7 +224,7 @@ namespace Helix {
 
 	// Dummy wrapper class
 
-	class Connection {
+	/*class Connection {
 	public:
 		//MObject source, sourceAttr, destination, destinationAttr;
 		MObject targets[2], attributes[2]; // 0 = source, 1 = destination
@@ -339,7 +370,7 @@ namespace Helix {
 					if (!status) {
 						status.perror("HelixBase_NextBase 2");
 						return status;
-					}*/
+					}*
 
 					// Get the pair connection
 
@@ -574,8 +605,8 @@ namespace Helix {
 		if (!(status = MGlobal::setActiveSelectionList(selectionList, MGlobal::kReplaceList))) {
 			status.perror("MGlobal::setActiveSelectionList");
 			return status;
-		}*/
+		}*
 
 		return MStatus::kSuccess;
-	}
+	}*/
 }
