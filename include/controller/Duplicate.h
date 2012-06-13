@@ -7,7 +7,11 @@
 
 #include <maya/MObjectArray.h>
 
+#if defined(MAC_PLUGIN) || defined(LINUX)
+#include <tr1/unordered_map>
+#else
 #include <unordered_map>
+#endif /* Windows */
 
 namespace Helix {
 	namespace Controller {
