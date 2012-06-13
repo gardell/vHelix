@@ -653,7 +653,7 @@ namespace Helix {
 			}
 		}
 
-		glPushAttrib(GL_POINT_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_TRANSFORM_BIT | GL_LIGHTING_BIT);
+		glPushAttrib(GL_POINT_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_TRANSFORM_BIT | GL_LIGHTING_BIT | GL_LINE_BIT);
 		glPushClientAttrib(GL_CLIENT_VERTEX_ARRAY_BIT);
 
 		glEnable(GL_BLEND);
@@ -676,9 +676,7 @@ namespace Helix {
 
 			glUseProgram(s_program);
 
-			std::cerr << "Setting screenHeight: " << view.portHeight() << std::endl;
-
-			glUniform2f(s_screen_dimensions_uniform, view.portWidth(), view.portHeight());
+			glUniform2f(s_screen_dimensions_uniform, (GLfloat) view.portWidth(), (GLfloat) view.portHeight());
 
 			glVertexPointer(3, GL_FLOAT, 0, vertices);
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
@@ -692,9 +690,11 @@ namespace Helix {
 		//
 
 		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderPairLines) {
+			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
+
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, line_colors);
 			glVertexPointer(3, GL_FLOAT, 0, line_vertices);
-
+			
 			glDrawArrays(GL_LINES, 0, GLsizei(line_index));
 		}
 

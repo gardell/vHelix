@@ -1299,8 +1299,6 @@ namespace Helix {
 	}
 
 	void MSceneMessage_AfterImportOpen_CallbackFunc(void *callbackData) {
-		std::cerr << "After import or open" << std::endl;
-
 		MStatus status;
 
 		MItDag it(MItDag::kBreadthFirst, MFn::kTransform, &status);

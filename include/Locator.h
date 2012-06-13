@@ -44,12 +44,13 @@
 #define SELECTED_ADJACENT_THREEPRIME_HALO_COLOR { 0x7F, 0xAF, 0x7F, 0x5F }
 
 //#define HALO_POLYGON_VERTEX_COUNT 32
-#define HALO_POINT_SIZE "0.0006"
+#define HALO_POINT_SIZE "0.0007"
+#define BASE_CONNECTIONS_LINE_WIDTH 2.0f
 
 #define GLSL_VERTEX_SHADER																									\
-		"#version 120\n"																									\
+		"#version 120\n",																									\
 		"const float pointSize = " HALO_POINT_SIZE ";\n",																	\
-		"uniform vec2 screen;\n"																						\
+		"uniform vec2 screen;\n",																							\
 		"varying vec4 color;\n",																							\
 		"void main() {\n",																									\
 		"    gl_Position = ftransform();\n",																				\
@@ -60,12 +61,12 @@
 #define GLSL_VERTEX_SHADER_COUNT	9 // Always change this one when modifying the shader source code!
 
 #define GLSL_FRAGMENT_SHADER																								\
-		"#version 120\n"																									\
-		"const float smooth_step = 0.05, halo_radius = 0.1;\n",																\
+		"#version 120\n",																									\
+		"const float smooth_step = 0.05, halo_radius = 0.15;\n",																\
 		"varying vec4 color;\n",																							\
 		"void main() {\n",																									\
 		"	 float radius = length(gl_PointCoord * 2.0 - vec2(1.0));\n",													\
-		"    gl_FragColor = color * smoothstep(1.0, 1.0 - smooth_step, radius) *\n"											\
+		"    gl_FragColor = color * smoothstep(1.0, 1.0 - smooth_step, radius) *\n",										\
 		"                   smoothstep(1.0 - smooth_step * 2 - halo_radius, 1.0 - smooth_step - halo_radius, radius);\n",	\
 		"}\n"
 
