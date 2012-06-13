@@ -15,6 +15,7 @@
 		AAA285D315823F5A00F30976 /* ConnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D015823F5A00F30976 /* ConnectController.cpp */; };
 		AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D115823F5A00F30976 /* DisconnectController.cpp */; };
 		AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D215823F5A00F30976 /* PaintStrandController.cpp */; };
+		AACE30601588D6EA00F4A033 /* DuplicateController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */; };
 		AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */; };
 		AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */; };
 		AAF468D715820E0800EC064F /* Connect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BF15820E0800EC064F /* Connect.cpp */; };
@@ -50,6 +51,7 @@
 		AAA285D015823F5A00F30976 /* ConnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectController.cpp; sourceTree = "<group>"; };
 		AAA285D115823F5A00F30976 /* DisconnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisconnectController.cpp; sourceTree = "<group>"; };
 		AAA285D215823F5A00F30976 /* PaintStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaintStrandController.cpp; sourceTree = "<group>"; };
+		AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DuplicateController.cpp; sourceTree = "<group>"; };
 		AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequence.cpp; path = src/ApplySequence.cpp; sourceTree = "<group>"; };
 		AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequenceGui.cpp; path = src/ApplySequenceGui.cpp; sourceTree = "<group>"; };
 		AAF468BF15820E0800EC064F /* Connect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Connect.cpp; path = src/Connect.cpp; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */,
 				AAA285D015823F5A00F30976 /* ConnectController.cpp */,
 				AAA285D115823F5A00F30976 /* DisconnectController.cpp */,
 				AAA285D215823F5A00F30976 /* PaintStrandController.cpp */,
@@ -262,6 +265,7 @@
 				AAA285D315823F5A00F30976 /* ConnectController.cpp in Sources */,
 				AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */,
 				AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */,
+				AACE30601588D6EA00F4A033 /* DuplicateController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

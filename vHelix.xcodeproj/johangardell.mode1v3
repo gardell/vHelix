@@ -267,6 +267,7 @@
 							<array>
 								<string>08FB7794FE84155DC02AAC07</string>
 								<string>08FB7795FE84155DC02AAC07</string>
+								<string>AAA285CF15823F5A00F30976</string>
 								<string>AAA285C415823F4000F30976</string>
 								<string>1AB674ADFE9D54B511CA2CBB</string>
 								<string>1C37FABC05509CD000000102</string>
@@ -274,6 +275,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>2</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -326,11 +328,11 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>AAA285F31582400400F30976</string>
+										<string>AACE30611588D6ED00F4A033</string>
 										<key>history</key>
 										<array>
 											<string>AAF469CA158233EA00EC064F</string>
-											<string>AAA2856A15823E5B00F30976</string>
+											<string>AAA285F31582400400F30976</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -342,14 +344,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {974, 491}}</string>
+								<string>{{0, 0}, {974, 485}}</string>
 								<key>RubberWindowFrame</key>
 								<string>437 225 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>491pt</string>
+							<string>485pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -362,14 +364,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 496}, {974, 219}}</string>
+								<string>{{0, 490}, {974, 225}}</string>
 								<key>RubberWindowFrame</key>
 								<string>437 225 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>219pt</string>
+							<string>225pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -388,9 +390,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>AAA285E915823FCF00F30976</string>
+				<string>AACE30631588D6ED00F4A033</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>AAA285EA15823FCF00F30976</string>
+				<string>AACE30641588D6ED00F4A033</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -528,8 +530,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>AAA285EE15823FCF00F30976</string>
-		<string>AAA285EB15823FCF00F30976</string>
 		<string>AA976852158209130049D263</string>
 		<string>/Users/johangardell/Documents/vHelix/vHelix.xcodeproj</string>
 	</array>
@@ -572,8 +572,6 @@
 							<string>0pt</string>
 						</dict>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -613,7 +611,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>AA976852158209130049D263</string>
-				<string>AAA285F115823FCF00F30976</string>
+				<string>AACE30651588D6ED00F4A033</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
