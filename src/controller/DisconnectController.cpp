@@ -25,14 +25,14 @@ namespace Helix {
 				 * Now recolor its strand to another color than its current one
 				 */
 
-				{
+				/*{
 					Model::Material *materials;
 					size_t numMaterials;
 
 					if (!(status = Model::Material::GetAllMaterials(&materials, numMaterials))) {
 						status.perror("Material::GetAllMaterials");
 					}
-				}
+				}*/
 
 				saveUndoRedo(element, forward);
 			}

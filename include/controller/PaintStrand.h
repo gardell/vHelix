@@ -31,7 +31,7 @@ namespace Helix {
 
 			}
 
-			void setMaterial(Model::Material & material) {
+			void setMaterial(const Model::Material & material) {
 				m_material = material;
 			}
 
@@ -49,13 +49,17 @@ namespace Helix {
 
 		class PaintMultipleStrandsFunctor {
 		public:
-			inline PaintMultipleStrandsFunctor(Model::Material *materials, size_t & numMaterials) : m_materials(materials), m_numMaterials(numMaterials) {
+			inline MStatus loadMaterials() {
+				MStatus status;
 
-			}
+				m_materials_begin = Model::Material::AllMaterials_begin(status, m_numMaterials);
 
-			inline PaintMultipleStrandsFunctor() {
-				if (!(m_status = Model::Material::GetAllMaterials(&m_materials, m_numMaterials)))
-					m_status.perror("Material::GetAllMaterials");
+				if (!status) {
+					status.perror("Material::GetAllMaterials");
+					return status;
+				}
+
+				return MStatus::kSuccess;
 			}
 
 			inline void operator() (Model::Strand strand) {
@@ -63,7 +67,7 @@ namespace Helix {
 				 * Randomize a new color, assume numMaterials > 0
 				 */
 
-				m_operation.setMaterial(m_materials[rand() % m_numMaterials]);
+				m_operation.setMaterial(*(m_materials_begin + (rand() % m_numMaterials)));
 
 				Model::Strand::ForwardIterator it = strand.forward_begin();
 				for_each_itref(it, strand.forward_end(), m_operation.execute());
@@ -98,11 +102,13 @@ namespace Helix {
 				return m_operation.redo();
 			}
 
-		protected:
+		protected: // FIXME
 			PaintStrandOperation m_operation;
 
-			Model::Material *m_materials;
-			size_t m_numMaterials;
+			/*Model::Material *m_materials;
+			size_t m_numMaterials;*/
+			Model::Material::Iterator m_materials_begin;
+			Model::Material::Container::size_type m_numMaterials;
 
 			MStatus m_status;
 		};
@@ -127,10 +133,11 @@ namespace Helix {
 				}
 
 				do {
-					chosen_material = m_materials[rand() % m_numMaterials];
+					chosen_material = *(m_materials_begin + (rand() % m_numMaterials));
+					//chosen_material = *(Model::Material::AllMaterials_begin(m_status, m_numMaterials) + (rand() % m_numMaterials));
 				} while (chosen_material == previous_material);
 
-				m_operation.setMaterial(m_materials[rand() % m_numMaterials]);
+				m_operation.setMaterial(chosen_material);
 
 				Model::Strand::ForwardIterator it = strand.forward_begin();
 				for_each_itref(it, strand.forward_end(), m_operation.execute());

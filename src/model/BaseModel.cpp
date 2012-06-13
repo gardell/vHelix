@@ -12,9 +12,12 @@
 #include <maya/MPlug.h>
 #include <maya/MPlugArray.h>
 #include <maya/MDGModifier.h>
+#include <maya/MCommandResult.h>
 
 #include <HelixBase.h>
 #include <Utility.h>
+
+#include <algorithm>
 
 namespace Helix {
 	namespace Model {
@@ -61,11 +64,13 @@ namespace Helix {
 		MStatus Base::getMaterial(Material & material) {
 			MStatus status;
 
-			Material *materials;
+			//Material *materials;
+			
 			size_t numMaterials;
+			Material::Iterator materials_begin = Material::AllMaterials_begin(status, numMaterials);
 
-			if (!(status = Material::GetAllMaterials(&materials, numMaterials))) {
-				status.perror("Material::GetAllMaterials");
+			if (!status) {
+				status.perror("Material::AllMaterials_begin");
 				return status;
 			}
 
@@ -76,10 +81,53 @@ namespace Helix {
 				return status;
 			}
 
-			for(size_t i = 0; i < numMaterials; ++i) {
+			/*
+			 * We must iterate over the models Shape nodes, for the first we find that seem to have material attached
+			 * originally, the idea was to use the listSets -extendToShape but it doesn't seem to work...
+			 */
+
+			unsigned int numShapes;
+			
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+				
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MCommandResult commandResult;
+				MStringArray stringArray;
+
+				if (!(status = MGlobal::executeCommand(MString("listSets -object ") + shape.fullPathName(), commandResult))) {
+					status.perror("MGlobal::executeCommand");
+					return status;
+				}
+
+				if (!(status = commandResult.getResult(stringArray))) {
+					status.perror("MCommandResult::getResult");
+					return status;
+				}
+
+				for(unsigned int j = 0; j < stringArray.length(); ++j) {
+					Material::Iterator materialIt;
+
+					if ((materialIt = std::find(materials_begin, Material::AllMaterials_end(), stringArray[j])) != Material::AllMaterials_end()) {
+						material = *materialIt;
+						return MStatus::kSuccess;
+					}
+				}
+			}
+
+			/*for(size_t i = 0; i < numMaterials; ++i) {
 				/*
 				 * Is our base part of this material set?
-				 */
+				 *
 
 				bool isMember;
 
@@ -92,7 +140,7 @@ namespace Helix {
 					material = materials[i];
 					return MStatus::kSuccess;
 				}
-			}
+			}*/
 
 			return MStatus::kNotFound;
 		}

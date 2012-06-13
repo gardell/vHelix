@@ -153,7 +153,6 @@ namespace Helix {
 
 	class PaintMultipleStrandsWithProgressBar : public Controller::PaintMultipleStrandsFunctor {
 	public:
-
 		void operator() (Model::Strand & strand) {
 			Controller::PaintMultipleStrandsFunctor::operator()(strand);
 			MProgressWindow::advanceProgress(1);
@@ -594,7 +593,14 @@ namespace Helix {
 
 		std::cerr << "Coloring strands" << std::endl;
 
-		std::for_each(colorBases.begin(), colorBases.end(), PaintMultipleStrandsWithProgressBar());
+		PaintMultipleStrandsWithProgressBar functor;
+
+		if (!(status = functor.loadMaterials())) {
+			status.perror("PaintMultipleStrandsWithProgressBar::loadMaterials");
+			return status;
+		}
+
+		for_each_ref(colorBases.begin(), colorBases.end(), functor);
 
 		/*for(unsigned int i = 0; i < colorBases.length(); ++i) {
 			PaintStrand paintStrand;

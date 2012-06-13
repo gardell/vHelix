@@ -75,14 +75,24 @@ namespace Helix {
 			 * The actually useful methods regarding materials
 			 */
 
-			static MStatus GetAllMaterials(Material **materials, size_t & numMaterials);
+			//static MStatus GetAllMaterials(Material **materials, size_t & numMaterials);
+			
+			typedef std::vector<Material> Container;
+			typedef const Material * Iterator;
 
-			class RegisterMaterialFile {
+			static Iterator AllMaterials_begin(MStatus & status, Container::size_type & numMaterials);
+			static Iterator AllMaterials_begin(MStatus & status);
+			
+			static inline Iterator AllMaterials_end() {
+				return &s_materials[0] + s_materials.size();
+			}
+
+			/*class RegisterMaterialFile {
 			public:
 				inline RegisterMaterialFile(const char *filepath) {
 					s_materialFiles.push_back(std::make_pair(MString(filepath), false));
 				}
-			};
+			};*/
 
 		protected:
 			MString m_material;
@@ -92,10 +102,10 @@ namespace Helix {
 			 * The above GetAllMaterials call this method
 			 */
 
-			static MStatus CacheMaterials();
-			static void ResetMaterialFilesLoaded();
-			static std::vector<Material> s_materials;
-			static std::vector<std::pair<MString, bool> > s_materialFiles;
+			/*static MStatus CacheMaterials();
+			static void ResetMaterialFilesLoaded();*/
+			static Container s_materials;
+			//static std::vector<std::pair<MString, bool> > s_materialFiles;
 		};
 	}
 }

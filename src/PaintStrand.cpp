@@ -104,6 +104,11 @@ namespace Helix {
 		 * Using the redefined STL approach, we can just use std::for_each on the strands using the iterators provided by Model::Strand
 		 */
 
+		if (!(status = m_functor.loadMaterials())) {
+			status.perror("PaintMultipleStrandsFunctor");
+			return status;
+		}
+
 		for_each_ref(targets.begin(), targets.end(), m_functor);
 
 		/*for(std::list<Model::Strand>::iterator it = targets.begin(); it != targets.end(); ++it) {

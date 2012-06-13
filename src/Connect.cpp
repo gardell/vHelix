@@ -105,6 +105,11 @@ namespace Helix {
 			return status;
 		}
 
+		if (!(status = m_functor.loadMaterials())) {
+			status.perror("PaintMultipleStrandsWithNewColorFunctor::loadMaterials");
+			return status;
+		}
+
 		m_functor(source);
 
 		return m_functor.status();

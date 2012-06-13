@@ -88,7 +88,7 @@ namespace Helix {
 			 * Copy over to our std::list of Base objects
 			 */
 
-			std::copy(&bases[0], &bases[bases.length()], std::insert_iterator< std::list<Model::Base> > (targets, targets.begin()));
+			std::copy(&bases[0], &bases[0] + bases.length(), std::back_insert_iterator< std::list<Model::Base> > (targets));
 		}
 
 		/*
@@ -100,6 +100,11 @@ namespace Helix {
 		/*
 		 * Now color all the recently disconnected bases in a new color
 		 */
+
+		if (!(status = m_functor.loadMaterials())) {
+			status.perror("PaintMultipleStrandsWithNewColorFunctor::loadMaterials");
+			return status;
+		}
 
 		for_each_ref(targets.begin(), targets.end(), m_functor);
 

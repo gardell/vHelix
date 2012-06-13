@@ -44,34 +44,32 @@
 #define SELECTED_ADJACENT_THREEPRIME_HALO_COLOR { 0x7F, 0xAF, 0x7F, 0x5F }
 
 //#define HALO_POLYGON_VERTEX_COUNT 32
-#define HALO_POINT_SIZE "768.0"
+#define HALO_POINT_SIZE "0.0006"
 
-#define GLSL_VERTEX_SHADER		\
-		"#version 120\n"		\
-		"const float pointSize = " HALO_POINT_SIZE ";\n",	\
-		/*"varying vec2 texcoord;\n",*/	\
-		"varying vec4 color;\n",	\
-		"void main() {\n",	\
-		"    gl_Position = ftransform();\n",	\
-		"    gl_PointSize = pointSize / gl_Position.w;\n",	\
-		/*"	 texcoord = gl_MultiTexCoord0.xy;\n",*/	\
-		"	 color = gl_Color;\n",	\
+#define GLSL_VERTEX_SHADER																									\
+		"#version 120\n"																									\
+		"const float pointSize = " HALO_POINT_SIZE ";\n",																	\
+		"uniform vec2 screen;\n"																						\
+		"varying vec4 color;\n",																							\
+		"void main() {\n",																									\
+		"    gl_Position = ftransform();\n",																				\
+		"    gl_PointSize = screen.x * screen.y * pointSize / (2.0 * gl_Position.w);\n",																	\
+		"	 color = gl_Color;\n",																							\
 		"}\n"
 
-#define GLSL_VERTEX_SHADER_COUNT	7 // Always change this one when modifying the shader source code!
+#define GLSL_VERTEX_SHADER_COUNT	9 // Always change this one when modifying the shader source code!
 
-#define GLSL_FRAGMENT_SHADER	\
-		/*"varying vec2 texcoord;\n",*/	\
-		/*"#version 120\n",*/	\
-		"#version 120\n"		\
-		"const float smooth_step = 0.05, halo_radius = 0.1;\n",		\
-		"varying vec4 color;\n",	\
-		"void main() {\n",	\
-		"	 float radius = length(gl_PointCoord * 2.0 - vec2(1.0));\n",	\
-		"    gl_FragColor = color * smoothstep(1.0, 1.0 - smooth_step, radius) * smoothstep(1.0 - smooth_step * 2 - halo_radius, 1.0 - smooth_step - halo_radius, radius);\n",	\
+#define GLSL_FRAGMENT_SHADER																								\
+		"#version 120\n"																									\
+		"const float smooth_step = 0.05, halo_radius = 0.1;\n",																\
+		"varying vec4 color;\n",																							\
+		"void main() {\n",																									\
+		"	 float radius = length(gl_PointCoord * 2.0 - vec2(1.0));\n",													\
+		"    gl_FragColor = color * smoothstep(1.0, 1.0 - smooth_step, radius) *\n"											\
+		"                   smoothstep(1.0 - smooth_step * 2 - halo_radius, 1.0 - smooth_step - halo_radius, radius);\n",	\
 		"}\n"
 
-#define GLSL_FRAGMENT_SHADER_COUNT	6 // Always change this one when modifying the shader source code!
+#define GLSL_FRAGMENT_SHADER_COUNT	8 // Always change this one when modifying the shader source code!
 
 namespace Helix {
 	class HelixLocator : public MPxLocatorNode {
@@ -97,7 +95,7 @@ namespace Helix {
 
 	protected:
 		static bool s_gl_initialized, s_gl_failed;
-		static GLint s_program, s_vertex_shader, s_fragment_shader;
+		static GLint s_program, s_vertex_shader, s_fragment_shader, s_screen_dimensions_uniform;
 
 		void initializeGL();
 	};

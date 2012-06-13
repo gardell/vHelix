@@ -61,7 +61,7 @@ namespace Helix {
 	const MTypeId transform_id(HELIX_TRANSFORM_ID);
 	//MObject HelixLocator::aBases;
 	bool HelixLocator::s_gl_initialized = false, HelixLocator::s_gl_failed = false;
-	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0;
+	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0, HelixLocator::s_screen_dimensions_uniform = -1;
 	
 #ifndef MAC_PLUGIN
 	PFNGLCREATEPROGRAMPROC glCreateProgram;
@@ -77,6 +77,8 @@ namespace Helix {
 	PFNGLGETSHADERIVPROC glGetShaderiv;
 	PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
 	PFNGLGETPROGRAMIVPROC glGetProgramiv;
+	PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+	PFNGLUNIFORM2FPROC glUniform2f;
 #endif /* N MAC_PLUGIN */
 	
 	HelixLocator::~HelixLocator() {
@@ -170,6 +172,16 @@ namespace Helix {
 			s_gl_failed = true;
 		}
 
+		if ((glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) GETPROCADDRESS("glGetUniformLocation")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
+		if ((glUniform2f = (PFNGLUNIFORM2FPROC) GETPROCADDRESS("glUniform2f")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
 #endif /* N MAC_PLUGIN */
 		
 		// Setup the shaders and programs
@@ -233,6 +245,15 @@ namespace Helix {
 
 			std::cerr << "OpenGL program info log: " << std::endl << log << std::endl << std::endl;
 
+			s_gl_failed = true;
+		}
+
+		/*
+		 * Set up screen height uniform required to scale the point sprites
+		 */
+
+		if ((s_screen_dimensions_uniform = glGetUniformLocation(s_program, "screen")) == -1) {
+			std::cerr << "Failed to obtain location to screenHeight uniform variable" << std::endl;
 			s_gl_failed = true;
 		}
 
@@ -654,6 +675,10 @@ namespace Helix {
 			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 			glUseProgram(s_program);
+
+			std::cerr << "Setting screenHeight: " << view.portHeight() << std::endl;
+
+			glUniform2f(s_screen_dimensions_uniform, view.portWidth(), view.portHeight());
 
 			glVertexPointer(3, GL_FLOAT, 0, vertices);
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);

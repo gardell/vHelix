@@ -519,7 +519,7 @@ namespace Helix {
 			}
 
 			void operator() (Helix helix) {
-				if (find_nonconst(&m_relatives[0], &m_relatives[m_relatives.length()], helix) == &m_relatives[m_relatives.length()]) {
+				if (find_nonconst(&m_relatives[0], &m_relatives[0] + m_relatives.length(), helix) == &m_relatives[0] + m_relatives.length()) {
 					MObject object = helix.getObject(m_status);
 				
 					if (!m_status) {
@@ -543,7 +543,7 @@ namespace Helix {
 						return;
 					}
 
-					for_each_ref(&helix_relatives[0], &helix_relatives[helix_relatives.length()], *this);
+					for_each_ref(&helix_relatives[0], &helix_relatives[0] + helix_relatives.length(), *this);
 				}
 			}
 
@@ -559,7 +559,7 @@ namespace Helix {
 		MStatus Helix::GetRelatives(const MObjectArray & helices, MObjectArray & relatives) {
 			GetRelativesFunctor functor(relatives);
 
-			for_each_ref(&helices[0], &helices[helices.length()], functor);
+			for_each_ref(&helices[0], &helices[0] + helices.length(), functor);
 
 			return functor.status();
 		}

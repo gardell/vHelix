@@ -172,11 +172,12 @@ namespace Helix {
 		 * Pick two materials by random
 		 */
 			
-		Model::Material *materials;
-		size_t numMaterials;
+		//Model::Material *materials;
+		Model::Material::Container::size_type numMaterials;
+		Model::Material::Iterator materials_begin = Model::Material::AllMaterials_begin(status, numMaterials);
 
-		if (!(status = Model::Material::GetAllMaterials(&materials, numMaterials))) {
-			status.perror("Material::GetAllMaterials");
+		if (!status) {
+			status.perror("Material::AllMaterials_begin");
 			return status;
 		}
 
@@ -185,7 +186,7 @@ namespace Helix {
 
 		if (numMaterials == 1) {
 			for(int i = 0; i < 2; ++i)
-				m_materials[i] = materials[0];
+				m_materials[i] = *materials_begin;
 		}
 		else if(numMaterials >= 2) {
 
@@ -197,7 +198,7 @@ namespace Helix {
 			do { indices[1] = rand() % numMaterials; } while (indices[0] == indices[1]);
 
 			for(int i = 0; i < 2; ++i)
-				m_materials[i] = materials[indices[i]];
+				m_materials[i] = *(materials_begin + indices[i]);
 		}
 
 		/*
