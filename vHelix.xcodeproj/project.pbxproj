@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */; };
+		AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */; };
+		AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */; };
 		AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C515823F4000F30976 /* BaseModel.cpp */; };
 		AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C615823F4000F30976 /* HelixModel.cpp */; };
 		AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C715823F4000F30976 /* MaterialModel.cpp */; };
@@ -43,6 +46,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplySequenceController.cpp; sourceTree = "<group>"; };
+		AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExportStrandsController.cpp; sourceTree = "<group>"; };
+		AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendStrandController.cpp; sourceTree = "<group>"; };
 		AAA285C515823F4000F30976 /* BaseModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseModel.cpp; sourceTree = "<group>"; };
 		AAA285C615823F4000F30976 /* HelixModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelixModel.cpp; sourceTree = "<group>"; };
 		AAA285C715823F4000F30976 /* MaterialModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialModel.cpp; sourceTree = "<group>"; };
@@ -172,6 +178,9 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */,
+				AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */,
+				AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */,
 				AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */,
 				AAA285D015823F5A00F30976 /* ConnectController.cpp */,
 				AAA285D115823F5A00F30976 /* DisconnectController.cpp */,
@@ -218,7 +227,14 @@
 			isa = PBXProject;
 			buildConfigurationList = 8A7F05F1086863A70064D097 /* Build configuration list for PBXProject "vHelix" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* helloWorldCmdPlugin */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -266,6 +282,9 @@
 				AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */,
 				AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */,
 				AACE30601588D6EA00F4A033 /* DuplicateController.cpp in Sources */,
+				AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */,
+				AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */,
+				AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

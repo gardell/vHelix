@@ -31,17 +31,34 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 361289430;
-			PBXWorkspaceStateSaveDate = 361289430;
+			PBXPerProjectTemplateStateSaveDate = 361465305;
+			PBXWorkspaceStateSaveDate = 361465305;
 		};
 		perUserProjectItems = {
-			AAA285F31582400400F30976 /* PBXTextBookmark */ = AAA285F31582400400F30976 /* PBXTextBookmark */;
-			AACE30611588D6ED00F4A033 /* PBXTextBookmark */ = AACE30611588D6ED00F4A033 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AA2990E6158B85D00077DEFB = AA2990E6158B85D00077DEFB /* PBXTextBookmark */;
+			AACE30611588D6ED00F4A033 = AACE30611588D6ED00F4A033 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
 		};
+	};
+	AA2990E6158B85D00077DEFB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA2990E7158B85D00077DEFB /* Locator.h */;
+		name = "Locator.h: 66";
+		rLen = 0;
+		rLoc = 2715;
+		rType = 0;
+		vrLen = 1245;
+		vrLoc = 2231;
+	};
+	AA2990E7158B85D00077DEFB /* Locator.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = Locator.h;
+		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
+		sourceTree = "<absolute>";
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -57,23 +74,6 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	AAA285F31582400400F30976 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAA285F41582400400F30976 /* Locator.h */;
-		name = "Locator.h: 71";
-		rLen = 0;
-		rLoc = 2715;
-		rType = 0;
-		vrLen = 1219;
-		vrLoc = 2537;
-	};
-	AAA285F41582400400F30976 /* Locator.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = Locator.h;
-		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
-		sourceTree = "<absolute>";
-	};
 	AACE30611588D6ED00F4A033 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = AACE30621588D6ED00F4A033 /* Locator.h */;
@@ -81,11 +81,12 @@
 		rLen = 0;
 		rLoc = 2715;
 		rType = 0;
-		vrLen = 1575;
+		vrLen = 1351;
 		vrLoc = 2276;
 	};
 	AACE30621588D6ED00F4A033 /* Locator.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = Locator.h;
 		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
 		sourceTree = "<absolute>";

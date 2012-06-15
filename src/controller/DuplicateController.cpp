@@ -11,6 +11,9 @@
 #include <unordered_map>
 #else
 #include <tr1/unordered_map>
+namespace std {
+	using tr1::unordered_map;
+}
 #endif /* N Windows */
 
 namespace Helix {
@@ -35,7 +38,7 @@ namespace Helix {
 		MStatus Duplicate::redo() {
 			MStatus status;
 
-			std::tr1::unordered_map<Model::Base, Model::Base> base_translation;
+			std::unordered_map<Model::Base, Model::Base> base_translation;
 
 			std::cerr << "Got " << m_helices.length() << " helices to copy" << std::endl;
 
