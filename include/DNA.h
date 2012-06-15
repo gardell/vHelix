@@ -140,6 +140,7 @@ namespace DNA {
 				break;
 			default:
 				m_value = Invalid;
+				break;
 			}
 
 			return *this;
@@ -187,7 +188,7 @@ namespace DNA {
 	 * Bases going in the positive Z-axis direction are named forw_{i} while the others are named backw_{i} where i >= 1
 	 */
 
-	static const char *strands[] = { "forw", "backw" };
+	const char *GetStrandName(int index);
 
 	/*
 	 * The create base gui allows the user to specify the number of bases per strand and remembers your choice. The default on startup is defined here

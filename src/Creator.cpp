@@ -84,7 +84,7 @@ namespace Helix {
 			 */
 
 			for(int j = 0; j < 2; ++j) {
-				MString strand(DNA::strands[j]);
+				MString strand(DNA::GetStrandName(j));
 
 				if (!(status = Model::Base::Create(m_helix, strand + "_" + (i + 1), basePositions[j], base_objects[j]))) {
 					status.perror("Base::Create");

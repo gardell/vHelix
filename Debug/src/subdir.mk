@@ -14,7 +14,7 @@ CPP_SRCS += \
 ../src/Duplicate.cpp \
 ../src/ExportStrands.cpp \
 ../src/ExtendGui.cpp \
-../src/ExtendHelix.cpp \
+../src/ExtendStrand.cpp \
 ../src/FindFivePrimeEnds.cpp \
 ../src/Helix.cpp \
 ../src/HelixBase.cpp \
@@ -40,7 +40,7 @@ OBJS += \
 ./src/Duplicate.o \
 ./src/ExportStrands.o \
 ./src/ExtendGui.o \
-./src/ExtendHelix.o \
+./src/ExtendStrand.o \
 ./src/FindFivePrimeEnds.o \
 ./src/Helix.o \
 ./src/HelixBase.o \
@@ -66,7 +66,7 @@ CPP_DEPS += \
 ./src/Duplicate.d \
 ./src/ExportStrands.d \
 ./src/ExtendGui.d \
-./src/ExtendHelix.d \
+./src/ExtendStrand.d \
 ./src/FindFivePrimeEnds.d \
 ./src/Helix.d \
 ./src/HelixBase.d \
@@ -86,7 +86,7 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -I/usr/autodesk/maya/include -I"/home/johan/workspace/vHelix/include" -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o"$@" "$<"
+	g++ -I/usr/autodesk/maya/include -I"/home/johan/workspace/vHelix/include" -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

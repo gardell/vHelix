@@ -125,24 +125,6 @@ namespace Helix {
 				}
 			}
 
-			/*for(size_t i = 0; i < numMaterials; ++i) {
-				/*
-				 * Is our base part of this material set?
-				 *
-
-				bool isMember;
-
-				if (!(status = HelixBase_isMemberOfSet(dagPath, materials[i].getMaterial(), isMember))) {
-					status.perror("HelixBase_isMemberOfSet");
-					return status;
-				}
-
-				if (isMember) {
-					material = materials[i];
-					return MStatus::kSuccess;
-				}
-			}*/
-
 			return MStatus::kNotFound;
 		}
 
@@ -241,9 +223,9 @@ namespace Helix {
 			MPlug plug(object, attribute);
 			MPlugArray targetPlugs;
 			MDGModifier dgModifier;
-			bool isConnected;
+			/*bool isConnected;
 
-			isConnected = plug.connectedTo(targetPlugs, true, false, &status);
+			isConnected = plug.connectedTo(targetPlugs, true, false, &status);*/
 
 			if (!status) {
 				status.perror("MPlug::connectedTo 1");
@@ -263,7 +245,7 @@ namespace Helix {
 
 			targetPlugs.clear(); // Dunno if required though
 
-			isConnected = plug.connectedTo(targetPlugs, false, true, &status);
+			//isConnected = plug.connectedTo(targetPlugs, false, true, &status);
 
 			if (!status) {
 				status.perror("MPlug::connectedTo 2");

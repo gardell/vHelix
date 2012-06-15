@@ -5,3 +5,4 @@
 USER_OBJS :=
 
 LIBS := -lOpenMaya -lOpenMayaUI -lOpenMayaRender -lGL
+

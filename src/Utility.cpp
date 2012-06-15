@@ -26,7 +26,7 @@
 
 #include <limits>
 
-#include <Model/Helix.h>
+#include <model/Helix.h>
 
 namespace Helix {
 	/*

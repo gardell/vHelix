@@ -419,7 +419,7 @@ namespace Helix {
 							// Helix_CreateBase is where the creation of the node is made
 							//
 
-							if (!(status = Helix_CreateBase(helix, MString(DNA::strands[l]) + "_base_" + directional_index, MVector(
+							if (!(status = Helix_CreateBase(helix, MString(DNA::GetStrandName(l)) + "_base_" + directional_index, MVector(
 									DNA::RADIUS * cos(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
 									DNA::RADIUS * sin(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
 									DNA::STEP * directional_index), helixBase))) {

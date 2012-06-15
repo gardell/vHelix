@@ -31,6 +31,11 @@
 	"ls $colors;\n"
 
 namespace DNA {
+	static const char *strands_str[] = { "forw", "backw" };
+
+	const char *GetStrandName(int index) {
+		return strands_str[index];
+	}
 
 	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset, double totalNumBases) {
 		/*

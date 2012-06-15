@@ -43,7 +43,7 @@ namespace Helix {
 	// Yes, a global variable here is not multithread aware etc, but (i think) there's no multithreading being done by Maya when nodes are deleted anyway
 	// Since there's no way in Maya to obtain an MPx*-object from a MObject, this is the easiest and fastest way of tracking the connected base
 	
-	struct {
+	struct BaseDeletionStorage {
 		MObject base;
 		bool inProgress;
 		std::list<MObject> delayedModificationQueue; // The objects that is going to be modified later by an *OnIdle call

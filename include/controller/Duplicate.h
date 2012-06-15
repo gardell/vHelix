@@ -3,7 +3,7 @@
 
 #include <Definition.h>
 
-#include <Model/Base.h>
+#include <model/Base.h>
 
 #include <maya/MObjectArray.h>
 
