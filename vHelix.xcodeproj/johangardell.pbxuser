@@ -59,6 +59,11 @@
 		name = Locator.h;
 		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1111, 1300}}";
+			sepNavSelRange = "{2715, 0}";
+			sepNavVisRange = "{2231, 1200}";
+		};
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -73,6 +78,14 @@
 	AA97684B158208DB0049D263 /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1205, 4511}}";
+			sepNavSelRange = "{834, 0}";
+			sepNavVisRange = "{100, 1123}";
+			sepNavWindowFrame = "{{410, 233}, {1264, 735}}";
+		};
 	};
 	AACE30611588D6ED00F4A033 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;

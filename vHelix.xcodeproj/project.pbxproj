@@ -10,6 +10,7 @@
 		AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */; };
 		AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */; };
 		AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */; };
+		AA2990F4158B865E0077DEFB /* ExtendStrand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990F3158B865E0077DEFB /* ExtendStrand.cpp */; };
 		AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C515823F4000F30976 /* BaseModel.cpp */; };
 		AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C615823F4000F30976 /* HelixModel.cpp */; };
 		AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C715823F4000F30976 /* MaterialModel.cpp */; };
@@ -29,7 +30,6 @@
 		AAF468DC15820E0800EC064F /* Duplicate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C415820E0800EC064F /* Duplicate.cpp */; };
 		AAF468DD15820E0800EC064F /* ExportStrands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C515820E0800EC064F /* ExportStrands.cpp */; };
 		AAF468DE15820E0800EC064F /* ExtendGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C615820E0800EC064F /* ExtendGui.cpp */; };
-		AAF468DF15820E0800EC064F /* ExtendHelix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C715820E0800EC064F /* ExtendHelix.cpp */; };
 		AAF468E015820E0800EC064F /* FindFivePrimeEnds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */; };
 		AAF468E115820E0800EC064F /* Helix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468C915820E0800EC064F /* Helix.cpp */; };
 		AAF468E215820E0800EC064F /* HelixBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468CA15820E0800EC064F /* HelixBase.cpp */; };
@@ -49,6 +49,7 @@
 		AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplySequenceController.cpp; sourceTree = "<group>"; };
 		AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExportStrandsController.cpp; sourceTree = "<group>"; };
 		AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendStrandController.cpp; sourceTree = "<group>"; };
+		AA2990F3158B865E0077DEFB /* ExtendStrand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtendStrand.cpp; path = src/ExtendStrand.cpp; sourceTree = "<group>"; };
 		AAA285C515823F4000F30976 /* BaseModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseModel.cpp; sourceTree = "<group>"; };
 		AAA285C615823F4000F30976 /* HelixModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelixModel.cpp; sourceTree = "<group>"; };
 		AAA285C715823F4000F30976 /* MaterialModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialModel.cpp; sourceTree = "<group>"; };
@@ -68,7 +69,6 @@
 		AAF468C415820E0800EC064F /* Duplicate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Duplicate.cpp; path = src/Duplicate.cpp; sourceTree = "<group>"; };
 		AAF468C515820E0800EC064F /* ExportStrands.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExportStrands.cpp; path = src/ExportStrands.cpp; sourceTree = "<group>"; };
 		AAF468C615820E0800EC064F /* ExtendGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtendGui.cpp; path = src/ExtendGui.cpp; sourceTree = "<group>"; };
-		AAF468C715820E0800EC064F /* ExtendHelix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExtendHelix.cpp; path = src/ExtendHelix.cpp; sourceTree = "<group>"; };
 		AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FindFivePrimeEnds.cpp; path = src/FindFivePrimeEnds.cpp; sourceTree = "<group>"; };
 		AAF468C915820E0800EC064F /* Helix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Helix.cpp; path = src/Helix.cpp; sourceTree = "<group>"; };
 		AAF468CA15820E0800EC064F /* HelixBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelixBase.cpp; path = src/HelixBase.cpp; sourceTree = "<group>"; };
@@ -110,6 +110,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AA2990F3158B865E0077DEFB /* ExtendStrand.cpp */,
 				AAA285CF15823F5A00F30976 /* controller */,
 				AAA285C415823F4000F30976 /* model */,
 				AAF468BD15820E0800EC064F /* ApplySequence.cpp */,
@@ -122,7 +123,6 @@
 				AAF468C415820E0800EC064F /* Duplicate.cpp */,
 				AAF468C515820E0800EC064F /* ExportStrands.cpp */,
 				AAF468C615820E0800EC064F /* ExtendGui.cpp */,
-				AAF468C715820E0800EC064F /* ExtendHelix.cpp */,
 				AAF468C815820E0800EC064F /* FindFivePrimeEnds.cpp */,
 				AAF468C915820E0800EC064F /* Helix.cpp */,
 				AAF468CA15820E0800EC064F /* HelixBase.cpp */,
@@ -259,7 +259,6 @@
 				AAF468DC15820E0800EC064F /* Duplicate.cpp in Sources */,
 				AAF468DD15820E0800EC064F /* ExportStrands.cpp in Sources */,
 				AAF468DE15820E0800EC064F /* ExtendGui.cpp in Sources */,
-				AAF468DF15820E0800EC064F /* ExtendHelix.cpp in Sources */,
 				AAF468E015820E0800EC064F /* FindFivePrimeEnds.cpp in Sources */,
 				AAF468E115820E0800EC064F /* Helix.cpp in Sources */,
 				AAF468E215820E0800EC064F /* HelixBase.cpp in Sources */,
@@ -285,6 +284,7 @@
 				AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */,
 				AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */,
 				AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */,
+				AA2990F4158B865E0077DEFB /* ExtendStrand.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
