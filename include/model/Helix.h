@@ -48,6 +48,13 @@ namespace Helix {
 
 			static MStatus GetRelatives(const MObjectArray & helices, MObjectArray & relatives);
 
+			/*
+			 * Show all helices using the cylinder representation or the base representation
+			 */
+
+			static MStatus ToggleCylinderOrBases();
+			static MStatus RefreshCylinderOrBases();
+
 			DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(Helix)
 
 			/*
@@ -126,7 +133,7 @@ namespace Helix {
 
 		private:
 			bool hasCylinder(MStatus & status);
-			MStatus createCylinder(double origo, double top);
+			MStatus createCylinder(double origo, double height);
 		};
 
 		DEFINE_DEFAULT_INHERITED_OBJECT_INVERSED_ORDER_OPERATORS(Helix);

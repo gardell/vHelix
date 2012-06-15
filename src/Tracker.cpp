@@ -12,6 +12,8 @@
 #include <HelixBase.h>
 #include <Utility.h>
 
+#include <model/Helix.h>
+
 #include <maya/MStatus.h>
 #include <maya/MSyntax.h>
 #include <maya/MArgList.h>
@@ -170,8 +172,8 @@ namespace Helix {
 
 		MObjectArray selectedBase_objects;
 
-		if (!(status = SelectedBases(selectedBase_objects))) {
-			status.perror("SelectedBases");
+		if (!(status = Model::Base::AllSelected(selectedBase_objects))) {
+			status.perror("Helix::AllSelected");
 			return status;
 		}
 

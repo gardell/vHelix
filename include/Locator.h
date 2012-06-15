@@ -29,10 +29,8 @@
 #define PLUGIN_VENDOR "KI?"
 #define PLUGIN_VERSION "0.1 RC 1"
 
-//#define HALO_TEXTURE { 0xFF, 0xFF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 #define HALO_TEXTURE_WIDTH 32
 #define HALO_INNER_DIAMETER 28
-//#define HALO_TEXTURE_FORMAT GL_ALPHA
 
 #define SELECTED_HALO_COLOR { 0xFF, 0, 0, 0x7F }
 #define SELECTED_FIVEPRIME_HALO_COLOR { 0, 0, 0x7F, 0x5F }
@@ -43,7 +41,6 @@
 #define SELECTED_ADJACENT_FIVEPRIME_HALO_COLOR { 0x7F, 0x7F, 0xAF, 0x5F }
 #define SELECTED_ADJACENT_THREEPRIME_HALO_COLOR { 0x7F, 0xAF, 0x7F, 0x5F }
 
-//#define HALO_POLYGON_VERTEX_COUNT 32
 #define HALO_POINT_SIZE "0.0007"
 #define BASE_CONNECTIONS_LINE_WIDTH 2.0f
 
@@ -75,25 +72,22 @@
 namespace Helix {
 	class HelixLocator : public MPxLocatorNode {
 	public:
-		inline HelixLocator() /*: m_gl_initialized(false), m_program(0), m_vertex_shader(0), m_fragment_shader(0)m_texture(0)*, m_polygon(NULL), m_polygon_vertex_count(0)*/ {
+		inline HelixLocator() {
 
 		}
 
 		virtual ~HelixLocator();
 
-		//virtual MStatus compute(const MPlug & plug, MDataBlock & data);
 		virtual void draw(M3dView &view, const MDagPath &path, M3dView::DisplayStyle style, M3dView::DisplayStatus status);
 
 		virtual bool isBounded() const;
-		//virtual MBoundingBox boundingBox() const;
 		virtual bool isTransparent() const;
 
 		static void * creator();
 		static MStatus initialize();
 
 		const static MTypeId id;
-		//static MObject aBases;
-
+		
 	protected:
 		static bool s_gl_initialized, s_gl_failed;
 		static GLint s_program, s_vertex_shader, s_fragment_shader, s_screen_dimensions_uniform;

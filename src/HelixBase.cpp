@@ -42,9 +42,7 @@ namespace Helix {
 
 	// Yes, a global variable here is not multithread aware etc, but (i think) there's no multithreading being done by Maya when nodes are deleted anyway
 	// Since there's no way in Maya to obtain an MPx*-object from a MObject, this is the easiest and fastest way of tracking the connected base
-	/*MObject BaseBeingRemoved;
-	bool BaseDeletionInProgress = false;*/
-
+	
 	struct {
 		MObject base;
 		bool inProgress;
@@ -67,11 +65,6 @@ namespace Helix {
 	}
 
 	void MNode_NodePreRemovalCallbackFunc(MObject & node, void *clientData) {
-		/*BaseBeingRemoved = node;
-		BaseDeletionInProgress = true;*/
-
-		//std::cerr << __FUNCTION__ << std::endl;
-
 		g_BaseDeletion.base = node;
 		g_BaseDeletion.inProgress = true;
 		
@@ -108,12 +101,6 @@ namespace Helix {
 
 			// Don't apply stuff if the node is set for deletion. The reason for this is a bug in Maya, see the callback that sets this parameter for more information
 
-			/*if (BaseBeingRemoved == thisObject) {
-				std::cerr << "ConnectionMade: isAboutToDelete or we're the opposite, canceling.. " << std::endl;
-
-				return MPxTransform::connectionMade(plug, otherPlug, asSrc);
-			}*/
-
 			MStatus status;
 			MFnDagNode this_dagNode(thisObject), target_dagNode(otherPlug.node(&status));
 
@@ -134,21 +121,11 @@ namespace Helix {
 				return status;
 			}
 
-			/*if (!(status = HelixBase_RemoveAllAimConstraints(thisObject))) {
-				status.perror("removeAllAimConstraints");
-				return status;
-			}*/
-
 			// Create aimConstraint
 			//
 
 			// DON'T USE executeCommandOnIdle since it will be executed too late in case of a disconnect followed by a new connect (will mess up everything)
 			// Also, OnIdle's are undoable, which gets VERY weird
-
-			/*if (!(status = MGlobal::executeCommand(MString("aimConstraint -aimVector 0 0 -1.0 ") + target_dagPath.fullPathName().asChar() + " " + this_dagPath.fullPathName().asChar() + ";"))) {
-				status.perror("MGlobal::executeCommandOnIdle");
-				return status;
-			}*/
 
 			g_BaseDeletion.delayedModificationQueue.remove(thisObject);
 			g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
@@ -205,48 +182,22 @@ namespace Helix {
 					return status;
 				}
 
-				/*if (BaseDeletionInProgress) {
-					// We can't do aimConstraints when a deletion is being made and has to postpone it to the callback triggered when the deletion is done
-
-					// FIXME: This call creates an error message if the user has requested the whole helix to be deleted
-					// That can be fixed by defining a new command that does this, and that doesn't execute the aimConstraint if the targets don't exist
-
-					if (!(status = MGlobal::executeCommandOnIdle(MString("aimConstraint -aimVector 1.0 0 0 ") + target_dagNode.fullPathName() + " " + this_dagNode.fullPathName() + ";", false))) {
-						status.perror("MGlobal::executeCommandOnIdle");
-						return status;
-					}
-				}
-				else {
-					// DON'T USE executeCommandOnIdle since it will be executed too late in case of a disconnect followed by a new connect (will mess up everything)
-					if (!(status = MGlobal::executeCommand(MString("aimConstraint -aimVector 1.0 0 0 ") + target_dagNode.fullPathName() + " " + this_dagNode.fullPathName() + ";", false))) {
-						status.perror("MGlobal::executeCommand");
-						return status;
-					}
-				}*/
-
 				g_BaseDeletion.delayedModificationQueue.remove(thisObject);
 				g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
 
 				if (g_BaseDeletion.inProgress) {
-					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND" << std::endl;
-
 					if (!(status = MGlobal::executeCommandOnIdle(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
 						status.perror("MGlobal::executeCommandOnIdle");
 						return status;
 					}
 
-					std::cerr << "RETARGETING BASE AS AN ONIDLE COMMAND DONE" << std::endl;
-
 					g_BaseDeletion.inProgress = false;
 				}
 				else {
-					std::cerr << "RETARGETING BASE IMMEDIATELY" << std::endl;
 					if (!(status = MGlobal::executeCommand(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
 						status.perror("MGlobal::executeCommandOnIdle");
 						return status;
 					}
-
-					std::cerr << "RETARGETING BASE IMMEDIATELY DONE" << std::endl;
 				}
 			}
 		}
@@ -287,41 +238,13 @@ namespace Helix {
 		}
 
 		for (int i = 0; i < DNA::BASES; ++i) {
-			const char label[] = { DNA::ToChar((DNA::Names) i), '\0' };
+			const char label[] = { DNA::Names(i).toChar(), '\0' };
 			labelAttr.addField(label, i);
 		}
-
-		// helix_forward and helix_backward are the bindings when the model was created using createHelix, duplicate or import
-		// it is used by the exporter to find the original helices
-		//
-
-		/*aHelix_Forward = helixForwardAttr.create("helix_forward", "hfw", MFnNumericData::kLong, 0, &stat);
-
-		if (!stat) {
-			stat.perror("MFnNumericAttribute::create for helix forward");
-			return stat;
-		}
-
-		aHelix_Backward = helixBackwardAttr.create("helix_backward", "hbw", MFnNumericData::kLong, 0, &stat);
-
-		if (!stat) {
-			stat.perror("MFnNumericAttribute::create for helix backward");
-			return stat;
-		}*/
-
-		/*aLocator = locatorAttr.create("locator", "loc", MFnNumericData::kLong, 0, &stat);
-
-		if (!stat) {
-			stat.perror("MFnNumericAttribute::create for locator");
-			return stat;
-		}*/
 
 		addAttribute(aForward);
 		addAttribute(aBackward);
 		addAttribute(aLabel);
-		//addAttribute(aHelix_Forward);
-		//addAttribute(aHelix_Backward);
-
 		return MStatus::kSuccess;
 	}
 }

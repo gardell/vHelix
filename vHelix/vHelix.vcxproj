@@ -148,9 +148,12 @@
     <ClInclude Include="..\include\ApplySequence.h" />
     <ClInclude Include="..\include\ApplySequenceGui.h" />
     <ClInclude Include="..\include\Connect.h" />
+    <ClInclude Include="..\include\controller\ApplySequence.h" />
     <ClInclude Include="..\include\controller\Connect.h" />
     <ClInclude Include="..\include\controller\Disconnect.h" />
     <ClInclude Include="..\include\controller\Duplicate.h" />
+    <ClInclude Include="..\include\controller\ExportStrands.h" />
+    <ClInclude Include="..\include\controller\ExtendStrand.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
     <ClInclude Include="..\include\Creator.h" />
@@ -161,7 +164,7 @@
     <ClInclude Include="..\include\Duplicate.h" />
     <ClInclude Include="..\include\ExportStrands.h" />
     <ClInclude Include="..\include\ExtendGui.h" />
-    <ClInclude Include="..\include\ExtendHelix.h" />
+    <ClInclude Include="..\include\ExtendStrand.h" />
     <ClInclude Include="..\include\FindFivePrimeEnds.h" />
     <ClInclude Include="..\include\Helix.h" />
     <ClInclude Include="..\include\HelixBase.h" />
@@ -185,9 +188,12 @@
     <ClCompile Include="..\src\ApplySequence.cpp" />
     <ClCompile Include="..\src\ApplySequenceGui.cpp" />
     <ClCompile Include="..\src\Connect.cpp" />
+    <ClCompile Include="..\src\controller\ApplySequenceController.cpp" />
     <ClCompile Include="..\src\controller\ConnectController.cpp" />
     <ClCompile Include="..\src\controller\DisconnectController.cpp" />
     <ClCompile Include="..\src\controller\DuplicateController.cpp" />
+    <ClCompile Include="..\src\controller\ExportStrandsController.cpp" />
+    <ClCompile Include="..\src\controller\ExtendStrandController.cpp" />
     <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />
@@ -196,7 +202,7 @@
     <ClCompile Include="..\src\Duplicate.cpp" />
     <ClCompile Include="..\src\ExportStrands.cpp" />
     <ClCompile Include="..\src\ExtendGui.cpp" />
-    <ClCompile Include="..\src\ExtendHelix.cpp" />
+    <ClCompile Include="..\src\ExtendStrand.cpp" />
     <ClCompile Include="..\src\FindFivePrimeEnds.cpp" />
     <ClCompile Include="..\src\Helix.cpp" />
     <ClCompile Include="..\src\HelixBase.cpp" />

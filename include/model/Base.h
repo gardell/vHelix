@@ -85,6 +85,12 @@ namespace Helix {
 			Base opposite();
 
 			bool opposite_isDestination(MStatus & status);
+
+			/*
+			 * Helix
+			 */
+
+			Helix getParent(MStatus & status);
 		};
 	}
 }

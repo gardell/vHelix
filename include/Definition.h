@@ -17,6 +17,6 @@
 #endif
 
 #define _CRT_SECURE_NO_WARNINGS /* Visual Studios annoying warnings */
-
+#define _SCL_SECURE_NO_WARNINGS
 
 #endif /* DEFINITION_H_ */

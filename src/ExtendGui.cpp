@@ -10,6 +10,8 @@
 
 #include <maya/MGlobal.h>
 
+#include <ExtendStrand.h>
+
 namespace Helix {
 	ExtendGui::ExtendGui() {
 
@@ -24,7 +26,7 @@ namespace Helix {
 
 		return MGlobal::executeCommandOnIdle(MString(
 				"string $text;\n"
-				"string $result = `promptDialog -title \"Extend bases...\" -message \"Enter the number of bases to generate:\" -button \"OK\" -button \"Cancel\" -defaultButton \"OK\" -cancelButton \"Cancel\" -dismissString \"Cancel\" -style \"integer\" -text ") + DNA::CREATE_DEFAULT_NUM_BASES + "`;\n"
+				"string $result = `promptDialog -title \"Extend bases...\" -message \"Enter the number of bases to generate:\" -button \"OK\" -button \"Cancel\" -defaultButton \"OK\" -cancelButton \"Cancel\" -dismissString \"Cancel\" -style \"integer\" -text ") + (double) ExtendStrand::default_length + "`;\n"
 				"if ($result == \"OK\") {\n"
 				"int $bases = `promptDialog -query -text`;\n"
 				"extendHelix -base $bases;\n"

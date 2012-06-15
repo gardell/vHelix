@@ -23,7 +23,7 @@
 #include <PaintStrand.h>
 #include <ApplySequence.h>
 #include <ApplySequenceGui.h>
-#include <ExtendHelix.h>
+#include <ExtendStrand.h>
 #include <ExtendGui.h>
 #include <ToggleCylinderBaseView.h>
 #include <ToggleLocatorRender.h>
@@ -46,8 +46,6 @@
 #include <ctime>
 
 #define REGISTER_OPERATIONS	\
-	/*new RegisterCommand(MEL_ONSELECTIONCHANGED_COMMAND_NATIVE, Helix::HelixTracker::creator, NULL),*/													\
-	/*new RegisterCommand(MEL_JSONIMPORT_COMMAND, Helix::JSONImport::creator, Helix::JSONImport::newSyntax),*/											\
 	new RegisterCommand(MEL_CREATEHELIX_COMMAND, Helix::Creator::creator, Helix::Creator::newSyntax),													\
 	new RegisterCommand(MEL_CREATEHELIX_GUI_COMMAND, Helix::CreatorGui::creator),																		\
 	new RegisterCommand(MEL_CONNECTBASES_COMMAND, Helix::Connect::creator, Helix::Connect::newSyntax),													\
@@ -57,8 +55,8 @@
 	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),											\
 	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),										\
 	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator),																\
-	new RegisterCommand(MEL_EXTENDHELIX_COMMAND, Helix::ExtendHelix::creator, Helix::ExtendHelix::newSyntax),											\
-	new RegisterCommand(MEL_EXTENDHELIX_GUI_COMMAND, Helix::ExtendGui::creator),																		\
+	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),											\
+	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator),																		\
 	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),			\
 	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),					\
 	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),										\
@@ -80,11 +78,6 @@
 #define MLL_EXPORT
 #endif /* WIN32 */
 
-// MOVE THESE
-//#define MEL_CREATEHELIX_GUI_COMMAND MEL_CREATEHELIX_COMMAND "_gui"
-//#define MEL_APPLYSEQUENCE_GUI_COMMAND MEL_APPLYSEQUENCE_COMMAND "_gui"
-//#define MEL_EXTENDHELIX_GUI_COMMAND MEL_EXTENDHELIX_COMMAND "_gui"
-
 /*
  * There's a bug in the halo rendering on Mac OS X right now
  */
@@ -100,7 +93,7 @@
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Connect bases", "Connect the two selected bases", MEL_CONNECTBASES_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'c' },	\
 {	"Disconnect bases", "Disconnect the selected base", MEL_DISCONNECTBASE_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'v' },	\
-{	"Extend strand", "Extend the selected strands", MEL_EXTENDHELIX_GUI_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
+{	"Extend strand", "Extend the selected strands", MEL_EXTENDSTRAND_GUI_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Find 5' ends", "Find all 5' ends on selected strands", MEL_FINDFIVEPRIMEENDS_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"Paint strand", "Paint the strand of the currently selected base with a random color", MEL_PAINTSTRAND_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'p' },	\
@@ -352,11 +345,6 @@ MLL_EXPORT MStatus initializePlugin(MObject obj) {
 		MProgressWindow::advanceProgress(1);
 	}
 
-	/*if (!(status = Helix::HelixTracker::registerOnSelectionChangedListener())) {
-		status.perror("registerOnSelectionChangedListener");
-		return status;
-	}*/
-
 	// Create the menus
 	//
 
@@ -438,12 +426,7 @@ MLL_EXPORT MStatus uninitializePlugin(MObject obj)
         MStatus status;
         MFnPlugin plugin(obj);
 
-		/*if (!(status = Helix::HelixTracker::deregisterOnSelectionChangedListener())) {
-			status.perror("HelixTracker::deregisterOnSelectionChangedListener");
-			return status;
-		}*/
-
-        static Register *register_operations[] = { REGISTER_OPERATIONS, new NullRegister() };
+		static Register *register_operations[] = { REGISTER_OPERATIONS, new NullRegister() };
 
 		for(size_t i = 0; register_operations[i]->isValid(); ++i) {
 			if (!(status = register_operations[i]->doDeregister(plugin)))

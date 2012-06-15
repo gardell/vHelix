@@ -18,7 +18,7 @@
 
 #include <maya/MPxCommand.h>
 
-#define MEL_EXTENDHELIX_GUI_COMMAND "extendHelix_gui"
+#define MEL_EXTENDSTRAND_GUI_COMMAND "extendStrand_gui"
 
 namespace Helix {
 	class ExtendGui : public MPxCommand {

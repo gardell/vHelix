@@ -17,6 +17,7 @@
 #include <HelixBase.h>
 #include <Locator.h>
 #include <Utility.h>
+#include <ToggleCylinderBaseView.h>
 
 #include <algorithm>
 
@@ -249,37 +250,52 @@ namespace Helix {
 
 		MStatus Helix::setCylinderRange(double origo, double height) {
 			MStatus status;
-			MDagPath helix = getDagPath(status), cylinder, topCap, bottomCap;
+			MDagPath helix = getDagPath(status), cylinder;//, topCap, bottomCap;
+
+			std::cerr << "setCylinderRange: origo = " << origo << ", height = " << height << std::endl;
 
 			if (!status) {
 				status.perror("Helix::getDagPath");
 				return status;
 			}
 
+			std::cerr << __FUNCTION__ << ": getCylinder: " << std::endl;
+
 			if (!(status = Helix_getCylinder(helix, cylinder))) {
+				if (status == MStatus::kNotFound)
+					return createCylinder(origo, height);
+
 				status.perror("Helix_getCylinder");
 				return status;
 			}
+
+			std::cerr << __FUNCTION__ << ": setZTranslationOnDagPath " << std::endl;
 
 			if (!(status = SetZTranslationOnDagPath(cylinder, origo))) {
 				status.perror("SetZTranslationOnDagPath on cylinder");
 				return status;
 			}
 
-			if (!(status = Helix_getCylinderCaps(cylinder, topCap, bottomCap))) {
+			std::cerr << __FUNCTION__ << ": getCylinderCaps: " << std::endl;
+
+			/*if (!(status = Helix_getCylinderCaps(cylinder, topCap, bottomCap))) {
 				status.perror("Helix_getCylinderCaps");
 				return status;
 			}
+
+			std::cerr << __FUNCTION__ << ": SetZTranslationOnDagPath bottom cap: " << std::endl;
 
 			if (!(SetZTranslationOnDagPath(bottomCap, origo))) {
 				status.perror("SetZTranslationOnDagPath on bottom cap");
 				return status;
 			}
 
+			std::cerr << __FUNCTION__ << ": SetZTranslationOnDagPath top cap: " << std::endl;
+
 			if (!(SetZTranslationOnDagPath(topCap, origo + height))) {
 				status.perror("SetZTranslationOnDagPath on top cap");
 				return status;
-			}
+			}*/
 
 
 			/*
@@ -287,6 +303,8 @@ namespace Helix {
 			 */
 
 			MObject makeNurbCylinder;
+
+			std::cerr << __FUNCTION__ << ": getMakeNurbCylinder: " << std::endl;
 
 			if (!(status = Helix_getMakeNurbCylinder(cylinder, makeNurbCylinder))) {
 				status.perror("Helix_getMakeNurbCylinder");
@@ -299,12 +317,16 @@ namespace Helix {
 
 			MFnDependencyNode makeNurbCylinder_dependencyNode(makeNurbCylinder);
 
+			std::cerr << __FUNCTION__ << ": heightRatio attribute: " << std::endl;
+
 			MObject heightRatioAttribute = makeNurbCylinder_dependencyNode.attribute("heightRatio", &status);
 
 			if (!status) {
 				status.perror("MFnDependencyNode::attribute 1");
 				return status;
 			}
+
+			std::cerr << __FUNCTION__ << ": radius: " << std::endl;
 
 			MObject radiusAttribute = makeNurbCylinder_dependencyNode.attribute("radius", &status);
 
@@ -316,6 +338,8 @@ namespace Helix {
 			MPlug heightRatioPlug(makeNurbCylinder, heightRatioAttribute), radiusPlug(makeNurbCylinder, radiusAttribute);
 			double radius;
 
+			std::cerr << __FUNCTION__ << ": get radius: " << std::endl;
+
 			if (!(status = radiusPlug.getValue(radius))) {
 				status.perror("MPlug::getValue");
 				return status;
@@ -325,10 +349,14 @@ namespace Helix {
 			 * Ok update the heightRatio
 			 */
 
+			std::cerr << __FUNCTION__ << ": set heightRatio: " << std::endl;
+
 			if (!(status = heightRatioPlug.setValue(height / radius))) {
 				status.perror("MPlug::setValue");
 				return status;
 			}
+
+			std::cerr << __FUNCTION__ << ": done: " << std::endl;
 
 			// FIXME: Update the translations of the bottom and top cap
 
@@ -431,6 +459,14 @@ namespace Helix {
 
 			status = Helix_getCylinder(thisDagPath, cylinder);
 
+			if (status == MStatus::kNotFound)
+				return false;
+
+			if (!status) {
+				status.perror("Helix_getCylinder");
+				return false;
+			}
+
 			bool isValid = cylinder.isValid(&status);
 
 			if (!status) {
@@ -441,11 +477,8 @@ namespace Helix {
 			return isValid;
 		}
 
-		MStatus Helix::createCylinder(double origo, double top) {
+		MStatus Helix::createCylinder(double origo, double height) {
 			MStatus status;
-
-			if (hasCylinder(status))
-				return setCylinderRange(origo, top);
 
 			/*
 			 * This is still easiest to do using MEL for a lot of reasons
@@ -459,10 +492,12 @@ namespace Helix {
 			}
 
 			if (!(status = MGlobal::executeCommand(
-					MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -heightRatio " + ((top - origo) / DNA::RADIUS) + (" -name \"" CYLINDERREPRESENTATION_NAME "\" -axis 0.0 0.0 1.0`;\n"
+					MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -heightRatio " + (height / DNA::RADIUS) + (" -name \"" CYLINDERREPRESENTATION_NAME "\" -axis 0.0 0.0 1.0`;\n"
 					"$topCap = `planarSrf -name \"" CYLINDERREPRESENTATION_NAME "_topCap\" -ch false ($cylinder[0] + \".u[0]\")`;\n"
-					"$bottomCap = `planarSrf -name \"" CYLINDERREPRESENTATION_NAME "_bottomCap\" -ch false ($cylinder[0] + \".u[") + (top - origo) + ("]\")`;\n"
+					"$bottomCap = `planarSrf -name \"" CYLINDERREPRESENTATION_NAME "_bottomCap\" -ch false ($cylinder[0] + \".u[") + height + ("]\")`;\n"
 					"parent -relative $topCap[0] $bottomCap[0] $cylinder[0];\n"
+					"setAttr ($cylinder[0] + \".overrideEnabled\") 1;"
+					"setAttr ($cylinder[0] + \".overrideDisplayType\") 2;"
 					"$parented_cylinder = `parent -relative $cylinder[0] ") + helix_dagPath.fullPathName() + ("`;\n"
 					"move -relative 0.0 0.0 ") + origo + "$parented_cylinder[0]\n"
 					))) {
@@ -698,6 +733,28 @@ namespace Helix {
 			}
 
 			return Helix_Relatives(thisObject, helices);
+		}
+
+		MStatus Helix::ToggleCylinderOrBases() {
+			MStatus status;
+
+			if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -toggle true"))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			return status;
+		}
+
+		MStatus Helix::RefreshCylinderOrBases() {
+			MStatus status;
+
+			if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			return status;
 		}
 	}
 }

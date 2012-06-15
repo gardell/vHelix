@@ -128,10 +128,19 @@ namespace Helix {
 				last_base_objects[j] = base_objects[j];
 		}
 
-		if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"))) {
-			status.perror("MGlobal::executeCommand");
-			return status;
-		}
+		/*
+		 * Setup cylinder
+		 */
+
+		if (!(status = m_helix.setCylinderRange(0.0, DNA::STEP * (bases - 1))))
+			status.perror("Helix::setCylinderRange");
+
+		/*
+		 * Refresh cylinder/base view
+		 */
+
+		if (!(status = Model::Helix::RefreshCylinderOrBases()))
+			status.perror("Helix::RefreshCylinderOrBases");
 
 		MProgressWindow::endProgress();
 

@@ -32,7 +32,6 @@ namespace Helix {
 		virtual bool isUndoable () const;
 		virtual bool hasSyntax () const;
 
-		//static MSyntax newSyntax ();
 		static void *creator();
 	};
 }

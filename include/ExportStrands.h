@@ -19,6 +19,8 @@
 
 #include <maya/MPxCommand.h>
 
+#include <controller/ExportStrands.h>
+
 #define MEL_EXPORTSTRANDS_COMMAND "exportStrands"
 
 namespace Helix {
@@ -35,6 +37,12 @@ namespace Helix {
 
 		static MSyntax newSyntax ();
 		static void *creator();
+
+	private:
+		class ExportStrandsWithProgressBar : public Controller::ExportStrands {
+		public:
+			void onProgressStep();
+		} m_operation;
 	};
 }
 

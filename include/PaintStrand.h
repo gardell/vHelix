@@ -39,21 +39,8 @@ namespace Helix {
 		static MSyntax newSyntax ();
 		static void *creator();
 
-		// Direct interface, used by other methods and implements the undo/redo ability
-
-		//MStatus paintStrands(MDagPathArray & dagPathArray);
-
 	private:
-		// The NEW STL-oriented interface requires less data to be saved
 		Controller::PaintMultipleStrandsWithNewColorFunctor m_functor;
-
-		// Just paint the bases given and put their old color in m_previousPaint
-		/*MStatus paintBases(MDagPathArray & dagPathArray);
-
-		//std::vector<std::pair<MDagPath, MString> > m_previousPaint; // Used for undo/redo
-		MDagPathArray m_previousPaintedDagNodes;
-		MStringArray m_paintedColors[2];
-		int m_currentPaintedColors;*/
 	};
 }
 

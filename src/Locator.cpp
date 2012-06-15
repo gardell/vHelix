@@ -11,6 +11,7 @@
 #include <Utility.h>
 #include <DNA.h>
 #include <ToggleLocatorRender.h>
+#include <ToggleCylinderBaseView.h>
 
 #include <maya/MGlobal.h>
 #include <maya/MSelectionList.h>
@@ -20,6 +21,8 @@
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MPlugArray.h>
 #include <maya/MFnCamera.h>
+
+#include <model/Helix.h>
 
 // I include the OpenGL headers directly for OpenGL 2.0, even though Maya has it's own definition of OpenGL calls
 
@@ -426,14 +429,14 @@ namespace Helix {
 			}
 
 			if (labelPlug.isDestination(&status))
-				label = DNA::OppositeBase(label);
+				label = label.opposite();
 
 			if (!status) {
 				status.perror("MPlug::isDestination");
 				return status;
 			}
 
-			sequence[vertex_index++] = DNA::ToChar(label);
+			sequence[vertex_index++] = label.toChar();
 
 			MDagPath opposite;
 			if (HelixBase_NextBase(object, HelixBase::aLabel, opposite, &status)) {
@@ -524,7 +527,7 @@ namespace Helix {
 		MDagPathArray neighbourBases, fivePrimeBases, threePrimeBases, selectedChildBases;
 
 		if (!(stat = SelectedStrands(selectedNeighbourBases, selectedBases))) {
-			stat.perror("SelectedBases");
+			stat.perror("SelectedStrands");
 			return;
 		}
 
@@ -739,6 +742,28 @@ namespace Helix {
 					2, 3, 4
 			};
 
+			bool renderingCylinder = false;
+
+			if (ToggleCylinderBaseView::CurrentView == 1) {
+				/*
+				 * We're currently rendering cylinders, 
+				 * move the arrow outside the cylinder instead of just rendering it at origo
+				 */
+
+				double cylinder_origo, cylinder_height;
+
+				if (!(stat = Model::Helix(parent_dagNode.object()).getCylinderRange(cylinder_origo, cylinder_height))) {
+					stat.perror("Model::Helix::getCylinderRange");
+				}
+				else {
+					glPushMatrix();
+					glTranslatef(0.0f, 0.0f, (GLfloat) cylinder_height / 2.0f + 0.3f + (GLfloat) cylinder_origo);
+					glScalef(1.0f, 1.0f, 0.4f);
+
+					renderingCylinder = true;
+				}
+			}
+
 			glShadeModel(GL_SMOOTH);
 
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, direction_arrow_colors);
@@ -758,13 +783,17 @@ namespace Helix {
 			glColor3b(0, 0, 0);*/
 
 			glDrawArrays(GL_LINE_LOOP, 0, 7);
+
+			if (renderingCylinder)
+				glPopMatrix();
 		}
 
 		glPopClientAttrib();
-		glPopAttrib();
-
+		
 		// Now render labels
 		//
+
+		glColor3ub(255, 255, 255);
 
 		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderSequence) {
 			for(size_t i = 0; i < vertex_index; ++i) {
@@ -774,6 +803,8 @@ namespace Helix {
 				}
 			}
 		}
+
+		glPopAttrib();
 
 		view.endGL();
 

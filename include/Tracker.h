@@ -26,75 +26,72 @@ for($obj in $neighbourBases) {
     print ($obj + "\n");
 }*/
 
-#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND		 \
-		/*"string $neighbourBases[];\n"*/		\
-		/*"clear($neighbourBases);\n"*/		\
-		"// Because our search is recursive\n"		\
+#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND																					\
+		"// Because our search is recursive\n"																					\
 		"proc appendNeighbours_Helix(string $base, string $starting_base, int $recursive, string $direction, string $neighbourBases[], string $ends[], string $adjacent[]) {\n"		\
-		"    // FIXME: If $base equals $starting_base we need to STOP, or a infinite loop will occur on circular strands!\n"		\
-		"    // Note, we cant just == because names can be relative, absolute etc\n"		\
-		/*"    global string $neighbourBases[];\n"*/		\
-		"    if ($base == $starting_base && $recursive > 0) {\n"		\
-		"        print \"breaking\\n\";\n"		\
-		"        return;\n"		\
-		"    }\n"		\
-		"    print (\"appending base: \" + $base + \"\\n\");\n"		\
-		"    $neighbourBases[size($neighbourBases)] = $base;\n"		\
-		"	 $adjacents_local = `listConnections ($base + \".label\")`;\n"	\
-		"	 $adjacents = `ls -l $adjacents_local`;\n"	\
-		"	 for($obj in $adjacents) {\n"	\
-		"		$adjacent[size($adjacent)] = $obj;\n"	\
-		"	 }\n"	\
-		"    string $connections[];\n"		\
-		"    $connections_local = `listConnections -s true -d false -type HelixBase ($base + $direction)`;\n"		\
-		"	 if (size($connections_local) == 0) {\n"	\
-		"		$ends[size($ends)] = $base;\n"	\
-		"	 }\n"	\
-		"	 else {\n"	\
-		"    	$connections = `ls -l $connections_local`;\n"		\
-		"    	for ($connection in $connections) {\n"		\
-		"        print (\"rec call on \" + $connection + \", \" + $recursive + \"\\n\");\n"		\
+		"    // FIXME: If $base equals $starting_base we need to STOP, or a infinite loop will occur on circular strands!\n"	\
+		"    // Note, we cant just == because names can be relative, absolute etc\n"											\
+		"    if ($base == $starting_base && $recursive > 0) {\n"																\
+		"        print \"breaking\\n\";\n"																						\
+		"        return;\n"																										\
+		"    }\n"																												\
+		"    print (\"appending base: \" + $base + \"\\n\");\n"																	\
+		"    $neighbourBases[size($neighbourBases)] = $base;\n"																	\
+		"	 $adjacents_local = `listConnections ($base + \".label\")`;\n"														\
+		"	 $adjacents = `ls -l $adjacents_local`;\n"																			\
+		"	 for($obj in $adjacents) {\n"																						\
+		"		$adjacent[size($adjacent)] = $obj;\n"																			\
+		"	 }\n"																												\
+		"    string $connections[];\n"																							\
+		"    $connections_local = `listConnections -s true -d false -type HelixBase ($base + $direction)`;\n"					\
+		"	 if (size($connections_local) == 0) {\n"																			\
+		"		$ends[size($ends)] = $base;\n"																					\
+		"	 }\n"																												\
+		"	 else {\n"																											\
+		"    	$connections = `ls -l $connections_local`;\n"																	\
+		"    	for ($connection in $connections) {\n"																			\
+		"        print (\"rec call on \" + $connection + \", \" + $recursive + \"\\n\");\n"										\
 		"        appendNeighbours_Helix($connection, $starting_base, 1, $direction, $neighbourBases, $ends, $adjacent);\n"		\
-		"    	}\n"		\
-		"    }\n"		\
-		"}\n"		\
-		"proc generateSelectedAndNeighbourHelixLists() {\n"	\
-		"	string $neighbourBases[];\n"		\
-		"	string $fivePrimes[];\n"		\
-		"	string $threePrimes[];\n"		\
-		"	string $adjacent[];\n"		\
-		"	$selectedBases = `ls -selection -type HelixBase -l`;\n"		\
-		"	for ($obj in $selectedBases) {\n"		\
-		"	    //string $forwardConnected;\n"		\
-		"	    //$forwardConnected = `connectionInfo -sourceFromDestination ($obj + \".forward\")`;\n"		\
-		"	    //print $forwardConnected;\n"		\
-		"	    string $connections[];\n"		\
-		"	    $connections_local = `listConnections -s true -d false -type HelixBase ($obj + \".forward\")`;\n"		\
-		"	    $connections = `ls -l $connections_local`;\n"		\
-		"	    for ($connection in $connections) {\n"		\
-		"	        print (\"first level\" + $connection + \"\\n\");\n"		\
-		"	        appendNeighbours_Helix($connection, $connection, 0, \".forward\", $neighbourBases, $fivePrimes, $adjacent);\n"		\
-		"	    }\n"		\
-		"	    $connections_local = `listConnections -s true -d false-type HelixBase ($obj + \".backward\")`;\n"		\
-		"	    $connections = `ls -l $connections_local`;\n"		\
-		"	    for ($connection in $connections) {\n"		\
+		"    	}\n"																											\
+		"    }\n"																												\
+		"}\n"																													\
+		"proc generateSelectedAndNeighbourHelixLists() {\n"																		\
+		"	string $neighbourBases[];\n"																						\
+		"	string $fivePrimes[];\n"																							\
+		"	string $threePrimes[];\n"																							\
+		"	string $adjacent[];\n"																								\
+		"	$selectedBases = `ls -selection -type HelixBase -l`;\n"																\
+		"	for ($obj in $selectedBases) {\n"																					\
+		"	    //string $forwardConnected;\n"																					\
+		"	    //$forwardConnected = `connectionInfo -sourceFromDestination ($obj + \".forward\")`;\n"							\
+		"	    //print $forwardConnected;\n"																					\
+		"	    string $connections[];\n"																						\
+		"	    $connections_local = `listConnections -s true -d false -type HelixBase ($obj + \".forward\")`;\n"				\
+		"	    $connections = `ls -l $connections_local`;\n"																	\
+		"	    for ($connection in $connections) {\n"																			\
+		"	        print (\"first level\" + $connection + \"\\n\");\n"															\
+		"	        appendNeighbours_Helix($connection, $connection, 0, \".forward\", $neighbourBases, $fivePrimes, $adjacent);\n"			\
+		"	    }\n"																											\
+		"	    $connections_local = `listConnections -s true -d false-type HelixBase ($obj + \".backward\")`;\n"				\
+		"	    $connections = `ls -l $connections_local`;\n"																	\
+		"	    for ($connection in $connections) {\n"																			\
 		"	        appendNeighbours_Helix($connection, $connection, 0, \".backward\", $neighbourBases, $threePrimes, $adjacent);\n"		\
-		"	    }\n"		\
-		"	}\n"		\
-		"	" MEL_ONSELECTIONCHANGED_CACHE_COMMAND " $selectedBases $neighbourBases $fivePrimes $threePrimes $adjacent;\n"	\
-		"}\n"	\
-		"createNode HelixLocator;\n"	\
+		"	    }\n"																											\
+		"	}\n"																												\
+		"	" MEL_ONSELECTIONCHANGED_CACHE_COMMAND " $selectedBases $neighbourBases $fivePrimes $threePrimes $adjacent;\n"		\
+		"}\n"																													\
+		"createNode HelixLocator;\n"																							\
 		"scriptJob -e  \"SelectionChanged\" \"generateSelectedAndNeighbourHelixLists();\" -permanent"
 
 // New native command, let this one replace the old one!
 
 #define MEL_ONSELECTIONCHANGED_COMMAND_NATIVE	"GenerateHelixLocatorCache"
 
-#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND_NATIVE	\
-		"$helixLocatorNode = `createNode HelixLocator`;\n"	\
+#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND_NATIVE																			\
+		"$helixLocatorNode = `createNode HelixLocator`;\n"																		\
 		"int $helixTracker_scriptJob = `scriptJob -e  \"SelectionChanged\" \"" MEL_ONSELECTIONCHANGED_COMMAND_NATIVE "\"`;"
-#define MEL_DEREGISTER_ONSELECTIONCHANGED_COMMAND_NATIVE	\
-		"scriptJob -kill $helixTracker_scriptJob;\n"		\
+#define MEL_DEREGISTER_ONSELECTIONCHANGED_COMMAND_NATIVE																		\
+		"scriptJob -kill $helixTracker_scriptJob;\n"																			\
 		"delete $helixLocatorNode;"
 
 /*
@@ -117,11 +114,9 @@ namespace Helix {
 		virtual MStatus redoIt ();
 		virtual bool isUndoable () const;
 		virtual bool hasSyntax () const;
-		//MSyntax syntax () const;
-
+		
 		static void *creator();
-		//static MSyntax cmdSyntax();
-
+		
 		// This is the "database" of currently activated helix bases. Will be cleared on every doIt, and filled with the given arguments
 
 		static MDagPathArray s_selectedBases, s_selectedNeighbourBases, s_selectedAdjacentBases, s_selectedFivePrimeBases, s_selectedThreePrimeBases;

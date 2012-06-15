@@ -46,10 +46,6 @@ namespace Helix {
 			void onProgressStep();
 			void onProgressDone();
 		} m_operation;
-
-		/*MStatus duplicate(const MObjectArray & targets);
-
-		MObjectArray m_duplicated_helices, m_target_helices; // First is for undo, second for redo*/
 	};
 }
 

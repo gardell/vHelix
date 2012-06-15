@@ -175,6 +175,17 @@ namespace Helix {
 				m_base = base;
 			}
 
+			bool contains_base(Base & base, MStatus & status);
+
+			/*
+			 * Comparison operator for std::find_if
+			 */
+
+			inline static bool Contains_base(Strand strand, Base base) {
+				MStatus status;
+				return strand.contains_base(base, status);
+			}
+
 		protected:
 			Base m_base; // The base defining the strand
 		};

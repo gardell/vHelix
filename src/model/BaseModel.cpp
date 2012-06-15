@@ -14,6 +14,7 @@
 #include <maya/MDGModifier.h>
 #include <maya/MCommandResult.h>
 
+#include <Helix.h>
 #include <HelixBase.h>
 #include <Utility.h>
 
@@ -471,7 +472,7 @@ namespace Helix {
 
 				MPlug oppositeBaseLabelPlug(oppositeBaseObject, ::Helix::HelixBase::aLabel);
 
-				if (!(status = oppositeBaseLabelPlug.setInt((int) DNA::OppositeBase(label)))) {
+				if (!(status = oppositeBaseLabelPlug.setInt((int) label.opposite()))) {
 					status.perror("MPlug::setInt opposite");
 					return status;
 				}
@@ -497,10 +498,28 @@ namespace Helix {
 
 			MPlug labelPlug(thisObject, ::Helix::HelixBase::aLabel);
 
+			/*
+			 * Get the value from the attribute
+			 */
+
 			if (!(status = labelPlug.getValue((int &) label))) {
 				status.perror("MPlug::getValue");
 				return status;
 			}
+
+			/*
+			 * Figure out if we are the destination on the connection, if we are, we need to inverse the value
+			 */
+
+			bool isDestination = labelPlug.isDestination(&status);
+
+			if (!status) {
+				status.perror("MPlug::getValue");
+				return status;
+			}
+
+			if (isDestination)
+				label = label.opposite();
 
 			return MStatus::kSuccess;
 		}
@@ -622,6 +641,47 @@ namespace Helix {
 			MPlug plug(thisObject, ::Helix::HelixBase::aLabel);
 
 			return plug.isDestination(&status);
+		}
+
+		Helix Base::getParent(MStatus & status) {
+			MObject thisObject = getObject(status);
+
+			if (!status) {
+				status.perror("Base::getObject");
+				return Helix();
+			}
+
+			MFnDagNode this_dagNode(thisObject);
+			unsigned int numParents = this_dagNode.parentCount(&status);
+
+			if (!status) {
+				status.perror("MFnDagNode::parentCount");
+				return Helix();
+			}
+
+			for(unsigned int i = 0; i < numParents; ++i) {
+				MObject parent = this_dagNode.parent(i, &status);
+
+				if (!status) {
+					status.perror("MFnDagNode::parent");
+					return Helix();
+				}
+
+				MFnDagNode parent_dagNode(parent);
+
+				if (parent_dagNode.typeId(&status) == ::Helix::Helix::id) {
+					status = MStatus::kSuccess;
+					return Helix(parent);
+				}
+
+				if (!status) {
+					status.perror("MFnDagNode::typeId");
+					return Helix();
+				}
+			}
+
+			status = MStatus::kNotFound;
+			return Helix();
 		}
 	}
 }

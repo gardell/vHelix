@@ -9,6 +9,8 @@
 #include <HelixBase.h>
 #include <Utility.h>
 
+#include <model/Helix.h>
+
 #include <maya/MSyntax.h>
 #include <maya/MSelectionList.h>
 #include <maya/MGlobal.h>
@@ -75,8 +77,8 @@ namespace Helix {
 		if (missingObjects_count > 0) {
 			MObjectArray selectedObjects;
 
-			if (!(status = SelectedBases(selectedObjects))) {
-				status.perror("SelectedBases");
+			if (!(status = Model::Base::AllSelected(selectedObjects))) {
+				status.perror("Helix::AllSelected");
 				return status;
 			}
 

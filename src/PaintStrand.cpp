@@ -19,6 +19,7 @@
 #include <maya/MFnDagNode.h>
 #include <maya/MGlobal.h>
 
+#include <model/Helix.h>
 #include <model/Strand.h>
 #include <model/Base.h>
 
@@ -73,7 +74,7 @@ namespace Helix {
 			//
 
 			MObjectArray selectedBases;
-			if (!(status = SelectedBases(selectedBases))) {
+			if (!(status = Model::Base::AllSelected(selectedBases))) {
 				status.perror("SelectedHelices");
 				return status;
 			}
@@ -110,10 +111,6 @@ namespace Helix {
 		}
 
 		for_each_ref(targets.begin(), targets.end(), m_functor);
-
-		/*for(std::list<Model::Strand>::iterator it = targets.begin(); it != targets.end(); ++it) {
-			m_functor(*it);
-		}*/
 
 		return m_functor.status();
 	}

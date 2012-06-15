@@ -10,6 +10,8 @@
 #include <HelixBase.h>
 #include <DNA.h>
 
+#include <model/Helix.h>
+
 #include <maya/MSyntax.h>
 #include <maya/MItDag.h>
 #include <maya/MDagPath.h>
@@ -20,8 +22,11 @@
 #include <maya/MGlobal.h>
 #include <maya/MFnDagNode.h>
 #include <maya/MCommandResult.h>
+#include <maya/MProgressWindow.h>
 
 #include <list>
+#include <functional>
+#include <algorithm>
 #include <cstdio>
 
 namespace Helix {
@@ -32,72 +37,6 @@ namespace Helix {
 	ExportStrands::~ExportStrands() {
 
 	}
-
-	// Helper class, defines a strand
-
-	class Strand {
-	public:
-		Strand() {
-
-		}
-
-		// This is the faster way to determine, because a base can only belong to one strand anyway
-
-		bool contains(const MObject & base, MStatus *retStatus = NULL) const {
-			for(unsigned int i = 0; i < m_bases.length(); ++i) {
-				if (m_bases[i].node(retStatus) == base)
-					return true;
-			}
-
-			return false;
-		}
-
-		// Don't use if you don't really need it, it is SLOW
-		//
-
-		bool operator==(const Strand & strand) const {
-			// We can't use the MDagPathArray's == operator, because the ordering might be different
-
-			if (m_bases.length() != strand.m_bases.length())
-				return false;
-
-
-
-			for(unsigned int i = 0; i < m_bases.length(); ++i) {
-				bool contains = false;
-
-				for(unsigned int j = 0; j < m_bases.length(); ++j) {
-					if (m_bases[i].node() == strand.m_bases[j].node()) {
-						contains = true;
-						break;
-					}
-				}
-
-				if (!contains)
-					return false;
-			}
-
-			return true;
-		}
-
-		// FIXME: Add some naming ?
-		MDagPathArray m_bases;
-	};
-
-	class StrandArray : public std::list<Strand> {
-	public:
-		bool contains(MObject & base, MStatus *retStatus = NULL) const {
-			for(std::list<Strand>::const_iterator it = begin(); it != end(); ++it) {
-				if (it->contains(base, retStatus))
-					return true;
-
-				if (!*retStatus)
-					break;
-			}
-
-			return false;
-		}
-	};
 
 	MStatus ExportStrands::doIt(const MArgList & args) {
 		MStatus status;
@@ -154,8 +93,8 @@ namespace Helix {
 
 			MObjectArray selectedBases;
 
-			if (!(status = SelectedBases(selectedBases))) {
-				status.perror("SelectedBases");
+			if (!(status = Model::Base::AllSelected(selectedBases))) {
+				status.perror("Helix::AllSelected");
 				return status;
 			}
 
@@ -204,276 +143,82 @@ namespace Helix {
 
 		if (targets.length() == 0) {
 			MGlobal::displayError("Nothing to export");
-			return MStatus::kFailure;
+			return MStatus::kSuccess;
 		}
 
-		// Ok, we have a bunch of nodes, but many of them probably belong to the same strand, so when iterating, we need to make sure that the strand the base belongs to has not already been exported
-		// this makes the method very slow when there's many nodes.
-		// The user can optimize this by selecting only one base of every strand he/she wants to export, this is not very user friendly though
-		//
+		if (!MProgressWindow::reserve())
+			MGlobal::displayWarning("Failed to reserve the progress window");
 
-		StrandArray strands;
+		MProgressWindow::setTitle("Export strands");
+		MProgressWindow::setProgressStatus("Isolating strands");
+		MProgressWindow::setProgressRange(0, targets.length());
+		MProgressWindow::startProgress();		
+
+		std::list<Model::Strand> strands;
+		std::list<Model::Strand>::iterator it;
 
 		for(unsigned int i = 0; i < targets.length(); ++i) {
-			MObject object = targets[i].node(&status);
-			if (!status) {
-				status.perror("MDagPathArray[i]::node");
-				return status;
+			Model::Base base(targets[i]);
+
+			if ((it = std::find_if(strands.begin(), strands.end(), std::bind2nd(std::ptr_fun(&Model::Strand::Contains_base), base))) == strands.end()) {
+				/*
+				 * The strand represented by the Base is not already present, add it.
+				 */
+
+				strands.push_back(Model::Strand(base));
 			}
 
-			bool contains = strands.contains(object, &status);
-
-			if (!status) {
-				status.perror("StrandArray::contains");
-				return status;
-			}
-
-			if (!contains) {
-				// This base belongs to a scaffold we have not come across before, find all the bases belonging to it
-				//
-
-				Strand strand;
-
-				MDagPath it_base_dagPath = targets[i];
-				MObject it_base_object, target_object = targets[i].node(&status);
-
-				if (!status) {
-					status.perror("MDagPathArray[i]::node");
-					return status;
-				}
-
-				// Forward
-				bool first = true;
-
-				do {
-					it_base_object = it_base_dagPath.node(&status);
-
-					if (!status) {
-						status.perror("MDagPath::node");
-						return status;
-					}
-
-					if (first)
-						first = false;
-					else if (it_base_object == target_object)
-						break;
-
-					if (!(status = strand.m_bases.append(it_base_dagPath))) {
-						status.perror("MDagPathArray::append");
-						return status;
-					}
-				}
-				while (HelixBase_NextBase(it_base_object, HelixBase::aForward, it_base_dagPath, &status));
-
-				if (!status) {
-					status.perror("HelixBase_NextBase 1");
-					return status;
-				}
-
-				// Backward
-
-				it_base_dagPath = targets[i];
-				it_base_object = it_base_dagPath.node(&status);
-
-				if (!status) {
-					status.perror("MDagPath::node");
-					return status;
-				}
-
-				first = true;
-
-				while (HelixBase_NextBase(it_base_object, HelixBase::aBackward, it_base_dagPath, &status)) {
-					it_base_object = it_base_dagPath.node(&status);
-
-					if (!status) {
-						status.perror("MDagPath::node");
-						return status;
-					}
-
-					if (first)
-						first = false;
-					else if (it_base_object == target_object)
-						break;
-
-					if (!(status = strand.m_bases.append(it_base_dagPath))) {
-						status.perror("MDagPathArray::append");
-						return status;
-					}
-				}
-
-				if (!status) {
-					status.perror("HelixBase_NextBase 2");
-					return status;
-				}
-
-				strands.push_back(strand);
-			}
+			MProgressWindow::advanceProgress(1);
 		}
 
-		// Now we have a list of strands containing all the bases
-		// Show a dialog containing the strand sequences along with options for exporting to excel etc
-		//
-
-		/*MString outputString;
-
-		for(StrandArray::iterator it = strands.begin(); it != strands.end(); ++it) {
-			for(unsigned int i = 0; i < it->m_bases.length(); ++i) {
-				MPlug labelPlug(it->m_bases[i].node(&status), HelixBase::aLabel);
-
-				if (!status) {
-					status.perror("MDagPath::node");
-					return status;
-				}
-
-				DNA::Names baseLabel;
-
-				if (!(status = labelPlug.getValue((int &) baseLabel))) {
-					status.perror("MPlug::getValue");
-					return status;
-				}
-
-				bool isDestination = labelPlug.isDestination(&status);
-
-				if (!status) {
-					status.perror("MPlug::isDestination");
-					return status;
-				}
-
-				if (isDestination)
-					baseLabel = DNA::OppositeBase(baseLabel);
-
-				char baseLabelChar = DNA::ToChar(baseLabel);
-				outputString += MString(&baseLabelChar, 1);
-			}
-
-			outputString += "\\n\\n";
-		}
-
+		MProgressWindow::endProgress();
+		
 		MCommandResult commandResult;
 
-		if (!(status = MGlobal::executeCommand(
-				MString("promptDialog -title \"Export strands\" -message \"Available strands for all or the currently selected bases strands:\" -scrollableField true -button \"Export\" -button \"Close\" -defaultButton \"Close\" -cancelButton \"Close\" -dismissString \"Close\" -text \"") + outputString + "\";\n", commandResult))) {
+		if (!(status = MGlobal::executeCommand("fileDialog2 -caption \"Export to text file\" -fileFilter \"Comma-separated values (*.csv);;Colon-separated values (*.csv);;Plain text (*.txt);;All files (*.*)\" -rf true -fileMode 0", commandResult))) {
 			status.perror("MGlobal::executeCommand");
 			return status;
 		}
 
-		MString promptDialogResult;
+		MStringArray result;
 
-		if (!(status = commandResult.getResult(promptDialogResult))) {
-			status.perror("MCommandResult");
+		if (!(status = commandResult.getResult(result))) {
+			status.perror("MCommandResult::getResult");
 			return status;
-		}*/
+		}
 
-		MCommandResult commandResult;
+		if (result.length() < 1) {
+			/*
+			 * User cancelled the export operation
+			 */
 
-		//if (promptDialogResult == "Export") {
-			if (!(status = MGlobal::executeCommand("fileDialog2 -caption \"Export to text file\" -fileFilter \"Comma-separated values (*.csv);;Colon-separated values (*.csv);;Plain text (*.txt);;All files (*.*)\" -rf true -fileMode 0", commandResult))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
-			}
+			return MStatus::kSuccess;
+		}
 
-			MStringArray result;
+		/*
+		 * Do the actual data collection on the strands
+		 */
 
-			if (!(status = commandResult.getResult(result))) {
-				status.perror("MCommandResult::getResult");
-				return status;
-			}
+		if (!MProgressWindow::reserve())
+			MGlobal::displayWarning("Failed to reserve the progress window");
 
-			if (result.length() < 1) {
-				//MGlobal::displayError("No valid number of files to export to");
-				return MStatus::kSuccess;
-			}
+		MProgressWindow::setTitle("Export strands");
+		MProgressWindow::setProgressStatus("Extracting strand sequences");
+		MProgressWindow::setProgressRange(0, (int) strands.size());
+		MProgressWindow::startProgress();
 
-			FILE *file;
+		std::for_each(strands.begin(), strands.end(), m_operation.execute());
 
-			if (!(file = fopen(result[0].asChar(), "w"))) {
-				MGlobal::displayError("Failed to open file \"" + result[0] + "\" for writing.");
-				return MStatus::kFailure;
-			}
+		MProgressWindow::endProgress();
 
-			char column_delimiter = '\t';
+		/*
+		 * Write to file
+		 */
 
-			std::cerr << result[1].asChar() << std::endl;
-
-			if (strstr(result[1].asChar(), "Comma"))
-				column_delimiter = ',';
-			else if (strstr(result[1].asChar(), "Colon"))
-				column_delimiter = ';';
-
-			MString column_delimiter_string(&column_delimiter, 1);
-
-			for(StrandArray::iterator it = strands.begin(); it != strands.end(); ++it) {
-				MString names, sequence;
-				MString color;
-
-				for(unsigned int i = 0; i < it->m_bases.length(); ++i) {
-					MPlug labelPlug(it->m_bases[i].node(&status), HelixBase::aLabel);
-
-					if (!status) {
-						status.perror("MDagPath::node");
-						return status;
-					}
-
-					DNA::Names baseLabel;
-
-					if (!(status = labelPlug.getValue((int &) baseLabel))) {
-						status.perror("MPlug::getValue");
-						return status;
-					}
-
-					bool isDestination = labelPlug.isDestination(&status);
-
-					if (!status) {
-						status.perror("MPlug::isDestination");
-						return status;
-					}
-
-					if (isDestination)
-						baseLabel = DNA::OppositeBase(baseLabel);
-
-					char baseLabelChar = DNA::ToChar(baseLabel);
-					sequence += MString(&baseLabelChar, 1);
-
-					/*names += it->m_bases[i].fullPathName(&status) + "\t";
-
-					if (!status) {
-						status.perror("MDagPathArray[i]::fullPathName");
-						return status;
-					}*/
-				}
-
-				if (it->m_bases.length() >= 2)
-					names = it->m_bases[0].fullPathName() + column_delimiter_string + it->m_bases[1].fullPathName();
-				else if (it->m_bases.length() == 1)
-					names = it->m_bases[0].fullPathName();
-				else
-					continue; // Nothing to print
-
-				if (!(status = DNA::QueryMaterialOfObject(it->m_bases[it->m_bases.length() - 1].node(), color))) {
-					status.perror("DNA::QueryMaterialOfObject");
-					return status;
-				}
-
-				/*MString colorName;
-				MFnDagNode color_dagPath(color);
-
-				colorName = color_dagPath.name(&status);*/
-
-				if (!status) {
-					status.perror("MFnDagNode::name");
-					return status;
-				}
-
-				fwrite(names.asChar(), 1, names.length(), file);
-				fputc(column_delimiter, file);
-				fwrite(sequence.asChar(), 1, sequence.length(), file);
-				fputc(column_delimiter, file);
-				fwrite(color.asChar(), 1, color.length(), file);
-				fputs("\r\n", file);
-			}
-
-			fclose(file);
-		//}
+		if (!(status = m_operation.write(result[0], strstr(result[1].asChar(), "Comma") != NULL ? Controller::ExportStrands::COMMA_SEPARATED : Controller::ExportStrands::COLON_SEPARATED))) {
+			status.perror("ExportStrands::write");
+			return status;
+		}
 
 		return MStatus::kSuccess;
 	}
@@ -511,5 +256,9 @@ namespace Helix {
 
 	void *ExportStrands::creator() {
 		return new ExportStrands();
+	}
+
+	void ExportStrands::ExportStrandsWithProgressBar::onProgressStep() {
+		MProgressWindow::advanceProgress(1);
 	}
 }

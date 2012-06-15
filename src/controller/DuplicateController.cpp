@@ -7,6 +7,12 @@
 
 #include <maya/MFnTransform.h>
 
+#if defined(WIN32) || defined(WIN64)
+#include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif /* N Windows */
+
 namespace Helix {
 	namespace Controller {
 		MStatus Duplicate::duplicate(const MObjectArray & helices) {
@@ -29,7 +35,7 @@ namespace Helix {
 		MStatus Duplicate::redo() {
 			MStatus status;
 
-			std::map<Model::Base, Model::Base> base_translation;
+			std::tr1::unordered_map<Model::Base, Model::Base> base_translation;
 
 			std::cerr << "Got " << m_helices.length() << " helices to copy" << std::endl;
 
@@ -93,6 +99,26 @@ namespace Helix {
 					return status;
 				}
 
+				std::cerr << "Done creating helix" << std::endl;
+
+				/*
+				 * Setup the cylinder
+				 */
+
+				double cylinder_origo, cylinder_height;
+
+				if (!(status = helix.getCylinderRange(cylinder_origo, cylinder_height))) {
+					status.perror("Helix::getCylinderRange");
+					return status;
+				}
+
+				if (!(status = new_helix.setCylinderRange(cylinder_origo, cylinder_height))) {
+					status.perror("Helix::setCylinderRange");
+					return status;
+				}
+
+				std::cerr << "Done setting up cylinder" << std::endl;
+
 				/*
 				 * Create bases
 				 */
@@ -121,6 +147,8 @@ namespace Helix {
 						return status;
 					}
 
+					std::cerr << "Done creating the base" << std::endl;
+
 					/*
 					 * Color the new base using the same material as the old one
 					 */
@@ -134,11 +162,12 @@ namespace Helix {
 							status.perror("Base::setMaterial");
 					}
 
+					std::cerr << "Done setting the base material" << std::endl;
+
 					/*
 					 * Add the newly created base paired with the old one in our lookup table for later referencing
 					 */
 
-					std::cerr << "Old base: " << base.getDagPath(status).fullPathName().asChar() << " = " << new_base.getDagPath(status).fullPathName().asChar() << std::endl;
 					base_translation[base] = new_base;
 
 					onProgressStep();
@@ -146,6 +175,8 @@ namespace Helix {
 
 				m_new_helices.push_back(new_helix);
 			}
+
+			std::cerr << "Done step 1" << std::endl;
 
 			/*
 			 * Yet again, loop over all helices and all bases, find out what other bases the current base is connected to
@@ -162,6 +193,8 @@ namespace Helix {
 					Model::Base base(*it);
 					Model::Base new_base = base_translation[base];
 
+					std::cerr << "base: " << base.getDagPath(status).fullPathName().asChar() << ", new_base: " << new_base.getDagPath(status).fullPathName().asChar() << std::endl;
+
 					Model::Base forward_base = base.forward(status);
 
 					if (!status && status != MStatus::kNotFound) {
@@ -174,24 +207,20 @@ namespace Helix {
 						 * This base has a forward connection
 						 */
 
-						std::cerr << "Make forward connection" << std::endl;
-
-						std::cerr << "Base: " << base.getDagPath(status).fullPathName().asChar() << ", new_base: " << new_base.getDagPath(status).fullPathName().asChar () << ", forward_base: " << forward_base.getDagPath(status).fullPathName().asChar() << std::endl;
-
 						Model::Base new_forward_base = base_translation[forward_base];
 
 						if (new_forward_base) {
 
-							std::cerr << "Forward connection: " << new_base.getDagPath(status).fullPathName().asChar() << " -> " << new_forward_base.getDagPath(status).fullPathName().asChar() << std::endl;
+							std::cerr << "Connect forward" << std::endl;
 
 							if (!(status = new_base.connect_forward(new_forward_base))) {
 								status.perror("Base::connect_forward");
 								return status;
 							}
 						}
-
-						std::cerr << "Make forward connection done" << std::endl;
 					}
+
+					std::cerr << "Looking for opposite connection" << std::endl;
 
 					Model::Base opposite_base = base.opposite(status);
 
@@ -205,7 +234,7 @@ namespace Helix {
 						 * This base has an opposite connection
 						 */
 
-						std::cerr << "Make opposite connection" << std::endl;
+						std::cerr << "Got opposite connection" << std::endl;
 
 						bool isDestination = base.opposite_isDestination(status);
 
@@ -214,12 +243,18 @@ namespace Helix {
 							return status;
 						}
 
+						std::cerr << "isDestination: " << (isDestination ? "true" : "false") << std::endl;
+
 						Model::Base new_opposite_base = base_translation[opposite_base];
 
 						if (new_opposite_base) {
 							/*
 							 * The order of the setup is important
 							 */
+
+							std::cerr << "Got new_opposite_base" << std::endl;
+
+							std::cerr << "new_base: " << new_base.getDagPath(status).fullPathName().asChar() << ", new_opposite_base: " << new_opposite_base.getDagPath(status).fullPathName().asChar() << std::endl;
 
 							if (isDestination) {
 								if (!(status = new_opposite_base.connect_opposite(new_base))) {
@@ -266,8 +301,6 @@ namespace Helix {
 								}
 							}
 						}
-
-						std::cerr << "Make opposite connection done" << std::endl;
 					}
 
 					onProgressStep();
@@ -275,6 +308,13 @@ namespace Helix {
 			}
 
 			onProgressDone();
+
+			/*
+			 * Refresh cylinder/base view
+			 */
+
+			if (!(status = Model::Helix::RefreshCylinderOrBases()))
+				status.perror("Helix::RefreshCylinderOrBases");
 
 			/*
 			 * Select all the newly created helices

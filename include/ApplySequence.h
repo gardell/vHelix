@@ -14,6 +14,8 @@
 
 #include <Definition.h>
 
+#include <controller/ApplySequence.h>
+
 #include <iostream>
 #include <list>
 
@@ -38,10 +40,7 @@ namespace Helix {
 		static void *creator();
 
 	private:
-		MStatus applySequence(const MString & sequence, const MDagPath & target);
-		MString m_appliedSequence; // For redo
-		MDagPath m_appliedTarget;
-		std::list<std::pair<MObject, int> > m_modifiedLabels; // For undo
+		Controller::ApplySequence m_operation;
 	};
 }
 

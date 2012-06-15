@@ -63,9 +63,6 @@
     <ClInclude Include="..\include\ExtendGui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ExtendHelix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\FindFivePrimeEnds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,6 +132,18 @@
     <ClInclude Include="..\include\controller\Duplicate.h">
       <Filter>Header Files\controller</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\controller\ExtendStrand.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ExtendStrand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\controller\ApplySequence.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\controller\ExportStrands.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -165,9 +174,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ExtendGui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ExtendHelix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\FindFivePrimeEnds.cpp">
@@ -234,6 +240,18 @@
       <Filter>Source Files\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\src\controller\DuplicateController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\ExtendStrandController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ExtendStrand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\ApplySequenceController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\ExportStrandsController.cpp">
       <Filter>Source Files\controller</Filter>
     </ClCompile>
   </ItemGroup>
