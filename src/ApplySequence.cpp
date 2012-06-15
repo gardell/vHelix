@@ -117,7 +117,7 @@ namespace Helix {
 		m_operation.setSequence(sequence);
 
 		Model::Strand strand(target);
-		for_each_ref(strand.forward_begin(), strand.forward_end(), m_operation.execute());
+		std::for_each(strand.forward_begin(), strand.forward_end(), m_operation.execute());
 
 		return m_operation.status();
 	}

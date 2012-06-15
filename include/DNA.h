@@ -76,10 +76,6 @@ namespace DNA {
 
 	class Names {
 	public:
-		Names Opposite() {
-
-		}
-
 		inline Names() : m_value(Invalid) {
 
 		}
