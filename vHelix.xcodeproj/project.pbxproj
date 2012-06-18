@@ -386,6 +386,7 @@
 					"-lFoundation",
 				);
 				SDKROOT = "";
+				SYMROOT = .;
 			};
 			name = Debug;
 		};
