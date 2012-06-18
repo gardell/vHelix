@@ -18,5 +18,6 @@
 
 #define _CRT_SECURE_NO_WARNINGS /* Visual Studios annoying warnings */
 #define _SCL_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
 
 #endif /* DEFINITION_H_ */
