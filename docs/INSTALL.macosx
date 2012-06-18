@@ -1,0 +1,59 @@
+vHelix - Free-form DNA-nanostructure design
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+INSTALL
+--------------------------------------------------------------------------------
+
+Mac OS X 10.6+ x64
+--------------------------------------------------------------------------------
+- Copy the included 'vHelix.bundle' to your Autodesk Maya 2011
+  'bin\plug-ins' directory, usually under the path: 
+  '/Applications/Autodesk/maya2011/Maya.app/Contents/MacOS/plug-ins/'
+
+	- Notice that this usually requires root access, if that is not a
+	  possibility, see instructions below
+
+- Copy the two included files 'BackboneArrow.ma' and 'DNAshaders.ma' to your
+  'maya/projects/default/scenes/' directory, usually found under your home
+  folder, example: '/Users/<username>/Documents/maya/projects/default/scenes'
+
+- Start Autodesk Maya 2011
+
+- In Maya, select 'Window' > 'Settings/Preferences' > 'Plug-in Manager'
+
+- In the newly opened dialog window, locate the 'vHelix.bundle' at the
+  bottom of the list under 'Other Registered Plugins' and make sure the
+  checkbox 'Loaded' is enabled
+
+	- If you want the plug-in to automatically load upon starting
+	  Autodesk Maya 2011, make sure the 'Auto load' is enabled
+
+- The plug-in is now loaded and a new menu item named 'Helix' should have
+  appeared in the Maya main window
+
+If you are, for example using a public computer, and are not able to move files
+into the 'plug-ins' directory, you can still load the vHelix plugin using a
+MEL command. To do this:
+
+- Open up the 'Script Editor' by clickin on the icon in the bottom right corner
+  of the Maya main window or click 'Window' > 'General Editors' > 'Script Editor'.
+
+- In the 'Script Editor' window that just opened, in the box labelled 'MEL',
+  enter the following command:
+
+loadPlugin "/Users/<path-to-your-vHelix-plugin-mll-file>/vHelix.bundle"
+
+  using the path to where you saved the downloaded vHelix plugin. Note that MEL
+  requires that backslashes '\\' must occur twice as directory separators.
+
+- Click the arrow shaped button 'Execute' on the upper row of the
+  'Script Editor' window.
+
+	- Note that you can save the command as a shortcut icon on any panel by
+	  chosing 'File' > 'Save Script to Shelf...'
+
+- When the command is executed, the plug-in is loaded and a new menu item named
+  'Helix' should appear in the Maya main window
+
+
