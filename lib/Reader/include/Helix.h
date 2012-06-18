@@ -32,6 +32,7 @@ using std::tr1::weak_ptr;
 
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 namespace Helix {
 	/*
@@ -63,6 +64,11 @@ namespace Helix {
 	 * Node: A named structure with a list of parents and children Nodes
 	 * The base class to Helix and Base objects but also used for other transform nodes that might occur
 	 */
+
+#define NODE_INHERITING_CLASSES_OPERATORS(ClassName)															\
+	bool operator==(const ClassName & n) const { return static_cast<const Node &> (*this) == n; }				\
+																												\
+	bool operator!=(const ClassName & n) const { return static_cast<const Node &> (*this) != n; }						
 
 	class Node {
 	public:
@@ -104,6 +110,14 @@ namespace Helix {
 
 		inline List::iterator end_children() {
 			return m_children.end();
+		}
+
+		inline List::const_iterator begin_parents() const {
+			return m_parents.begin();
+		}
+
+		inline List::const_iterator end_parents() const {
+			return m_parents.end();
 		}
 
 		inline List::const_iterator begin_children() const {
@@ -185,6 +199,39 @@ namespace Helix {
 			return matrix;
 		}
 
+		/*
+		 * For identifying the base
+		 */
+
+		bool operator==(const Node & n) const {
+			if (m_name != n.m_name)
+				return false;
+
+			/*
+			 * Find at least one of our parents that the other object shares
+			 */
+
+			bool found = false;
+			for(List::const_iterator it = begin_parents(); it != end_parents(); ++it) {
+				for(List::const_iterator n_it = n.begin_parents(); n_it != n.end_parents(); ++n_it) {
+					if (*it->lock() == *n_it->lock())
+						return true;
+
+					found = true;
+				}
+			}
+
+			/*
+			 * As the names match, and we have no parents, the objects must equal
+			 */
+
+			return m_parents.empty() && n.m_parents.empty();
+		}
+
+		bool operator!=(const Node & n) const {
+			return !this->operator==(n);
+		}
+
 	protected:
 		List m_parents, m_children;
 		std::string m_name;
@@ -198,6 +245,29 @@ namespace Helix {
 	};
 
 	/*
+	 * Added the Strand class as a way of identifying a strand. Notice that the strand object does not exist in the .ma files, but are generated on import
+	 */
+
+	class Base;
+
+	class Strand {
+	public:
+		inline Strand(const char *name, weak_ptr<Node> base) : m_base(base), m_name(name) {
+
+		}
+
+		bool contains_base(Base & base) const;
+
+		const char *getName() const {
+			return m_name.c_str();
+		}
+
+	private:
+		weak_ptr<Node> m_base;
+		std::string m_name;
+	};
+
+	/*
 	 * Helix: Encapsulates a helix object, which contains a list of forward and backward strands as well as
 	 * a translation vector and a name
 	 */
@@ -205,6 +275,7 @@ namespace Helix {
 	class Base : public Node {
 		friend std::string labelToString(int label);
 	public:
+		NODE_INHERITING_CLASSES_OPERATORS(Base);
 
 		inline virtual Type getType() const {
 			return Node::BASE;
@@ -283,6 +354,22 @@ namespace Helix {
 		}
 
 		/*
+		 * Notice that Scene::generate_strands() must have been called first
+		 */
+
+		inline weak_ptr<Strand> & getStrand() {
+			return m_strand;
+		}
+
+		inline const weak_ptr<Strand> & getStrand() const {
+			return m_strand;
+		}
+
+		inline void setStrand(weak_ptr<Strand> strand) {
+			m_strand =  strand;
+		}
+
+		/*
 		 * Constructors
 		 */
 
@@ -323,10 +410,17 @@ namespace Helix {
 		}
 
 		Vector m_translate;
+
+		/*
+		 * Added reference to a common Strand class identifying the strand this Helix belongs to
+		 */
+
+		weak_ptr<Strand> m_strand;
 	};
 
 	class Helix : public Node {
 	public:
+		NODE_INHERITING_CLASSES_OPERATORS(Helix);
 
 		inline virtual Type getType() const {
 			return Node::HELIX;
@@ -364,6 +458,7 @@ namespace Helix {
 
 		typedef std::list<weak_ptr<Node> > HelixList;
 		typedef std::list<shared_ptr<Node> > NodeList;
+		typedef std::list<shared_ptr<Strand> > StrandList;
 
 		inline HelixList::iterator begin_helices() {
 			return m_helices.begin();
@@ -410,9 +505,27 @@ namespace Helix {
 			m_nodes.push_back(base);
 		}
 
+		/*
+		 * Generate or get a list of all the strands
+		 */
+
+		inline StrandList::iterator begin_strands() {
+			if (m_strands.empty())
+				generate_strands();
+
+			return m_strands.begin();
+		}
+
+		inline StrandList::iterator end_strands() {
+			return m_strands.begin();
+		}
+
+		void generate_strands();
+
 	private:
 		HelixList m_helices;
 		NodeList m_nodes;
+		StrandList m_strands;
 	};
 }
 

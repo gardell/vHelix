@@ -318,6 +318,103 @@ namespace Helix {
 			}
 		}
 	}
+
+	bool Strand::contains_base(Base & base) const {
+		/*
+		 * Using the base defining the strand, iterate over all of the forward and backward references and try to find the given 'base'
+		 */
+
+		/* Forward */
+
+		shared_ptr<Node> thisBase = m_base.lock();
+		Base b = static_cast<Base &> (*thisBase);
+
+		if (b == base)
+			return true;
+
+		bool found = true;
+
+		do {
+			if (!b.hasForwardConnectedBase()) {
+				found = false;
+				break;
+			}
+
+			b = b.getForwardConnectedBase();
+		} while (b != base);
+
+		if (found) {
+			//std::cerr << "Forward loop, found: " << b.getName() << std::endl;
+			//std::cerr << base.getName() << " = " << b.getName() << std::endl;
+			return true;
+		}
+
+		/* Backward */
+
+		b = static_cast<Base &> (*thisBase);
+		found = true;
+
+		do {
+			if (!b.hasBackwardConnectedBase()) {
+				found = false;
+				break;
+			}
+
+			b = b.getBackwardConnectedBase();
+		} while (b != base);
+
+		if (found) {
+			//std::cerr << "Backward loop, found: " << b.getName() << std::endl;
+			//std::cerr << base.getName() << " = " << b.getName() << std::endl;
+			return true;
+		}
+
+		//std::cerr << "Couldn't find base: " << base.getName() << std::endl;
+
+		return false;
+	}
+
+	void Scene::generate_strands() {
+		/*
+		 * Iterate over all bases in the Scene and find out whether their strand is already in the m_strands list
+		 */
+
+		unsigned int last_id = 0;
+
+		for(HelixList::iterator it = begin_helices(); it != end_helices(); ++it) {
+			shared_ptr<Node> node = it->lock();
+			Helix & helix = static_cast<Helix &> (*node.get());
+
+			for(Helix::List::iterator b_it = helix.begin_children(); b_it != helix.end_children(); ++b_it) {
+				shared_ptr<Node> b_node = b_it->lock();
+
+				if (b_node->getType() != Node::BASE)
+					continue;
+
+				Base & base = static_cast<Base &> (*b_node.get());
+
+				bool found = false;
+
+				for(StrandList::iterator s_it = m_strands.begin(); s_it != m_strands.end(); ++s_it) {
+					if (s_it->get()->contains_base(base)) {
+						base.setStrand(*s_it);
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					std::stringstream sstream;
+					sstream << "strand_" << ++last_id;
+					std::string id = sstream.str();
+
+					shared_ptr<Strand> strand = std::make_shared<Strand> (id.c_str(), b_node);
+					base.setStrand(strand);
+					m_strands.push_back(strand);
+				}
+			}
+		}
+	}
 }
 
 /*
@@ -351,6 +448,12 @@ std::ostream & operator<< (std::ostream & stream, const Helix::Node & node) {
 			const Helix::Base & base = static_cast<const Helix::Base &> (node);
 
 			stream << " label: " << base.getLabel();
+			
+			{
+				shared_ptr<Helix::Strand> strand = base.getStrand().lock();
+				if (strand)
+					stream << " strand: " << strand->getName();
+			}
 
 			if (base.hasForwardConnectedBase())
 				stream << " forward connected base: " << base.getForwardConnectedBase().getName();

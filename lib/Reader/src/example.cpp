@@ -20,6 +20,12 @@ int main(int argc, const char **argv) {
 
 	try {
 		scene.parse(argv[1]);
+
+		/*
+		 * New procedure, generates strand information and ids
+		 */
+
+		scene.generate_strands();
 	}
 	catch(Helix::parse_exception & e) {
 		std::cerr << "Parsing failed: \"" << e.what() << "\"" << std::endl;
@@ -53,7 +59,16 @@ int main(int argc, const char **argv) {
 			Helix::Base & base = static_cast<Helix::Base &> (node);
 
 			// Base_id  |  base's position in 3d coordinates | id of the strand and helix it belongs to |   connected to which Base (in which helix) |
-			std::cerr << "\t" << base.getName() << " | " << (base.getWorldTransform() * Helix::Vector()) << " | " << helix.getName() << std::endl << "\t\tforward: ";
+			std::cerr << "\t" << base.getName();
+
+			{
+				shared_ptr<Helix::Strand> strand = base.getStrand().lock();
+
+				if (strand)
+					std::cerr << " | " << strand->getName();
+			}
+
+			std::cerr << " | " << (base.getWorldTransform() * Helix::Vector()) << " | " << helix.getName() << std::endl << "\t\tforward: ";
 
 			if (base.hasForwardConnectedBase()) {
 				Helix::Base & forward_base = base.getForwardConnectedBase();
