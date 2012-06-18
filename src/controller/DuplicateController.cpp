@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <list>
 
 #include <maya/MFnTransform.h>
 
@@ -34,10 +35,7 @@ namespace Helix {
 
 		MStatus Duplicate::redo() {
 			MStatus status;
-
-<<<<<<< HEAD
-			std::tr1::unordered_map< Model::Base, Model::Base, std::tr1::hash<Model::Base> > base_translation;
-=======
+			
 #ifdef MAC_PLUGIN
 			/*
 			 * The implementation of std::tr1::unordered_map is broken in GCC 4.2 that we're using on the Mac version
@@ -46,7 +44,7 @@ namespace Helix {
 			class : public std::list< std::pair<Model::Base, Model::Base> > {
 			public:
 				Model::Base operator[](Model::Base & model) {
-					for(std::list< std::pair<Model::Base, Model::Base>::iterator it = begin(); it != end() ++it) {
+					for(std::list< std::pair<Model::Base, Model::Base> >::iterator it = begin(); it != end(); ++it) {
 						if (it->first == model)
 							return it->second;
 					}
@@ -57,8 +55,7 @@ namespace Helix {
 #else
 			std::tr1::unordered_map<Model::Base, Model::Base> base_translation;
 #endif /* N MAC_PLUGIN */
->>>>>>> b83ffa901dffc7b2a4b12b4aa9ae71535c1bb30a
-
+			
 			std::cerr << "Got " << m_helices.length() << " helices to copy" << std::endl;
 
 			/*
