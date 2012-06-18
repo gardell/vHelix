@@ -31,14 +31,14 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 361699291;
-			PBXWorkspaceStateSaveDate = 361699291;
+			PBXPerProjectTemplateStateSaveDate = 361699472;
+			PBXWorkspaceStateSaveDate = 361699472;
 		};
 		perUserProjectItems = {
-			AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
-			AA78DD94158F185E001B1D84 /* XCBuildMessageTextBookmark */ = AA78DD94158F185E001B1D84 /* XCBuildMessageTextBookmark */;
-			AA78DD96158F185E001B1D84 /* PBXTextBookmark */ = AA78DD96158F185E001B1D84 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AA78DD93158F185E001B1D84 = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
+			AA78DD94158F185E001B1D84 = AA78DD94158F185E001B1D84 /* PBXTextBookmark */;
+			AA78DD96158F185E001B1D84 = AA78DD96158F185E001B1D84 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
@@ -50,11 +50,6 @@
 		name = Locator.h;
 		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1111, 1300}}";
-			sepNavSelRange = "{2715, 0}";
-			sepNavVisRange = "{2231, 1200}";
-		};
 	};
 	AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -66,11 +61,10 @@
 		vrLen = 1200;
 		vrLoc = 2231;
 	};
-	AA78DD94158F185E001B1D84 /* XCBuildMessageTextBookmark */ = {
+	AA78DD94158F185E001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		comments = "'std::tr1::__detail::_Hash_code_base<_Key, _Value, _ExtractKey, _Equal, _H1, _H2, std::tr1::__detail::_Default_ranged_hash, false>::_M_h1' has incomplete type";
 		fRef = AA78DD95158F185E001B1D84 /* hashtable_policy.h */;
-		fallbackIsa = XCBuildMessageTextBookmark;
 		rLen = 1;
 		rLoc = 827;
 		rType = 1;
@@ -94,6 +88,7 @@
 	};
 	AA78DD97158F185E001B1D84 /* hashtable_policy.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = hashtable_policy.h;
 		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
 		sourceTree = "<absolute>";
