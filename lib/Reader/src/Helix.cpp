@@ -408,7 +408,8 @@ namespace Helix {
 					sstream << "strand_" << ++last_id;
 					std::string id = sstream.str();
 
-					shared_ptr<Strand> strand = std::tr1::make_shared<Strand> (id.c_str(), b_node);
+					//shared_ptr<Strand> strand = std::tr1::make_shared<Strand> (id.c_str(), b_node);
+					shared_ptr<Strand> strand(new Strand(id.c_str(), b_node));
 					base.setStrand(strand);
 					m_strands.push_back(strand);
 				}
