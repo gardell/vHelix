@@ -14,6 +14,7 @@
 #include <iostream>
 
 #include <maya/MDagPath.h>
+#include <maya/MDagPathArray.h>
 #include <maya/MStringArray.h>
 #include <maya/MObjectArray.h>
 #include <maya/MVector.h>
@@ -26,44 +27,40 @@
 #define RAD2DEG(rad)	((rad) / M_PI * 180.0)
 #endif /* N RAD2DEG */
 
-#define HELIX_GEOMETRY_PATH			""
-
-#define HELIXBASE_MODEL_SOURCE_FILES HELIX_GEOMETRY_PATH "BackboneArrow.ma"
+#define STRAND_NAMES	"forw", "backw"
 
 namespace DNA {
-	// Some DNA properties as well as visual settings.
-	//
+	/*
+	 * Some constants defining DNA behaviour and visual representation
+	 */
 
-	const double PITCH = 720.0 / 21.0, // degrees
+	const double PITCH = 720.0 / 21.0,														// degrees
 				 STEP = 0.334,
 				 RADIUS = 1.0,
-				 SPHERE_RADIUS = 0.13, // not dna properties, but visual
-				 HELIX_RADIUS = RADIUS + SPHERE_RADIUS + 0.20, // TODO: This looked visually correct :-)
-				 Z_SHIFT = 0.165; // Don't know what to call it, just got it from earlier source code
-	const double ONE_MINUS_SPHERE_RADIUS = (1.0 - SPHERE_RADIUS);
+				 SPHERE_RADIUS = 0.13,														// not dna properties, but visual
+				 HELIX_RADIUS = RADIUS + SPHERE_RADIUS + 0.20,								// TODO: This looked visually correct
+				 Z_SHIFT = 0.165,															// Don't know what to call it, just got it from earlier source code
+				 ONE_MINUS_SPHERE_RADIUS = (1.0 - SPHERE_RADIUS),
+				 SEQUENCE_RENDERING_Y_OFFSET = 0.22,										// Multiplied by RADIUS
+				 HONEYCOMB_X_STRIDE = 2.0 * DNA::HELIX_RADIUS * cos(DEG2RAD(30)),			// Constants for the honeycomb lattice
+				 HONEYCOMB_Y_STRIDE = 2.0 * DNA::HELIX_RADIUS * (1.0 + sin(DEG2RAD(30))),
+				 HONEYCOMB_Y_OFFSET = 1.0 * DNA::HELIX_RADIUS * sin(DEG2RAD(30));
+
+	/*
+	 * The create base gui allows the user to specify the number of bases per strand and remembers your choice. The default on startup is defined here
+	 */
+
+	const long CREATE_DEFAULT_NUM_BASES = 21;
+
+	const int BASES = 4; // Trivial, but still, cleaner code with defines
 
 	// Since Create, Extend and Import all use the properties above to generate the correct positions for each base
-	// This utility method should be used and not the parameters above
+	// This utility method should be used and not the individual parameters above. However, it is not suitable for all cases
 
 	MStatus CalculateBasePairPositions(double index, MVector & forward, MVector & backward, double offset = 0.0, double totalNumBases = 0);
 
-	const float SEQUENCE_RENDERING_Y_OFFSET = 0.22f; // Multiplied by RADIUS
-
-	// Constants for generating the honeycomb lattice
-
-	const double HONEYCOMB_X_STRIDE = 2.0 * DNA::HELIX_RADIUS * cos(DEG2RAD(30)),
-						 HONEYCOMB_Y_STRIDE = 2.0 * DNA::HELIX_RADIUS * (1.0 + sin(DEG2RAD(30))),
-						 HONEYCOMB_Y_OFFSET = 1.0 * DNA::HELIX_RADIUS * sin(DEG2RAD(30));
-
-	// Some defines that makes the code look nicer and easier to read, when dealing directly with DNA bases
-	//
-
 	/*
 	 * A small API for managing the DNA enumerations
-	 */
-
-	/*
-	 * Enumerates the nucleotides. Notice the 'Invalid' that is represented as a '?' on the base. This is the default
 	 */
 
 	enum Values {
@@ -74,29 +71,29 @@ namespace DNA {
 		Invalid = 4
 	};
 
-	class Names {
+	class Name {
 	public:
-		inline Names() : m_value(Invalid) {
+		inline Name() : m_value(Invalid) {
 
 		}
 
-		inline Names(const Names & copy) : m_value(copy.m_value) {
+		inline Name(const Name & copy) : m_value(copy.m_value) {
 
 		}
 
-		inline Names(Values v) : m_value(v) {
+		inline Name(Values v) : m_value(v) {
 
 		}
 
-		inline Names(char c) {
+		inline Name(char c) {
 			this->operator=(c);
 		}
 
-		inline bool operator==(const Names & n) const {
+		inline bool operator==(const Name & n) const {
 			return m_value == n.m_value;
 		}
 
-		inline bool operator!=(const Names & n) const {
+		inline bool operator!=(const Name & n) const {
 			return m_value != n.m_value;
 		}
 
@@ -108,19 +105,19 @@ namespace DNA {
 			return m_value != v;
 		}
 
-		inline Names & operator=(const Names & n) {
+		inline Name & operator=(const Name & n) {
 			m_value = n.m_value;
 
 			return *this;
 		}
 
-		inline Names & operator=(const Values & v) {
+		inline Name & operator=(const Values & v) {
 			m_value = v;
 
 			return *this;
 		}
 
-		inline Names & operator=(char c) {
+		inline Name & operator=(char c) {
 			switch(c) {
 			case 'A':
 			case 'a':
@@ -161,7 +158,7 @@ namespace DNA {
 			}
 		}
 
-		inline Names opposite() const {
+		inline Name opposite() const {
 			switch(m_value) {
 			case A:
 				return T;
@@ -191,19 +188,12 @@ namespace DNA {
 	const char *GetStrandName(int index);
 
 	/*
-	 * The create base gui allows the user to specify the number of bases per strand and remembers your choice. The default on startup is defined here
+	 * New handling of arrow and molecule. Uses MEL commands to create the models instead of .ma files.
+	 * Also aware of New Scene commands that will delete the nodes and invalidate any references
+	 * Notice that it will not return the transform called 'BackboneArrow' but all its shapes
 	 */
 
-	const long CREATE_DEFAULT_NUM_BASES = 21;
-
-	const int BASES = 4; // Trivial, but still, cleaner code with defines
-
-	/*
-	 * FIXME: The molecule and arrow models should be baked into the executable and not loaded as external models
-	 */
-
-	MStatus GetMoleculeModel(MDagPath & result);
-	MStatus GetArrowModel(MDagPath & result);
+	MStatus GetMoleculeAndArrowShapes(MDagPathArray & shapes);
 }
 
 #endif /* DNA_H_ */

@@ -177,6 +177,8 @@ namespace Helix {
 
 					hasOppositeStrand = true;
 
+					std::cerr << "Has opposite base" << std::endl;
+
 					isDestinationForOpposite = element.opposite_isDestination(status);
 
 					if (!status) {
@@ -265,6 +267,8 @@ namespace Helix {
 					 * Find the opposite base if exists (using previous_opposite) and connect to it, use the isDestinationForOpposite to decide on the direction
 					 */
 
+					std::cerr << "Connecting to opposite" << std::endl;
+
 					Model::Base opposite = (previous_opposite.*target_backward) (status);
 
 					if (!status && status != MStatus::kNotFound) {
@@ -301,6 +305,9 @@ namespace Helix {
 					previous_opposite = opposite;
 				}
 				else {
+
+					std::cerr << "Not extending to opposite" << std::endl;
+
 					/*
 					 * Since we're extending along a direction in which there does not seem to be any bases further away,
 					 *	we are extending the total length of the helix. It is important to track these changes as it requires us to

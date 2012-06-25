@@ -756,5 +756,35 @@ namespace Helix {
 
 			return status;
 		}
+
+		MStatus Helix::getSelectedChildBases(MObjectArray & selectedBases) {
+			MStatus status;
+			MObjectArray allSelectedBases;
+
+			if (!(status = Base::AllSelected(allSelectedBases))) {
+				status.perror("Base::AllSelected");
+				return status;
+			}
+
+			/*
+			 * Now sort out the ones that are not children to this helix
+			 */
+
+			for(unsigned int i = 0; i < allSelectedBases.length(); ++i) {
+				Base base(allSelectedBases[i]);
+
+				Helix parent = base.getParent(status);
+
+				if (!status) {
+					status.perror("Base::getParent");
+					return status;
+				}
+
+				if (parent == *this)
+					selectedBases.append(allSelectedBases[i]);
+			}
+
+			return MStatus::kSuccess;
+		}
 	}
 }

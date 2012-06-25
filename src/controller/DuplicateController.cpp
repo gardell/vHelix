@@ -285,7 +285,7 @@ namespace Helix {
 								 * Set the label of the base
 								 */
 
-								DNA::Names label;
+								DNA::Name label;
 
 								if (!(status = opposite_base.getLabel(label))) {
 									status.perror("Base::getLabel");
@@ -307,7 +307,7 @@ namespace Helix {
 								 * Set the label of the base
 								 */
 
-								DNA::Names label;
+								DNA::Name label;
 
 								if (!(status = opposite_base.getLabel(label))) {
 									status.perror("Base::getLabel");

@@ -23,6 +23,9 @@
 #include <maya/MFnCamera.h>
 
 #include <model/Helix.h>
+#include <model/Strand.h>
+
+#include <algorithm>
 
 // I include the OpenGL headers directly for OpenGL 2.0, even though Maya has it's own definition of OpenGL calls
 
@@ -38,17 +41,6 @@
 
 #endif /* N MAC_PLUGIN */
 
-// The Python command to get the nodes we're interested in
-
-#define PYTHON_COMMAND_RENDERABLE_DATA	\
-	"import maya.cmds as cmds\n" \
-	"selectedChildBases = set(pm.ls(selection = True, type = 'HelixBase')).intersection(pm.listRelatives('vHelix1', c = True))\n" \
-	"return_value = []\n" \
-	"for base in selectedChildBases:\n" \
-	"    return_value.extend(base.getTranslation())\n" \
-	"    return_value.extend([ 1, pm.getAttr(base + '.label'), int(pm.connectionInfo(base + '.label', isDestination = True)) ])\n" \
-	"return return_value\n"
-
 //
 // OpenGL 2.0 extensions
 //
@@ -57,14 +49,14 @@
 #define GETPROCADDRESS(str)		wglGetProcAddress((LPCSTR) str)
 #else
 #define GETPROCADDRESS(str)		glXGetProcAddressARB((const GLubyte *) str)
-#endif /* No windows, FIXME: Mac OS */
+#endif /* No windows */
 
 namespace Helix {
 	const MTypeId HelixLocator::id(HELIX_LOCATOR_ID);
 	const MTypeId transform_id(HELIX_TRANSFORM_ID);
 	//MObject HelixLocator::aBases;
 	bool HelixLocator::s_gl_initialized = false, HelixLocator::s_gl_failed = false;
-	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0, HelixLocator::s_screen_dimensions_uniform = -1;
+	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0, HelixLocator::s_screen_dimensions_uniform = -1, HelixLocator::s_halo_size_attrib_location = -1;
 	
 #ifndef MAC_PLUGIN
 	PFNGLCREATEPROGRAMPROC glCreateProgram;
@@ -82,16 +74,15 @@ namespace Helix {
 	PFNGLGETPROGRAMIVPROC glGetProgramiv;
 	PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
 	PFNGLUNIFORM2FPROC glUniform2f;
+	PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
+	PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
+	PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
+	PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 #endif /* N MAC_PLUGIN */
 	
 	HelixLocator::~HelixLocator() {
-		/*if (m_polygon)
-			delete m_polygon;*/
+		
 	}
-
-	/*MStatus HelixLocator::compute(const MPlug & plug, MDataBlock & data) {
-		return MS::kUnknownParameter;
-	}*/
 
 	void HelixLocator::initializeGL() {
 
@@ -185,6 +176,26 @@ namespace Helix {
 			s_gl_failed = true;
 		}
 
+		if ((glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC) GETPROCADDRESS("glGetAttribLocation")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
+		if ((glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC) GETPROCADDRESS("glEnableVertexAttribArray")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
+		if ((glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) GETPROCADDRESS("glDisableVertexAttribArray")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
+		if ((glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC) GETPROCADDRESS("glVertexAttribPointer")) == NULL) {
+			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+			s_gl_failed = true;
+		}
+
 #endif /* N MAC_PLUGIN */
 		
 		// Setup the shaders and programs
@@ -260,6 +271,15 @@ namespace Helix {
 			s_gl_failed = true;
 		}
 
+		/*
+		 * Setup halo size attribute for shader
+		 */
+
+		if ((s_halo_size_attrib_location = glGetAttribLocation(s_program, HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME)) == -1) {
+			std::cerr << "Failed to obtain location of " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME << " attribute" << std::endl;
+			s_gl_failed = true;
+		}
+
 		s_gl_initialized = true;
 	}
 
@@ -267,36 +287,6 @@ namespace Helix {
 			SELECTED_HALO_COLOR, SELECTED_NEIGHBOUR_HALO_COLOR, SELECTED_FIVEPRIME_HALO_COLOR, SELECTED_THREEPRIME_HALO_COLOR,
 			SELECTED_ADJACENT_HALO_COLOR, SELECTED_ADJACENT_NEIGHBOUR_HALO_COLOR, SELECTED_ADJACENT_FIVEPRIME_HALO_COLOR, SELECTED_ADJACENT_THREEPRIME_HALO_COLOR
 	};
-
-	// Helper method
-	/*MStatus FromDagPathArrayOfTransformToFloatArray(MDagPathArray & dagPathArray, float *vertices, unsigned char *colors, size_t index, size_t color_index, char *sequence) {
-		MStatus stat;
-
-		for(size_t i = 0; i < dagPathArray.length(); ++i) {
-			MFnTransform transform(dagPathArray[i], &stat);
-			MVector worldTranslation;
-
-			if (!stat) {
-				stat.perror("MFnTransform::#ctor");
-				return stat;
-			}
-
-			worldTranslation = transform.getTranslation(MSpace::kWorld, &stat);
-
-			if (!stat) {
-				stat.perror("MFnTransform::getTranslation");
-				return stat;
-			}
-
-			for(size_t j = 0; j < 3; ++j) {
-				vertices[(index + i) * 3 + j] = worldTranslation[j];
-				colors[(index + i) * 4 + j] = static_colors[color_index][j];
-			}
-			colors[(index + i) * 4 + 3] = static_colors[color_index][3];
-		}
-
-		return MStatus::kSuccess;
-	}*/
 
 	// Helper method
 	MStatus recursiveSearchForNeighbourBases(MObjectArray children, MDagPath dagPath, MObject forward_attribute, MObject backward_attribute, MDagPathArray & selectedNeighbourBases, MDagPathArray & endBases, bool force = false) {
@@ -393,7 +383,7 @@ namespace Helix {
 	}
 
 	// Helper method. MUST increase line_index and vertex_index!
-	MStatus ExtractDataForRendering(MDagPathArray array, unsigned int & vertex_index, unsigned int & line_index, float *vertices, float *line_vertices, unsigned char *colors, unsigned char *line_colors, char *sequence, int coloring) {
+	MStatus ExtractDataForRendering(MDagPathArray array, unsigned int & vertex_index, unsigned int & line_index, float *vertices, float *line_vertices, unsigned char *colors, unsigned char *line_colors, char *sequence, int coloring, float *halo_diameters, float halo_multiplier = 1.0f) {
 		MStatus status;
 
 		for(unsigned int i = 0; i < array.length(); ++i) {
@@ -420,8 +410,8 @@ namespace Helix {
 			// Extract label information
 			//
 
-			MPlug labelPlug(dagNode.object(), HelixBase::aLabel);
-			DNA::Names label;
+			MPlug labelPlug(object, HelixBase::aLabel);
+			DNA::Name label;
 
 			if (!(status = labelPlug.getValue((int &) label))) {
 				status.perror("MPlug::getValue");
@@ -436,6 +426,12 @@ namespace Helix {
 				return status;
 			}
 
+			// Set halo size
+
+			halo_diameters[vertex_index] = halo_multiplier;
+
+			// Extract sequence data AND increase the vertex_index
+
 			sequence[vertex_index++] = label.toChar();
 
 			MDagPath opposite;
@@ -449,21 +445,6 @@ namespace Helix {
 					status.perror("MFnTransform::getTranslation");
 					return status;
 				}
-
-				// Render a halo and label around the opposite base too
-				//
-
-				/*
-				 * NOT INTERESTING ANYMORE; NOTE: To bring this back, you must increase the amount of allocated RAM, below
-				 * or it will CRASH!
-				 *
-				for (size_t j = 0; j < 3; ++j)
-					vertices[vertex_index * 3 + j] = (GLfloat) opposite_vector[j];
-
-				for (size_t j = 0; j < 4; ++j)
-					colors [vertex_index * 4 + j] = (GLubyte) static_colors[coloring + 4][j];
-
-				sequence[vertex_index++] = DNA::ToChar(DNA::OppositeBase(label));*/
 
 				// Add a connecting line between the bases
 				//
@@ -517,124 +498,201 @@ namespace Helix {
 			}
 		}
 
-		//
-		// Obtain the required information for rendering
-		//
+		/*
+		 * New extraction code using the new API. Fixes duplications where nodes had several halos (Selected, prime ends and neighbour)
+		 * Might also be a bit faster, and definitely easier to read
+		 */
 
-		// Find all selected HelixBases
-
-		MObjectArray selectedBases, selectedNeighbourBases;
-		MDagPathArray neighbourBases, fivePrimeBases, threePrimeBases, selectedChildBases;
-
-		if (!(stat = SelectedStrands(selectedNeighbourBases, selectedBases))) {
-			stat.perror("SelectedStrands");
-			return;
-		}
-
-		// Find all children of type HelixBase and match them with the selectedBases array
-
-		MFnDagNode this_dagNode(thisMObject());
-		MFnDagNode parent_dagNode(this_dagNode.parent(0));
-
-		size_t childCount = parent_dagNode.childCount(&stat);
+		MObjectArray selectedChildBases, selectedChildBasesWithNeighbours;
+		Model::Helix helix(MFnDagNode(thisMObject()).parent(0, &stat)); // We can assume our node has a parent and that it is only the helix
 
 		if (!stat) {
-			stat.perror("MFnDagNode::childCount");
+			stat.perror("MFnDagNode::parent");
 			return;
 		}
 
-		for(unsigned int i = 0; i < childCount; ++i) {
-			MObject child = parent_dagNode.child(i, &stat);
+		if (!(stat = helix.getSelectedChildBases(selectedChildBases))) {
+			stat.perror("Helix::getSelectedChildBases");
+			return;
+		}
 
-			if (!stat) {
-				stat.perror("MFnDagNode::child");
+		/*
+		 * When the user hasn't selected anything
+		 */
+
+		if (selectedChildBases.length() == 0)
+			return;
+
+		/*
+		 * Iterate over all bases and iterate over their strands to extract neighbour bases
+		 */
+
+		for(unsigned int i = 0; i < selectedChildBases.length(); ++i) {
+			Model::Base base(selectedChildBases[i]);
+			Model::Strand strand(base);
+
+			Model::Strand::ForwardIterator it = strand.forward_begin();
+			for(; it != strand.forward_end(); ++it) {
+				selectedChildBasesWithNeighbours.append(it->getObject(stat));
+
+				if (!stat) {
+					stat.perror("Base::getObject");
+					return;
+				}
+			}
+
+			if (!it.loop()) {
+				for(Model::Strand::BackwardIterator bit = ++strand.reverse_begin(); bit != strand.reverse_end(); ++bit) {
+					selectedChildBasesWithNeighbours.append(bit->getObject(stat));
+
+					if (!stat) {
+						stat.perror("Base::getObject");
+						return;
+					}
+				}
+			}
+		}
+
+		/*
+		 * Data declaration, same as old code, might need a cleanup
+		 */
+		
+		size_t vertices_count = selectedChildBasesWithNeighbours.length();
+
+		// NOTE; Multiply length by two if adjacent bases are to be rendered. See code above!!
+		float *vertices = new float[vertices_count * 3], *line_vertices = new float[vertices_count * 3 * 2], *halo_diameters = new float[vertices_count];
+		unsigned char *colors = new unsigned char[vertices_count * 4], *line_colors = new unsigned char[vertices_count * 4 * 2];
+		char *sequence = new char[vertices_count];
+		unsigned int /*vertex_index = 0, */ line_index = 0;
+
+		/*
+		 * Data gathering
+		 */
+
+		for(unsigned int i = 0; i < selectedChildBasesWithNeighbours.length(); ++i) {
+			Model::Base base(selectedChildBasesWithNeighbours[i]);
+			MVector base_translation;
+
+			/*
+			 * Translation
+			 */
+
+			if (!(stat = base.getTranslation(base_translation, MSpace::kTransform))) {
+				stat.perror("Base::getTranslation");
 				return;
 			}
 
-			// If this base is in the selected bases, add it to the selectedChildBases
-			//
+			for(int j = 0; j < 3; ++j) {
+				vertices[i * 3 + j] = (float) base_translation[j];
+				line_vertices[line_index * 3 + j] = (float) base_translation[j];
+			}
 
-			for(unsigned int j = 0; j < selectedBases.length(); ++j) {
-				if (selectedBases[j] == child) {
-					MFnDagNode dagNode(selectedBases[j]);
-					MDagPath dagPath;
+			/*
+			 * Halo radius and coloring
+			 */
 
-					if (!(stat = dagNode.getPath(dagPath))) {
-						stat.perror("MFnDagNode::getPath");
-						return;
-					}
+			/* FIXME: Check if this is a selected base, in that case color it red */
 
-					selectedChildBases.append(dagPath);
+			if (std::find(&selectedChildBases[0], &selectedChildBases[0] + selectedChildBases.length(), selectedChildBasesWithNeighbours[i]) != &selectedChildBases[0] + selectedChildBases.length()) {
+				/*
+				 * This is a selected base
+				 */
+
+				for(int j = 0; j < 4; ++j) {
+					colors[i * 4 + j] = static_colors[0][j];
+					line_colors[line_index * 4 + j] = static_colors[0][j];
 				}
-
-				if (!stat) {
-					stat.perror("MFnDagNode::child");
-					return;
+				halo_diameters[i] = HALO_SELECTED_BASE_DIAMETER_MULTIPLIER;
+			}
+			else {
+				switch(base.type(stat)) {
+			
+				case Model::Base::FIVE_PRIME_END:
+					for(int j = 0; j < 4; ++j) {
+						colors[i * 4 + j] = static_colors[2][j];
+						line_colors[line_index * 4 + j] = static_colors[2][j];
+					}
+					halo_diameters[i] = HALO_FIVE_PRIME_BASE_DIAMETER_MULTIPLIER;
+					break;
+				case Model::Base::THREE_PRIME_END:
+					for(int j = 0; j < 4; ++j) {
+						colors[i * 4 + j] = static_colors[3][j];
+						line_colors[line_index * 4 + j] = static_colors[3][j];
+					}
+					halo_diameters[i] = HALO_THREE_PRIME_BASE_DIAMETER_MULTIPLIER;
+					break;
+				default:
+					for(int j = 0; j < 4; ++j) {
+						colors[i * 4 + j] = static_colors[1][j];
+						line_colors[line_index * 4 + j] = static_colors[1][j];
+					}
+					halo_diameters[i] = 1.0f;
+					break;
 				}
 			}
 
-			// If this base is in the selectedNeighbourBases, add it to the neighbourBases
+			if (!stat) {
+				stat.perror("Base::type");
+				return;
+			}
 
-			for(unsigned int j = 0; j < selectedNeighbourBases.length(); ++j) {
-				if (selectedNeighbourBases[j] == child) {
-					MFnDagNode dagNode(selectedNeighbourBases[j]);
-					MDagPath dagPath;
+			/*
+			 * Label
+			 */
 
-					if (!(stat = dagNode.getPath(dagPath))) {
-						stat.perror("MFnDagNode::getPath");
-						return;
-					}
+			DNA::Name label;
 
-					neighbourBases.append(dagPath);
+			if (!(stat = base.getLabel(label))) {
+				stat.perror("Base::getLabel");
+				return;
+			}
 
-					unsigned int endType = HelixBase_endType(child, &stat);
+			sequence[i] = label.toChar();
 
-					if (!stat) {
-						stat.perror("HelixBase_endType");
-						continue;
-					}
+			/*
+			 * Opposite base for line connection
+			 */
 
-					if (endType & FivePrime)
-						fivePrimeBases.append(dagPath);
-					else if (endType & ThreePrime)
-						threePrimeBases.append(dagPath);
-				}
+			Model::Base opposite_base = base.opposite(stat);
 
-				if (!stat) {
-					stat.perror("MFnDagNode::child");
+			if (stat) {
+				++line_index;
+
+				MVector opposite_base_translation;
+
+				if (!(stat = opposite_base.getTranslation(opposite_base_translation, MSpace::kTransform))) {
+					stat.perror("Base::getTranslation 2");
 					return;
 				}
+
+				for(int j = 0; j < 3; ++j)
+					line_vertices[line_index * 3 + j] = (float) opposite_base_translation[j];
+
+				/*
+				 * Opposite base type
+				 */
+
+				switch(opposite_base.type(stat)) {
+				case Model::Base::FIVE_PRIME_END:
+					for(int j = 0; j < 4; ++j)
+						line_colors[line_index * 4 + j] = static_colors[2][j];
+					break;
+				case Model::Base::THREE_PRIME_END:
+					for(int j = 0; j < 4; ++j)
+						line_colors[line_index * 4 + j] = static_colors[3][j];
+					break;
+				default:
+					for(int j = 0; j < 4; ++j)
+						line_colors[line_index * 4 + j] = static_colors[1][j];
+					break;
+				}
+
+				++line_index;
 			}
-		}
-
-		// Ok, we have gathered all the nodes required, now extract the information required for rendering
-		//
-
-		size_t vertices_count = selectedChildBases.length() + neighbourBases.length() + fivePrimeBases.length() + threePrimeBases.length();
-		// NOTE; Multiply length by two if adjacent bases are to be rendered. See code above!!
-		float *vertices = new float[vertices_count * 3], *line_vertices = new float[vertices_count * 3 * 2];
-		unsigned char *colors = new unsigned char[vertices_count * 4], *line_colors = new unsigned char[vertices_count * 4 * 2];
-		char *sequence = new char[vertices_count * 2];
-		unsigned int vertex_index = 0, line_index = 0;
-
-		if (!(stat = ExtractDataForRendering(neighbourBases, vertex_index, line_index, vertices, line_vertices, colors, line_colors, sequence, 1))) {
-			stat.perror("ExtractDataForRendering");
-			return;
-		}
-
-		if (!(stat = ExtractDataForRendering(fivePrimeBases, vertex_index, line_index, vertices, line_vertices, colors, line_colors, sequence, 2))) {
-			stat.perror("ExtractDataForRendering");
-			return;
-		}
-
-		if (!(stat = ExtractDataForRendering(threePrimeBases, vertex_index, line_index, vertices, line_vertices, colors, line_colors, sequence, 3))) {
-			stat.perror("ExtractDataForRendering");
-			return;
-		}
-
-		if (!(stat = ExtractDataForRendering(selectedChildBases, vertex_index, line_index, vertices, line_vertices, colors, line_colors, sequence, 0))) {
-			stat.perror("ExtractDataForRendering");
-			return;
+			else if (stat != MStatus::kNotFound) {
+				stat.perror("Base::opposite");
+				return;
+			}
 		}
 
 		// The actual rendering using OpenGL
@@ -673,6 +731,9 @@ namespace Helix {
 		//
 
 		if (!isOrtho && (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderHalo)) {
+			glEnableVertexAttribArray(s_halo_size_attrib_location);
+			glVertexAttribPointer(s_halo_size_attrib_location, 1, GL_FLOAT, GL_FALSE, 0, halo_diameters);
+
 			glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
 
 			glEnable(GL_POINT_SPRITE);
@@ -685,9 +746,11 @@ namespace Helix {
 			glVertexPointer(3, GL_FLOAT, 0, vertices);
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
 
-			glDrawArrays(GL_POINTS, 0, GLsizei(vertex_index));
+			glDrawArrays(GL_POINTS, 0, GLsizei(vertices_count));
 
 			glUseProgram(0);
+
+			glDisableVertexAttribArray(s_halo_size_attrib_location);
 		}
 
 		// Render the lines
@@ -752,7 +815,7 @@ namespace Helix {
 
 				double cylinder_origo, cylinder_height;
 
-				if (!(stat = Model::Helix(parent_dagNode.object()).getCylinderRange(cylinder_origo, cylinder_height))) {
+				if (!(stat = helix.getCylinderRange(cylinder_origo, cylinder_height))) {
 					stat.perror("Model::Helix::getCylinderRange");
 				}
 				else {
@@ -769,7 +832,6 @@ namespace Helix {
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, direction_arrow_colors);
 			glVertexPointer(3, GL_FLOAT, 0, direction_arrow_vertices);
 
-			//glDrawArrays(GL_LINE_LOOP, 0, 7);
 			glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_BYTE, direction_arrow_indices);
 
 			/*
@@ -779,9 +841,6 @@ namespace Helix {
 			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
 
 			glColorPointer(4, GL_UNSIGNED_BYTE, 0, direction_arrow_contour_colors);
-			/*glDisableClientState(GL_COLOR_ARRAY);
-			glColor3b(0, 0, 0);*/
-
 			glDrawArrays(GL_LINE_LOOP, 0, 7);
 
 			if (renderingCylinder)
@@ -796,7 +855,7 @@ namespace Helix {
 		glColor3ub(255, 255, 255);
 
 		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderSequence) {
-			for(size_t i = 0; i < vertex_index; ++i) {
+			for(size_t i = 0; i < vertices_count; ++i) {
 				if (!(stat = view.drawText(MString(&sequence[i], 1), MPoint(vertices[i * 3], vertices[i * 3 + 1] + DNA::RADIUS * DNA::SEQUENCE_RENDERING_Y_OFFSET, vertices[i * 3 + 2]), M3dView::kCenter))) {
 					stat.perror("M3dView::drawText");
 					break;
@@ -816,6 +875,7 @@ namespace Helix {
 		delete line_colors;
 		delete colors;
 		delete sequence;
+		delete halo_diameters;
 	}
 
 	bool HelixLocator::isBounded() const {

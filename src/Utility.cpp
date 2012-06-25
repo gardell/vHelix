@@ -382,107 +382,6 @@ namespace Helix {
 		return false;
 	}
 
-	//
-	// FIXME: The DNA.cpp to load molecules as well as this method need a lot of cleanup that could increase performance when creating bases
-	//
-
-	MStatus Helix_CreateBase(MObject & helix, MString name, MVector translation, MObject & result) {
-		MStatus status;
-
-		// Create the base
-		//
-
-		MFnDagNode base_dagNode;
-		result = base_dagNode.create(HelixBase::id, name, helix, &status);
-
-		if (!status) {
-			status.perror("MFnDagNode::create");
-			return status;
-		}
-
-		// Translate the base
-		//
-
-		MFnTransform base_transform(result);
-
-		if (!(status = base_transform.setTranslation(translation, MSpace::kTransform))) {
-			status.perror("MFnTransform::setTranslation");
-			return status;
-		}
-
-		// Attach the models
-		//
-
-		MDagPath arrowModel, moleculeModel;
-
-		if (!(status = DNA::GetArrowModel(arrowModel))) {
-			status.perror("DNA::GetArrowModel");
-			return status;
-		}
-
-		if (!(status = DNA::GetMoleculeModel(moleculeModel))) {
-			status.perror("DNA::GetMoleculeModel");
-			return status;
-		}
-
-		if (!(status = moleculeModel.extendToShape())) {
-			status.perror("MDagPath::extendToShape 1");
-		}
-
-		MObject moleculeModelObject = moleculeModel.node(&status);
-
-		if (!status) {
-			status.perror("MDagPath::node doesn't work on Shapes 2");
-		}
-
-		if (!(status = base_dagNode.addChild(moleculeModelObject, MFnDagNode::kNextPos, true))) {
-			status.perror("MFnDagNode::addChild 2");
-			return status;
-		}
-
-		unsigned int numArrowChildren = arrowModel.childCount(&status);
-
-		if (!status) {
-			status.perror("MDagPath::childCount");
-			return status;
-		}
-
-		for(unsigned int i = 0; i < numArrowChildren; ++i) {
-			MObject childObject = arrowModel.child(i, &status);
-
-			if (!status) {
-				status.perror("MDagPath::child");
-				continue;
-			}
-
-			MDagPath childDagPath;
-
-			if (!(status = MDagPath::getAPathTo(childObject, childDagPath))) {
-				status.perror("MDagPath::getAPathTo");
-				continue;
-			}
-
-			if (!(status = childDagPath.extendToShape())) {
-				status.perror("MDagNode::extendToShape");
-				continue;
-			}
-
-			MObject childShapeObject = childDagPath.node(&status);
-
-			if (!status) {
-				status.perror("MDagPath::node arrow shape");
-				continue;
-			}
-
-			if (!(status = base_dagNode.addChild(childShapeObject, MFnDagNode::kNextPos, true))) {
-				status.perror("MFnDagNode::addChild 2");
-				return status;
-			}
-		}
-
-		return MStatus::kSuccess;
-	}
-
 	MStatus Helix_Relatives(const MObject & helix, MObjectArray & result) {
 		MStatus status;
 
@@ -643,13 +542,10 @@ namespace Helix {
 				}
 
 				if (translation.z < z) {
-					//std::cerr << "replacing " << z << " with " << translation.z << " at index " << z_index << std::endl;
 					z = translation.z;
 					z_index = i;
 				}
 			}
-
-			//std::cerr << "chosen z: " << z << ", index: " << z_index << " named: " << MFnDagNode(input[z_index]).fullPathName().asChar() << std::endl;
 
 			result.append(input[z_index]);
 			input.remove(z_index);

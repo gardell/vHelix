@@ -111,7 +111,7 @@
 
 /*
  * I wanted to make a way to register commands that are easier to monitor (for having a progress bar etc)
- * This is an register operation, registerCommand, registerNode or registerTransform etc
+ * This is a register operation, registerCommand, registerNode or registerTransform etc
  */
 
 class Register {

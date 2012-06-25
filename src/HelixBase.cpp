@@ -238,7 +238,7 @@ namespace Helix {
 		}
 
 		for (int i = 0; i < DNA::BASES; ++i) {
-			const char label[] = { DNA::Names(i).toChar(), '\0' };
+			const char label[] = { DNA::Name(i).toChar(), '\0' };
 			labelAttr.addField(label, i);
 		}
 

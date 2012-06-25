@@ -20,18 +20,10 @@
 
 #include <algorithm>
 
-#define MEL_PARSE_MATERIALS_COMMAND			\
-	"$materials = `ls -mat \"DNA*\"`;\n"	\
-	"string $colors[];\n"	\
-	"for ($material in $materials) {\n"	\
-    "$dnaShader = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $material)`;\n"	\
-    "connectAttr ($material + \".outColor\") ($dnaShader + \".surfaceShader\");\n"	\
-    "$colors[size($colors)] = $dnaShader;\n"	\
-	"}\n"	\
-	"ls $colors;\n"
+#include <BackboneArrow.h>
 
 namespace DNA {
-	static const char *strands_str[] = { "forw", "backw" };
+	static const char *strands_str[] = { STRAND_NAMES };
 
 	const char *GetStrandName(int index) {
 		return strands_str[index];
@@ -68,201 +60,73 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 
 		return MStatus::kSuccess;
 	}
-	
-	static MDagPath moleculeModel_dagPath, arrowModel_dagPath;
 
-	// Another helper method
+	/*
+	 * New model handling API
+	 */
 
-	MStatus GetDagPathFromString(const char *name, MDagPath & dagPath) {
-		MStatus status;
-		MSelectionList selectionList;
-
-		if (!(status = selectionList.add(name, false))) {
-			status.perror("GetDagPathFromString: MSelectionList::add");
-			return status;
-		}
-
-		MObject backboneArrow_object;
-
-		if (!(status = selectionList.getDagPath(0, dagPath))) {
-			status.perror("MSelectionList::getDagPath");
-			return status;
-		}
-
-		return MStatus::kSuccess;
-	}
-
-	// Helper method, load the file and set the moleculeModel and arrowModel
-
-	MStatus LoadMoleculeAndArrowModels() {
+	MStatus GetMoleculeAndArrowShapes(MDagPathArray & shapes) {
 		MStatus status;
 
-		// Load the file containing the models
-		//
+		MDagPath node;
 
-		if (!(status = MFileIO::importFile(HELIXBASE_MODEL_SOURCE_FILES))) {
-			status.perror("MFileIO::importFile");
+		/*
+		 * Find out if the BACKBONE_ARROW_NAME node exists
+		 */
 
-			// Ask the user to select the file containing the source files instead
-			//
+		{
+			MSelectionList selectionList;
+			MString name(BACKBONE_ARROW_NAME);
 
-			bool opened_file = false;
-			while (!opened_file) {
-				MCommandResult commandResult;
-				if (!(status = MGlobal::executeCommand(MString("fileDialog2 -fileFilter \"Maya Files (*.ma *.mb)\" -dialogStyle 2 -caption \"Select the file containing the Helix molecule (Typically called " HELIXBASE_MODEL_SOURCE_FILES ")\" -fileMode 1;"), commandResult))) {
+			if (!(status = selectionList.add(name, false))) {
+				/*
+				 * The node does not exist. Create it
+				 */
+
+				if (!(status = MGlobal::executeCommand(CREATE_BACKBONE_ARROW_COMMAND))) {
 					status.perror("MGlobal::executeCommand");
 					return status;
 				}
 
-				MStringArray stringArray;
-				if (!(status = commandResult.getResult(stringArray))) {
-					status.perror("MCommandResult::getResult");
+				/*
+				 * Now try again
+				 */
+
+				if (!(status = selectionList.add(name, false))) {
+					status.perror("Couldn't find the previously loaded backbone arrow model");
 					return status;
 				}
-
-				for(unsigned int i = 0; i < stringArray.length(); ++i) {
-					if (!(status = MFileIO::importFile(stringArray[i])))
-						status.perror(MString("MFileIO::importFile for ") + stringArray[i]);
-				}
-
-				// Make sure we actually loaded something useful
-				//
-
-				if (!(status = GetDagPathFromString("BackboneArrow", arrowModel_dagPath))) {
-					status.perror("GetDagPathFromString");
-					continue;
-				}
-
-				bool isValid = arrowModel_dagPath.isValid(&status);
-
-				if (!status) {
-					status.perror("MDagPath::isValid");
-					return status;
-				}
-
-				if (!isValid)
-					continue;
-
-				opened_file = true;
-			}
-		}
-
-		// Extract the models
-		//
-
-		if (!(status = GetDagPathFromString("BackboneArrow", arrowModel_dagPath))) {
-			status.perror("GetDagPathFromString");
-			return status;
-		}
-
-		{
-			MCommandResult commandResult;
-
-			if (!(status = MGlobal::executeCommand(MString("sphere -radius ") + DNA::SPHERE_RADIUS + " -name vHelixMolecule", commandResult))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
 			}
 
-			MStringArray result;
-			if (!(status = commandResult.getResult(result))) {
-				status.perror("MCommandResult::getResult");
-				return status;
-			}
-
-			MSelectionList selectionList;
-
-			if (!(status = selectionList.add(result[0], false))) {
-				status.perror("LoadMoleculeAndArrowModels: MSelectionList::add");
-				return status;
-			}
-
-			MObject molecule_object;
-
-			if (!(status = selectionList.getDagPath(0, moleculeModel_dagPath, molecule_object))) {
-				status.perror("MSelectionList::getDagPath main");
+			if (!(status = selectionList.getDagPath(0, node))) {
+				status.perror("MSelectionList::getDagPath");
 				return status;
 			}
 		}
 
 		/*
-		 * Now make the models invisible
+		 * Ok we have the dagpath to the backboneArrow transform containing all the shapes required (arrow + molecule)
 		 */
 
-		{
-			MFnDagNode molecule_dagNode(moleculeModel_dagPath);
-
-			MObject molecule_visibility_attribute = molecule_dagNode.attribute("visibility", &status);
-
-			if (!status) {
-				status.perror("MFnDagNode::attribute 1");
-				return status;
-			}
-
-			MPlug moleculeVisibility(moleculeModel_dagPath.node(), molecule_visibility_attribute);
-
-			if (!(status = moleculeVisibility.setBool(false))) {
-				status.perror("MPlug::setBool 1");
-				return status;
-			}
-
-			MFnDagNode arrow_dagNode(arrowModel_dagPath);
-
-			MObject arrow_visibility_attribute = arrow_dagNode.attribute("visibility", &status);
-
-			if (!status) {
-				status.perror("MFnDagNode::attribute 2");
-				return status;
-			}
-
-			MPlug arrowVisibility(arrowModel_dagPath.node(), arrow_visibility_attribute);
-
-			if (!(status = arrowVisibility.setBool(false))) {
-				status.perror("MPlug::setBool 2");
-				return status;
-			}
-		}
-
-		return MStatus::kSuccess;
-	}
-
-	MStatus GetMoleculeModel(MDagPath & result) {
-		MStatus status;
-		bool valid = moleculeModel_dagPath.isValid(&status);
-
-		if (!status) {
-			status.perror("MDagPath::isValid");
+		unsigned int numShapes;
+		
+		if (!(status = node.numberOfShapesDirectlyBelow(numShapes))) {
+			status.perror("MDagPath::numberOfShapesDirectlyBelow");
 			return status;
 		}
 
-		if (!valid) {
-			if (!(status = LoadMoleculeAndArrowModels())) {
-				status.perror("LoadMoleculeAndArrowModels");
+		shapes.setLength(numShapes);
+
+		for(unsigned int i = 0; i < numShapes; ++i) {
+			MDagPath shape = node;
+			
+			if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+				status.perror("MDagPath::extendToShapeDirectlyBelow");
 				return status;
 			}
+
+			shapes[i] = shape;
 		}
-
-		result = moleculeModel_dagPath;
-
-		return MStatus::kSuccess;
-	}
-
-	MStatus GetArrowModel(MDagPath & result) {
-		MStatus status;
-		bool valid = arrowModel_dagPath.isValid(&status);
-
-		if (!status) {
-			status.perror("MDagPath::isValid");
-			return status;
-		}
-
-		if (!valid) {
-			if (!(status = LoadMoleculeAndArrowModels())) {
-				status.perror("LoadMoleculeAndArrowModels");
-				return status;
-			}
-		}
-
-		result = arrowModel_dagPath;
 
 		return MStatus::kSuccess;
 	}

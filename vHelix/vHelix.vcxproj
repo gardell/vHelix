@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\ApplySequence.h" />
     <ClInclude Include="..\include\ApplySequenceGui.h" />
+    <ClInclude Include="..\include\BackboneArrow.h" />
     <ClInclude Include="..\include\Connect.h" />
     <ClInclude Include="..\include\controller\ApplySequence.h" />
     <ClInclude Include="..\include\controller\Connect.h" />

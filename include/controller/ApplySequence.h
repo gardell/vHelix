@@ -8,7 +8,7 @@
 
 namespace Helix {
 	namespace Controller {
-		class ApplySequence : public Operation<Model::Base, DNA::Names, DNA::Names> {
+		class ApplySequence : public Operation<Model::Base, DNA::Name, DNA::Name> {
 		public:
 			inline void setSequence(const MString & sequence) {
 				m_sequence = sequence;
@@ -17,8 +17,8 @@ namespace Helix {
 
 		protected:
 			MStatus doExecute(Model::Base & element);
-			MStatus doUndo(Model::Base & element, DNA::Names & undoData);
-			MStatus doRedo(Model::Base & element, DNA::Names & redoData);
+			MStatus doUndo(Model::Base & element, DNA::Name & undoData);
+			MStatus doRedo(Model::Base & element, DNA::Name & redoData);
 
 		private:
 			MString m_sequence;

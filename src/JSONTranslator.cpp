@@ -7,6 +7,8 @@
 
 #include <JSONTranslator.h>
 
+#include <model/Helix.h>
+
 #include <Helix.h>
 #include <HelixBase.h>
 #include <DNA.h>
@@ -419,12 +421,36 @@ namespace Helix {
 							// Helix_CreateBase is where the creation of the node is made
 							//
 
-							if (!(status = Helix_CreateBase(helix, MString(DNA::GetStrandName(l)) + "_base_" + directional_index, MVector(
+							/*
+							 * Because the new API is replacing the old, i've removed Helix_CreateBase here even though the JSONTranslator have not yet been updated
+							 */
+
+							/*if (!(status = Helix_CreateBase(helix, MString(DNA::GetStrandName(l)) + "_base_" + directional_index, MVector(
 									DNA::RADIUS * cos(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
 									DNA::RADIUS * sin(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
 									DNA::STEP * directional_index), helixBase))) {
 								status.perror("Helix_CreateBase");
 								return status;
+							}*/
+
+							{
+								Model::Helix helix_(helix);
+								MString name(MString(DNA::GetStrandName(l)) + "_base_" + directional_index);
+								MVector translation(DNA::RADIUS * cos(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
+													DNA::RADIUS * sin(DEG2RAD(honeycomb_rotation_offset + 155.0 * l + DNA::PITCH * directional_index)),
+													DNA::STEP * directional_index);
+								Model::Base base_;
+								if (!(status = Model::Base::Create(helix_, name, translation, base_))) {
+									status.perror("Base::Create");
+									return status;
+								}
+
+								helixBase = base_.getObject(status);
+
+								if (!status) {
+									status.perror("Base::getObject");
+									return status;
+								}
 							}
 
 							base_pair.append(helixBase);

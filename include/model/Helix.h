@@ -49,6 +49,12 @@ namespace Helix {
 			static MStatus GetRelatives(const MObjectArray & helices, MObjectArray & relatives);
 
 			/*
+			 * This is used by the Locator. Find all selected bases that belong to this helix.
+			 */
+
+			MStatus getSelectedChildBases(MObjectArray & selectedBases);
+
+			/*
 			 * Show all helices using the cylinder representation or the base representation
 			 */
 

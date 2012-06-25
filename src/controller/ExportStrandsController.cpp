@@ -69,7 +69,7 @@ namespace Helix {
 
 			Model::Strand::ForwardIterator f_it = Model::Strand(*last_it).forward_begin(), last_f_it = f_it;
 			for(; f_it != element.forward_end(); ++f_it) {
-				DNA::Names label;
+				DNA::Name label;
 
 				if (!(status = f_it->getLabel(label))) {
 					status.perror("Base::getLabel 1");

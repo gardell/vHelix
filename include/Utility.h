@@ -45,8 +45,6 @@ namespace Helix {
 
 	unsigned int HelixBase_endType(MObject & base, MStatus *retStatus = NULL);
 
-	MStatus Helix_CreateBase(MObject & helix, MString name, MVector translation, MObject & result);
-	
 	MStatus Helix_Relatives(const MObject & helix, MObjectArray & result);
 
 	bool HelixBase_isForward(const MObject & base, MStatus *retStatus = NULL);

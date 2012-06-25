@@ -34,7 +34,7 @@
 
 #define SELECTED_HALO_COLOR { 0xFF, 0, 0, 0x7F }
 #define SELECTED_FIVEPRIME_HALO_COLOR { 0, 0, 0x7F, 0x5F }
-#define SELECTED_THREEPRIME_HALO_COLOR { 0, 0x7F, 0, 0x5F }
+#define SELECTED_THREEPRIME_HALO_COLOR { 0, 0xAF, 0, 0x5F }
 #define SELECTED_NEIGHBOUR_HALO_COLOR { 0, 0xAA, 0xAA, 0x5F }
 #define SELECTED_ADJACENT_HALO_COLOR { 0xAF, 0x7F, 0x7F, 0x5F }
 #define SELECTED_ADJACENT_NEIGHBOUR_HALO_COLOR { 0x7F, 0x7F, 0x7F, 0x5F }
@@ -44,30 +44,40 @@
 #define HALO_POINT_SIZE "0.0007"
 #define BASE_CONNECTIONS_LINE_WIDTH 2.0f
 
+#define HALO_THREE_PRIME_BASE_DIAMETER_MULTIPLIER 1.05f
+#define HALO_FIVE_PRIME_BASE_DIAMETER_MULTIPLIER 1.1f
+#define HALO_SELECTED_BASE_DIAMETER_MULTIPLIER 1.15f
+
+#define HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME "diameter_multiplier"
+
 #define GLSL_VERTEX_SHADER																									\
 		"#version 120\n",																									\
 		"const float pointSize = " HALO_POINT_SIZE ";\n",																	\
 		"uniform vec2 screen;\n",																							\
 		"varying vec4 color;\n",																							\
+		"varying float radius_multiplier;\n",																				\
+		"attribute float " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME ";\n",														\
 		"void main() {\n",																									\
 		"    gl_Position = ftransform();\n",																				\
-		"    gl_PointSize = screen.x * screen.y * pointSize / (2.0 * gl_Position.w);\n",																	\
+		"    gl_PointSize = screen.x * screen.y * pointSize * " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME " / (2.0 * gl_Position.w);\n",	\
 		"	 color = gl_Color;\n",																							\
+		"	 radius_multiplier = " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME ";\n",												\
 		"}\n"
 
-#define GLSL_VERTEX_SHADER_COUNT	9 // Always change this one when modifying the shader source code!
+#define GLSL_VERTEX_SHADER_COUNT	12 // Always change this one when modifying the shader source code!
 
 #define GLSL_FRAGMENT_SHADER																								\
 		"#version 120\n",																									\
-		"const float smooth_step = 0.05, halo_radius = 0.15;\n",																\
+		"const float smooth_step = 0.05, halo_radius = 0.15;\n",															\
 		"varying vec4 color;\n",																							\
+		"varying float radius_multiplier;\n",																				\
 		"void main() {\n",																									\
 		"	 float radius = length(gl_PointCoord * 2.0 - vec2(1.0));\n",													\
 		"    gl_FragColor = color * smoothstep(1.0, 1.0 - smooth_step, radius) *\n",										\
-		"                   smoothstep(1.0 - smooth_step * 2 - halo_radius, 1.0 - smooth_step - halo_radius, radius);\n",	\
+		"                   smoothstep((1.0 - smooth_step * 2 - halo_radius) / radius_multiplier, (1.0 - smooth_step - halo_radius) / radius_multiplier, radius);\n",	\
 		"}\n"
 
-#define GLSL_FRAGMENT_SHADER_COUNT	8 // Always change this one when modifying the shader source code!
+#define GLSL_FRAGMENT_SHADER_COUNT	9 // Always change this one when modifying the shader source code!
 
 namespace Helix {
 	class HelixLocator : public MPxLocatorNode {
@@ -90,7 +100,7 @@ namespace Helix {
 		
 	protected:
 		static bool s_gl_initialized, s_gl_failed;
-		static GLint s_program, s_vertex_shader, s_fragment_shader, s_screen_dimensions_uniform;
+		static GLint s_program, s_vertex_shader, s_fragment_shader, s_screen_dimensions_uniform, s_halo_size_attrib_location;
 
 		void initializeGL();
 	};

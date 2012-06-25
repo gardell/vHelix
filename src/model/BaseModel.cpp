@@ -13,10 +13,13 @@
 #include <maya/MPlugArray.h>
 #include <maya/MDGModifier.h>
 #include <maya/MCommandResult.h>
+#include <maya/MFnDagNode.h>
 
 #include <Helix.h>
 #include <HelixBase.h>
 #include <Utility.h>
+
+#include <DNA.h>
 
 #include <algorithm>
 
@@ -24,7 +27,7 @@ namespace Helix {
 	namespace Model {
 		MStatus Base::Create(Helix & helix, const MString & name, const MVector & translation, Base & base) {
 			MStatus status;
-			MObject base_object, helix_object = helix.getObject(status);
+			/*MObject base_object, helix_object = helix.getObject(status);
 
 			if (!status) {
 				status.perror("Helix::getObject");
@@ -35,7 +38,59 @@ namespace Helix {
 
 			base = base_object;
 
-			return status;
+			return status;*/
+
+			MObject helix_object = helix.getObject(status);
+
+			if (!status) {
+				status.perror("Helix::getObject");
+				return status;
+			}
+
+			/*
+			 * Create the 'HelixBase' object type
+			 */
+
+			MFnDagNode base_dagNode;
+			MObject base_object = base_dagNode.create(HelixBase::id, name, helix_object, &status);
+
+			if (!status) {
+				status.perror("MFnDagNode::create");
+				return status;
+			}
+
+			/*
+			 * Translate the base
+			 */
+
+			MFnTransform base_transform(base_object);
+
+			if (!(status = base_transform.setTranslation(translation, MSpace::kTransform))) {
+				status.perror("MFnTransform::setTranslation");
+				return status;
+			}
+
+			/*
+			 * Attach the shapes
+			 */
+
+			MDagPathArray shapes;
+
+			if (!(status = DNA::GetMoleculeAndArrowShapes(shapes))) {
+				status.perror("DNA::GetMoleculeAndArrowShapes");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < shapes.length(); ++i) {
+				if (!(status = base_dagNode.addChild(shapes[i].node(), MFnDagNode::kNextPos, true))) {
+					status.perror("MFnDagNode::addChild");
+					return status;
+				}
+			}
+
+			base = base_object;
+
+			return MStatus::kSuccess;
 		}
 
 		MStatus Base::AllSelected(MObjectArray & selectedBases) {
@@ -223,9 +278,8 @@ namespace Helix {
 			MPlug plug(object, attribute);
 			MPlugArray targetPlugs;
 			MDGModifier dgModifier;
-			/*bool isConnected;
-
-			isConnected = plug.connectedTo(targetPlugs, true, false, &status);*/
+			
+			plug.connectedTo(targetPlugs, true, false, &status);
 
 			if (!status) {
 				status.perror("MPlug::connectedTo 1");
@@ -245,7 +299,7 @@ namespace Helix {
 
 			targetPlugs.clear(); // Dunno if required though
 
-			//isConnected = plug.connectedTo(targetPlugs, false, true, &status);
+			plug.connectedTo(targetPlugs, false, true, &status);
 
 			if (!status) {
 				status.perror("MPlug::connectedTo 2");
@@ -415,7 +469,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus Base::setLabel(DNA::Names label) {
+		MStatus Base::setLabel(DNA::Name label) {
 			MStatus status;
 			MObject thisObject = getObject(status);
 
@@ -469,7 +523,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus Base::getLabel(DNA::Names & label) {
+		MStatus Base::getLabel(DNA::Name & label) {
 			MStatus status;
 			MObject thisObject = getObject(status);
 

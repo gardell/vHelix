@@ -86,15 +86,21 @@ namespace Helix {
 			for(int j = 0; j < 2; ++j) {
 				MString strand(DNA::GetStrandName(j));
 
+				std::cerr << "Creating base" << std::endl;
+
 				if (!(status = Model::Base::Create(m_helix, strand + "_" + (i + 1), basePositions[j], base_objects[j]))) {
 					status.perror("Base::Create");
 					return status;
 				}
+
+				std::cerr << "Setting material" << std::endl;
 					
 				if (!(status = base_objects[j].setMaterial(m_materials[j]))) {
 					status.perror("Base::setMaterial");
 					return status;
 				}
+
+				std::cerr << "Material set" << std::endl;
 
 				MProgressWindow::advanceProgress(1);
 			}

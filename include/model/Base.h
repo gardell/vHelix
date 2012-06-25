@@ -67,8 +67,8 @@ namespace Helix {
 			 * Labels
 			 */
 
-			MStatus setLabel(DNA::Names label);
-			MStatus getLabel(DNA::Names & label);
+			MStatus setLabel(DNA::Name label);
+			MStatus getLabel(DNA::Name & label);
 
 			/*
 			 * Find the next, prev or opposite bases.

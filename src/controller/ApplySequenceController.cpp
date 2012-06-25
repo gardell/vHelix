@@ -10,7 +10,7 @@ namespace Helix {
 
 				char char_name = m_sequence.asChar()[m_sequence_index++];
 
-				DNA::Names name(char_name), previous_name;
+				DNA::Name name(char_name), previous_name;
 
 				if (!(status = element.getLabel(previous_name))) {
 					status.perror("Base::getLabel");
@@ -28,7 +28,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus ApplySequence::doUndo(Model::Base & element, DNA::Names & undoData) {
+		MStatus ApplySequence::doUndo(Model::Base & element, DNA::Name & undoData) {
 			MStatus status;
 
 			if (!(status = element.setLabel(undoData))) {
@@ -39,7 +39,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus ApplySequence::doRedo(Model::Base & element, DNA::Names & redoData) {
+		MStatus ApplySequence::doRedo(Model::Base & element, DNA::Name & redoData) {
 			return doUndo(element, redoData);
 		}
 	}

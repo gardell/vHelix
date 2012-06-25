@@ -48,10 +48,10 @@ namespace Helix {
 			 * Remove the newly created connection
 			 */
 
-			if (!(status = m_previous_connections[0][0].disconnect_forward())) {
+			/*if (!(status = m_previous_connections[0][0].disconnect_forward())) {
 				status.perror("Base::disconnect_forward");
 				return status;
-			}
+			}*/
 
 			/*
 			 * Make the old connections. Note that there is no connect_backward method, thus the indices have been switched
@@ -81,10 +81,10 @@ namespace Helix {
 			 * Disconnect the 'old' connections (or if restored by undo) then make the new connections
 			 */
 
-			if (m_previous_connections[0].size() > 1) {
-				/*
+			/*if (m_previous_connections[0].size() > 1) {
+				 *
 				 * The base is connected, acting as the source
-				 */
+				 *
 
 				std::cerr << "The source is already connected, calling disconnect_forward" << std::endl;
 
@@ -97,9 +97,9 @@ namespace Helix {
 			}
 
 			if (m_previous_connections[1].size() > 1) {
-				/*
+				 *
 				 * This base too, is already connected, acting as the target
-				 */
+				 *
 
 				std::cerr << "The destination is already connected, calling disconnect_backward on the target" << std::endl;
 
@@ -109,7 +109,7 @@ namespace Helix {
 				}
 
 				std::cerr << "disconnect_backward done" << std::endl;
-			}
+			}*/
 
 			/*
 			 * Connect the source to its new destination
