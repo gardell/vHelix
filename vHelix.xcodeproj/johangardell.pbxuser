@@ -154,10 +154,10 @@
 	};
 	AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1205, 4693}}";
-			sepNavSelRange = "{1165, 0}";
-			sepNavVisRange = "{604, 1280}";
-			sepNavWindowFrame = "{{495, 138}, {1264, 735}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1205, 4719}}";
+			sepNavSelRange = "{9062, 0}";
+			sepNavVisRange = "{713, 1351}";
+			sepNavWindowFrame = "{{21, 103}, {1264, 735}}";
 		};
 	};
 	AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {
