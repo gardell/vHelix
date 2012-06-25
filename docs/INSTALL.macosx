@@ -14,10 +14,6 @@ Mac OS X 10.6+ x64
 	- Notice that this usually requires root access, if that is not a
 	  possibility, see instructions below
 
-- Copy the two included files 'BackboneArrow.ma' and 'DNAshaders.ma' to your
-  'maya/projects/default/scenes/' directory, usually found under your home
-  folder, example: '/Users/<username>/Documents/maya/projects/default/scenes'
-
 - Start Autodesk Maya 2011
 
 - In Maya, select 'Window' > 'Settings/Preferences' > 'Plug-in Manager'
@@ -32,7 +28,7 @@ Mac OS X 10.6+ x64
 - The plug-in is now loaded and a new menu item named 'Helix' should have
   appeared in the Maya main window
 
-If you are, for example using a public computer, and are not able to move files
+If you are, for example using a public computer, and not able to move files
 into the 'plug-ins' directory, you can still load the vHelix plugin using a
 MEL command. To do this:
 
@@ -44,8 +40,7 @@ MEL command. To do this:
 
 loadPlugin "/Users/<path-to-your-vHelix-plugin-mll-file>/vHelix.bundle"
 
-  using the path to where you saved the downloaded vHelix plugin. Note that MEL
-  requires that backslashes '\\' must occur twice as directory separators.
+  using the path to where you saved the downloaded vHelix plugin.
 
 - Click the arrow shaped button 'Execute' on the upper row of the
   'Script Editor' window.
@@ -55,5 +50,3 @@ loadPlugin "/Users/<path-to-your-vHelix-plugin-mll-file>/vHelix.bundle"
 
 - When the command is executed, the plug-in is loaded and a new menu item named
   'Helix' should appear in the Maya main window
-
-
