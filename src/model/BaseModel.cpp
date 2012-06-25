@@ -82,7 +82,9 @@ namespace Helix {
 			}
 
 			for(unsigned int i = 0; i < shapes.length(); ++i) {
-				if (!(status = base_dagNode.addChild(shapes[i].node(), MFnDagNode::kNextPos, true))) {
+				MObject shape_object = shapes[i].node();
+
+				if (!(status = base_dagNode.addChild(shape_object, MFnDagNode::kNextPos, true))) {
 					status.perror("MFnDagNode::addChild");
 					return status;
 				}
