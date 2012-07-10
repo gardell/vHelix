@@ -35,14 +35,10 @@
 			PBXWorkspaceStateSaveDate = 361700596;
 		};
 		perUserProjectItems = {
-			AA78DD93158F185E001B1D84 = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
-			AA78DDA1158F1B23001B1D84 = AA78DDA1158F1B23001B1D84 /* PBXTextBookmark */;
-			AA78DDAC158F1CE3001B1D84 = AA78DDAC158F1CE3001B1D84 /* PBXBookmark */;
-			AA78DDAD158F1CEE001B1D84 = AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */;
-			AA78DDB3158F1CEE001B1D84 = AA78DDB3158F1CEE001B1D84 /* PBXTextBookmark */;
-			AA78DDC5158F1E46001B1D84 /* PBXTextBookmark */ = AA78DDC5158F1E46001B1D84 /* PBXTextBookmark */;
-			AA78DDC8158F1E46001B1D84 /* PBXTextBookmark */ = AA78DDC8158F1E46001B1D84 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
+			AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */ = AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */;
+			AA78DDCA1598A57E001B1D84 /* PBXTextBookmark */ = AA78DDCA1598A57E001B1D84 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
@@ -64,27 +60,6 @@
 		rType = 0;
 		vrLen = 1200;
 		vrLoc = 2231;
-	};
-	AA78DDA1158F1B23001B1D84 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA78DDA2158F1B23001B1D84 /* hashtable_policy.h */;
-		name = "hashtable_policy.h: 828";
-		rLen = 0;
-		rLoc = 29297;
-		rType = 0;
-		vrLen = 883;
-		vrLoc = 28730;
-	};
-	AA78DDA2158F1B23001B1D84 /* hashtable_policy.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = hashtable_policy.h;
-		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
-		sourceTree = "<absolute>";
-	};
-	AA78DDAC158F1CE3001B1D84 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */;
 	};
 	AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -108,19 +83,9 @@
 			sepNavVisRange = "{28730, 840}";
 		};
 	};
-	AA78DDB3158F1CEE001B1D84 /* PBXTextBookmark */ = {
+	AA78DDCA1598A57E001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
-		fRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */;
-		name = "DuplicateController.cpp: 39";
-		rLen = 0;
-		rLoc = 795;
-		rType = 0;
-		vrLen = 1260;
-		vrLoc = 79;
-	};
-	AA78DDC5158F1E46001B1D84 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA78DDAE158F1CEE001B1D84 /* hashtable_policy.h */;
+		fRef = AA78DDCB1598A57E001B1D84 /* hashtable_policy.h */;
 		name = "hashtable_policy.h: 828";
 		rLen = 0;
 		rLoc = 29297;
@@ -128,15 +93,11 @@
 		vrLen = 840;
 		vrLoc = 28730;
 	};
-	AA78DDC8158F1E46001B1D84 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */;
-		name = "DuplicateController.cpp: 47";
-		rLen = 0;
-		rLoc = 1165;
-		rType = 0;
-		vrLen = 1280;
-		vrLoc = 604;
+	AA78DDCB1598A57E001B1D84 /* hashtable_policy.h */ = {
+		isa = PBXFileReference;
+		name = hashtable_policy.h;
+		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
+		sourceTree = "<absolute>";
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
 		isa = PBXSourceControlManager;

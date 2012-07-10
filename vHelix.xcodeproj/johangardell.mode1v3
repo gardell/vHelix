@@ -197,48 +197,7 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
-				<string>AA78DDB1158F1CEE001B1D84</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>DuplicateController.cpp</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>AA78DDB2158F1CEE001B1D84</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>DuplicateController.cpp</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>AA78DDC8158F1E46001B1D84</string>
-						<key>history</key>
-						<array>
-							<string>AA78DDB3158F1CEE001B1D84</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 20}, {1264, 638}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>416 237 1264 679 0 0 1920 1058 </string>
-			</dict>
-		</dict>
-	</array>
+	<array/>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>-1</integer>
@@ -340,7 +299,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>1204 -85 1182 756 0 0 1920 1058 </string>
+						<string>801 -2 1182 756 0 0 1920 1058 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -368,7 +327,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>AA78DDC5158F1E46001B1D84</string>
+										<string>AA78DDCA1598A57E001B1D84</string>
 										<key>history</key>
 										<array>
 											<string>AAF469CA158233EA00EC064F</string>
@@ -387,7 +346,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {974, 442}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1204 -85 1182 756 0 0 1920 1058 </string>
+								<string>801 -2 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -407,7 +366,7 @@
 								<key>Frame</key>
 								<string>{{0, 447}, {974, 268}}</string>
 								<key>RubberWindowFrame</key>
-								<string>1204 -85 1182 756 0 0 1920 1058 </string>
+								<string>801 -2 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -573,10 +532,9 @@
 	<array>
 		<string>AA976852158209130049D263</string>
 		<string>/Users/johangardell/Documents/vHelix/vHelix.xcodeproj</string>
-		<string>AA78DDB1158F1CEE001B1D84</string>
 	</array>
 	<key>WindowString</key>
-	<string>1204 -85 1182 756 0 0 1920 1058 </string>
+	<string>801 -2 1182 756 0 0 1920 1058 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
