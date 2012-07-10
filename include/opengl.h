@@ -18,8 +18,8 @@
 
 #ifdef MAC_PLUGIN
 
-#include <OpenGL/glext.h>
 #include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 
 #else
 
@@ -28,7 +28,6 @@
 
 #include <GL/gl.h>
 #include <GL/glext.h>
-#include <GL/glu.h>
 
 /*
  * Must be called in main when using GLX, in an active GL context when using WGL. Installs the OpenGL extensions
