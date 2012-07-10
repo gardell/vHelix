@@ -109,7 +109,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Program Files\Autodesk\Maya2011\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OpenMaya.lib;OpenMayaUI.lib;Foundation.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OpenMaya.lib;OpenMayaUI.lib;Foundation.lib;OpenGL32.lib;GLU32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -160,6 +160,7 @@
     <ClInclude Include="..\include\controller\Duplicate.h" />
     <ClInclude Include="..\include\controller\ExportStrands.h" />
     <ClInclude Include="..\include\controller\ExtendStrand.h" />
+    <ClInclude Include="..\include\controller\JSONImporter.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
     <ClInclude Include="..\include\Creator.h" />
@@ -183,12 +184,17 @@
     <ClInclude Include="..\include\model\Material.h" />
     <ClInclude Include="..\include\model\Object.h" />
     <ClInclude Include="..\include\model\Strand.h" />
+    <ClInclude Include="..\include\opengl.h" />
     <ClInclude Include="..\include\PaintStrand.h" />
     <ClInclude Include="..\include\RetargetBase.h" />
     <ClInclude Include="..\include\ToggleCylinderBaseView.h" />
     <ClInclude Include="..\include\ToggleLocatorRender.h" />
     <ClInclude Include="..\include\Tracker.h" />
     <ClInclude Include="..\include\Utility.h" />
+    <ClInclude Include="..\include\view\BaseShape.h" />
+    <ClInclude Include="..\include\view\BaseShapeUI.h" />
+    <ClInclude Include="..\include\view\HelixShape.h" />
+    <ClInclude Include="..\include\view\HelixShapeUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp" />
@@ -200,6 +206,7 @@
     <ClCompile Include="..\src\controller\DuplicateController.cpp" />
     <ClCompile Include="..\src\controller\ExportStrandsController.cpp" />
     <ClCompile Include="..\src\controller\ExtendStrandController.cpp" />
+    <ClCompile Include="..\src\controller\JSONImporterController.cpp" />
     <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />
@@ -221,12 +228,17 @@
     <ClCompile Include="..\src\model\MaterialModel.cpp" />
     <ClCompile Include="..\src\model\ObjectModel.cpp" />
     <ClCompile Include="..\src\model\StrandModel.cpp" />
+    <ClCompile Include="..\src\opengl.cpp" />
     <ClCompile Include="..\src\PaintStrand.cpp" />
     <ClCompile Include="..\src\RetargetBase.cpp" />
     <ClCompile Include="..\src\ToggleCylinderBaseView.cpp" />
     <ClCompile Include="..\src\ToggleLocatorRender.cpp" />
     <ClCompile Include="..\src\Tracker.cpp" />
     <ClCompile Include="..\src\Utility.cpp" />
+    <ClCompile Include="..\src\view\BaseShape.cpp" />
+    <ClCompile Include="..\src\view\BaseShapeUI.cpp" />
+    <ClCompile Include="..\src\view\HelixShape.cpp" />
+    <ClCompile Include="..\src\view\HelixShapeUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

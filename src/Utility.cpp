@@ -19,6 +19,7 @@
 #include <maya/MFnSet.h>
 #include <maya/MDagModifier.h>
 #include <maya/MItDag.h>
+#include <maya/MFnNurbsCurve.h>
 
 #include <HelixBase.h>
 #include <Helix.h>
@@ -695,5 +696,72 @@ namespace Helix {
 				}
 			}
 		}
+	}
+
+	/*
+	 * It looks like these could also be put into the template, but getDagPath actually takes a third argument
+	 * thus the methods do not have the same method definition
+	 */
+
+	MObject GetObjectFromSelectionList(const MSelectionList & list, unsigned int index) {
+		MObject node;
+		list.getDependNode(index, node);
+		
+		return node;
+	}
+
+	MDagPath GetDagPathFromSelectionList(const MSelectionList & list, unsigned int index) {
+		MDagPath node;
+		list.getDagPath(index, node);
+		
+		return node;
+	}
+
+	MStatus ArgList_GetObjects(const MArgList & args, const MSyntax & syntax, const char *flag, MObjectArray & result) {
+		return ArgList_ArgumentNodes<MObjectArray, MObject, &GetObjectFromSelectionList> (args, syntax, flag, result);
+	}
+
+	MStatus ArgList_GetDagPaths(const MArgList & args, const MSyntax & syntax, const char *flag, MDagPathArray & result) {
+		return ArgList_ArgumentNodes<MDagPathArray, MDagPath, &GetDagPathFromSelectionList> (args, syntax, flag, result);
+	}
+
+	MStatus CVCurveFromObject(const Model::Object & object, MPointArray & array) {
+		MStatus status;
+		MDagPath dagPath = object.getDagPath(status);
+
+		if (!status) {
+			status.perror("Object::getDagPath");
+			return status;
+		}
+		
+		MDagPath shape = dagPath;
+		unsigned int numShapes;
+		
+		if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+			status.perror("MDagPath::numberOfShapesDirectlyBelow");
+			return status;
+		}
+
+		for(unsigned int i = 0; i < numShapes; ++i) {
+			if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+				status.perror("MDagPath::extendToShapeDirectlyBelow");
+				return status;
+			}
+
+			if (shape.hasFn(MFn::kNurbsCurve)) {
+				MFnNurbsCurve nurbsCurve(shape);
+
+				if (!(status = nurbsCurve.getCVs(array, MSpace::kWorld))) {
+					status.perror("MFnNurbsCurve::getCVs");
+					return status;
+				}
+
+				return MStatus::kSuccess;
+			}
+			else
+				std::cerr << "No MFnNurbsCurve!" << std::endl;
+		}
+
+		return MStatus::kNotFound;
 	}
 }

@@ -140,7 +140,7 @@ namespace Helix {
 				MObject targetObject = object.getObject(status);
 
 				if (!status) {
-					status.perror("This error is normal. Object::getObject() on target");
+					//status.perror("This error is normal. Object::getObject() on target");
 					return false;
 				}
 
@@ -166,7 +166,7 @@ namespace Helix {
 				MObject targetObject = object.getObject(status);
 
 				if (!status) {
-					status.perror("This error is normal. Object::getObject() on target");
+					//status.perror("This error is normal. Object::getObject() on target");
 					return false;
 				}
 

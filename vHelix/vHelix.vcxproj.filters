@@ -28,6 +28,12 @@
     <Filter Include="Source Files\model">
       <UniqueIdentifier>{2508124a-c87b-4d73-9289-64e8bd2c07d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\view">
+      <UniqueIdentifier>{58cc321c-c5ab-445c-a753-253b2a2f5f20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\view">
+      <UniqueIdentifier>{847f838d-16b5-4e6f-b760-1b09cca8a8b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ApplySequence.h">
@@ -147,6 +153,24 @@
     <ClInclude Include="..\include\BackboneArrow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\view\BaseShape.h">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\view\BaseShapeUI.h">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\controller\JSONImporter.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\view\HelixShape.h">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\view\HelixShapeUI.h">
+      <Filter>Header Files\view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -256,6 +280,24 @@
     </ClCompile>
     <ClCompile Include="..\src\controller\ExportStrandsController.cpp">
       <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\view\BaseShape.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\view\BaseShapeUI.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\JSONImporterController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\view\HelixShape.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\view\HelixShapeUI.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\opengl.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

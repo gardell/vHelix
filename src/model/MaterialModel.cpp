@@ -12,6 +12,8 @@
 #include <maya/MFileIO.h>
 #include <maya/MGlobal.h>
 #include <maya/MCommandResult.h>
+#include <maya/MPlug.h>
+#include <maya/MPlugArray.h>
 
 #include <DNA.h>
 
@@ -81,22 +83,18 @@
 	"ls $material_sets;\n"
 
 /*
- * Notice that this code is also defined in the old DNA.cpp. So in case it changes before this file becomes the main version..
+ * The caDNAno importer creates new materials with the colors extracted from the JSON file. This script creates the material
+ * Note that before this command, you *must* define the array $color that sets the color of the material and the $name that sets the name of the material
  */
 
-/*#define MEL_PARSE_MATERIALS_COMMAND			\
-	"$materials = `ls -mat \"DNA*\"`;\n"	\
-	"string $colors[];\n"	\
-	"for ($material in $materials) {\n"	\
-    "$dnaShader = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $material)`;\n"	\
-    "connectAttr ($material + \".outColor\") ($dnaShader + \".surfaceShader\");\n"	\
-    "$colors[size($colors)] = $dnaShader;\n"	\
-	"}\n"	\
-	"ls $colors;\n"
-
-#define MEL_MATERIALS_EXIST_COMMAND			\
-	"ls -mat \"DNA*\";"
-*/
+#define MEL_CREATE_MATERIAL_COMMAND																							\
+	"$materialNode = `createNode lambert -ss -n $materialName`;\n"															\
+	"setAttr ($materialNode + \".dc\") 1;\n"																				\
+	"setAttr ($materialNode + \".c\") -type \"float3\" $materialColor[0] $materialColor[1] $materialColor[2];\n"			\
+	"connectAttr ($materialNode + \".msg\") \":defaultShaderList1.s\" -na;\n"												\
+	"$materialSet = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $materialNode)`;\n"		\
+	"connectAttr ($materialNode + \".outColor\") ($materialSet + \".surfaceShader\");\n"									\
+	"ls $materialSet;\n"
 
 namespace Helix {
 	namespace Model {
@@ -158,6 +156,102 @@ namespace Helix {
 			std::copy(&materialNames[0], &materialNames[0] + materialNames.length(), std::back_insert_iterator<Container>(s_materials));
 
 			return &s_materials[0];
+		}
+
+		MStatus Material::getColor(float color[3]) const {
+			MStatus status;
+			MObject material_object;
+
+			{
+				MSelectionList list;
+				if (!(status = list.add(m_material))) {
+					status.perror("MSelectionList::add");
+					return status;
+				}
+
+				if (!(status = list.getDependNode(0, material_object))) {
+					status.perror("MSelectionList::getDependNode");
+					return status;
+				}
+			}
+
+			MFnDependencyNode material_dependencyNode(material_object);
+
+			MPlug surfaceShader_plug = material_dependencyNode.findPlug("surfaceShader", &status);
+
+			if (!status) {
+				status.perror("MFnDependencyNode::findPlug");
+				return status;
+			}
+
+			MPlugArray surfaceShader_attachments;
+
+			if (!surfaceShader_plug.connectedTo(surfaceShader_attachments, true, false, &status)) {
+				std::cerr << "The outColor is not attached as a destination, thus we cannot find the color attribute" << std::endl;
+				return MStatus::kFailure;
+			}
+
+			for(unsigned int i = 0; i < surfaceShader_attachments.length(); ++i) {
+				MFnDependencyNode attachment_dependencyNode(surfaceShader_attachments[i].node());
+
+				MPlug color_plug = attachment_dependencyNode.findPlug("color", &status);
+
+				if (!status) {
+					status.perror("MFnDependencyNode::findPlug");
+					continue;
+				}
+
+				color[0] = color_plug.child(0).asFloat();
+				color[1] = color_plug.child(1).asFloat();
+				color[2] = color_plug.child(2).asFloat();
+
+				return MStatus::kSuccess;
+			}
+
+			std::cerr << "Couldn't find a color attribute" << std::endl;
+
+			return MStatus::kFailure;
+		}
+
+		MStatus Material::Create(const MString & name, float color[3], Material & material) {
+			MCommandResult result;
+			MStringArray materialName;
+			MStatus status;
+
+			if (!(status = MGlobal::executeCommand(MString("float $materialColor[] = { (float) ") + color[0] + ", (float) " + color[1] + ", (float) " + color[2] + " };\nstring $materialName = \"" + name + "\";\n" + MEL_CREATE_MATERIAL_COMMAND, result))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			if (!(status = result.getResult(materialName))) {
+				status.perror("MCommandResult::getResult");
+				return status;
+			}
+
+			std::cerr << "Created new material named: " << materialName[0].asChar() << std::endl;
+
+			material.m_material = materialName[0];
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Material::ApplyMaterialToBases::add(Base & base) {
+			MStatus status;
+
+			m_concat += " " + base.getDagPath(status).fullPathName();
+
+			return status;
+		}
+
+		MStatus Material::ApplyMaterialToBases::apply() const {
+			MStatus status;
+
+			if (!(status = MGlobal::executeCommand(MString("sets -noWarnings -forceElement ") + m_material.getMaterial() + m_concat))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			return MStatus::kSuccess;
 		}
 	}
 }

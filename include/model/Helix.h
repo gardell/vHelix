@@ -26,6 +26,7 @@ namespace Helix {
 			 * Create: Creates a new helix node, attach a locator node and transforms it to the given position
 			 */
 
+			//static MStatus Create(const MMatrix & transform, Helix & helix);
 			static MStatus Create(const MString & name, const MMatrix & transform, Helix & helix);
 
 			/*
@@ -136,6 +137,12 @@ namespace Helix {
 			 */
 
 			MStatus getRelatives(MObjectArray & helices);
+
+			/*
+			 * Only used for memory allocation
+			 */
+			
+			unsigned int Helix::numChildren(MStatus & status);
 
 		private:
 			bool hasCylinder(MStatus & status);

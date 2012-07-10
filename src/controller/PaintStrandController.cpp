@@ -20,7 +20,13 @@ namespace Helix {
 
 			if (!(status = element.getMaterial(previous_material))) {
 				status.perror("Base::getMaterial");
-				return status;
+				//return status;
+
+				/*
+				 * This is in case there's no material assigned. It won't really be undoable though
+				 * The JSON importer does not paint scaffolds, thus it is affected by this
+				 */
+				previous_material = m_material;
 			}
 
 			saveUndoRedo(element, previous_material, m_material);

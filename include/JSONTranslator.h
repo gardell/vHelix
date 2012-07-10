@@ -10,7 +10,7 @@
 
 #include <Definition.h>
 
-#include <iostream>
+#include <controller/JSONImporter.h>
 
 #include <maya/MDagPath.h>
 #include <maya/MPxFileTranslator.h>
@@ -29,6 +29,9 @@ namespace Helix {
 		virtual MPxFileTranslator::MFileKind identifyFile (	const MFileObject& file, const char* buffer, short size) const;
 
 		static void *creator();
+
+	private:
+		Controller::JSONImporter m_operator;
 	};
 }
 

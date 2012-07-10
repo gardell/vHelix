@@ -17,7 +17,7 @@
 #define VIEW_BASES "base"
 #define VIEW_CYLINDERS "cylinder"
 #define TOGGLE_VIEWS	VIEW_BASES, VIEW_CYLINDERS
-#define TOGGLE_VIEW_FLAGS { { true, false }, { false, true } }
+//#define TOGGLE_VIEW_FLAGS { { true, false }, { false, true } }
 
 
 namespace Helix {

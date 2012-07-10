@@ -10,6 +10,7 @@
 
 #include <model/Object.h>
 #include <model/Material.h>
+#include <model/Color.h>
 
 #include <DNA.h>
 
@@ -17,6 +18,8 @@
 #include <maya/MTransformationMatrix.h>
 #include <maya/MVector.h>
 #include <maya/MEulerRotation.h>
+#include <maya/MFnDagNode.h>
+#include <maya/MNodeMessage.h>
 
 namespace Helix {
 	namespace Model {
@@ -26,6 +29,7 @@ namespace Helix {
 		 */
 
 		class Base : public Object {
+			friend void BaseModel_Shape_NodePreRemovalCallback(MObject & node,void *clientData);
 		public:
 			enum Type {
 				BASE = 0,
@@ -48,6 +52,15 @@ namespace Helix {
 			MStatus getMaterial(Material & material);
 
 			/*
+			 * Faster than the above
+			 */
+
+			MStatus getMaterialColor(float & r, float & g, float & b, float & a);
+
+			/*Color getColor(MStatus & status);
+			MStatus setColor(const Color & color);*/
+
+			/*
 			 * Returns one of the enum types above
 			 */
 
@@ -57,10 +70,10 @@ namespace Helix {
 			 * Connect/disconnect
 			 */
 
-			MStatus connect_forward(Base & target);
+			MStatus connect_forward(Base & target, bool ignorePreviousConnections = false);
 			MStatus disconnect_forward();
 			MStatus disconnect_backward();
-			MStatus connect_opposite(Base & target);
+			MStatus connect_opposite(Base & target, bool ignorePreviousConnections = false);
 			MStatus disconnect_opposite();
 
 			/*
@@ -91,6 +104,14 @@ namespace Helix {
 			 */
 
 			Helix getParent(MStatus & status);
+
+		private:
+			/*
+			 * The shape is only created once, after this, it is instead instanced. Saves on file size and hopefully increases performance
+			 */
+
+			/*static MObject s_shape;
+			static MCallbackId s_shape_NodePreRemovalCallbackId;*/
 		};
 	}
 }

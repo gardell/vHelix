@@ -17,6 +17,9 @@
 namespace Helix {
 	namespace Controller {
 		MStatus Duplicate::duplicate(const MObjectArray & helices) {
+			if (helices.length() == 0)
+				return MStatus::kSuccess;
+
 			m_helices.setLength(helices.length());
 			std::copy(&helices[0], &helices[0] + helices.length(), &m_helices[0]);
 			
@@ -38,7 +41,7 @@ namespace Helix {
 			
 #ifdef MAC_PLUGIN
 			/*
-			 * The implementation of std::tr1::unordered_map is broken in GCC 4.2 that we're using on the Mac version
+			 * The implementation of std::tr1::unordered_map is broken in GCC 4.2, which is the version we're using under Mac OS X
 			 */
 
 			class : public std::list< std::pair<Model::Base, Model::Base> > {

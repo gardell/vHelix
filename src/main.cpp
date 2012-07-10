@@ -5,6 +5,8 @@
  *      Author: johan
  */
 
+#include <opengl.h>
+
 #include <DNA.h>
 #include <Utility.h>
 
@@ -30,6 +32,11 @@
 #include <ExportStrands.h>
 #include <JSONTranslator.h>
 #include <RetargetBase.h>
+
+#include <view/BaseShape.h>
+#include <view/BaseShapeUI.h>
+#include <view/HelixShape.h>
+#include <view/HelixShapeUI.h>
 
 #include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
@@ -64,7 +71,9 @@
 	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),	\
 	new RegisterTransform(HELIX_HELIXBASE_NAME, Helix::HelixBase::id, Helix::HelixBase::creator, Helix::HelixBase::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),	\
 	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),					\
-	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator)
+	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),															\
+	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),	\
+	new RegisterShape(HELIX_SHAPE_NAME, Helix::View::HelixShape::id, Helix::View::HelixShape::creator, Helix::View::HelixShape::initialize, Helix::View::HelixShapeUI::creator)
 
 #define MEL_REGISTER_MENU_COMMAND													\
     "menu -tearOff true -label \"Helix\" -allowOptionBoxes true -parent $gMainWindow;\n"
@@ -276,6 +285,39 @@ private:
 	void *(*m_creator)();
 };
 
+class RegisterShape : public Register {
+public:
+	RegisterShape(MString typeName, MTypeId typeId, MCreatorFunction creatorFunction, MInitializeFunction initFunction, MCreatorFunction uiCreatorFunction) : m_typeName(typeName), m_typeId(typeId), m_creatorFunction(creatorFunction), m_initFunction(initFunction), m_uiCreatorFunction(uiCreatorFunction) {
+
+	}
+
+	virtual MStatus doRegister(MFnPlugin & plugin) {
+		MStatus status;
+
+		if (!(status = plugin.registerShape(m_typeName, m_typeId, m_creatorFunction, m_initFunction, m_uiCreatorFunction))) {
+			status.perror(MString("MFnPlugin::registerShape: ") + m_typeName);
+			return status;
+		}
+
+		return MStatus::kSuccess;
+	}
+
+	virtual MStatus doDeregister(MFnPlugin & plugin) {
+		return plugin.deregisterNode(m_typeId);
+	}
+
+	virtual bool isValid() const {
+		return true;
+	}
+
+protected:
+	MString m_typeName;
+	MTypeId m_typeId;
+	MCreatorFunction m_creatorFunction;
+	MInitializeFunction m_initFunction;
+	MCreatorFunction m_uiCreatorFunction;
+};
+
 MString g_menuName;
 
 enum {
@@ -289,6 +331,16 @@ MCallbackId g_afterImport_CallbackId, g_afterOpen_CallbackId;
 
 MLL_EXPORT MStatus initializePlugin(MObject obj) {
 	MStatus status;
+
+	/*
+	 * GLX allows extensions to be queried *before* we have a context
+	 * WGL requires a context though
+	 */
+
+#ifdef LINUX
+	if (!installGLExtensions())
+		return MStatus::kFailure;
+#endif /* N LINUX */
 
 	// Data for initialization
 	//

@@ -52,7 +52,7 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 		forward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);
 		forward.z = index * STEP + Z_SHIFT - totalNumBases * STEP / 2;
 
-		rad += DEG2RAD(155.0);
+		rad += DEG2RAD(OPPOSITE_ROTATION);
 
 		backward.x = ONE_MINUS_SPHERE_RADIUS * sin(rad);
 		backward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);

@@ -29,6 +29,13 @@
 
 #define STRAND_NAMES	"forw", "backw"
 
+/*
+ * There's no string concatenation available, if PITCH or STEP is changed below, it must be changed here as well for cylinder texturing to work..
+ */
+
+#define PITCH_STR "720.0 / 21.0"
+#define STEP_STR "0.334"
+
 namespace DNA {
 	/*
 	 * Some constants defining DNA behaviour and visual representation
@@ -38,7 +45,8 @@ namespace DNA {
 				 STEP = 0.334,
 				 RADIUS = 1.0,
 				 SPHERE_RADIUS = 0.13,														// not dna properties, but visual
-				 HELIX_RADIUS = RADIUS + SPHERE_RADIUS + 0.20,								// TODO: This looked visually correct
+				 OPPOSITE_ROTATION = 155.0,
+				 HELIX_RADIUS = RADIUS + 0.05,												// From the paper 'Self-assembly of DNA into nanoscale three-dimensional shapes'
 				 Z_SHIFT = 0.165,															// Don't know what to call it, just got it from earlier source code
 				 ONE_MINUS_SPHERE_RADIUS = (1.0 - SPHERE_RADIUS),
 				 SEQUENCE_RENDERING_Y_OFFSET = 0.22,										// Multiplied by RADIUS

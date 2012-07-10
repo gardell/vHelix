@@ -7,6 +7,8 @@
 
 #include <model/Base.h>
 #include <model/Helix.h>
+#include <view/BaseShape.h>
+#include <view/HelixShape.h>
 
 #include <maya/MGlobal.h>
 #include <maya/MPlug.h>
@@ -14,6 +16,8 @@
 #include <maya/MDGModifier.h>
 #include <maya/MCommandResult.h>
 #include <maya/MFnDagNode.h>
+#include <maya/MPxSurfaceShapeUI.h>
+#include <maya/MMaterial.h>
 
 #include <Helix.h>
 #include <HelixBase.h>
@@ -27,18 +31,6 @@ namespace Helix {
 	namespace Model {
 		MStatus Base::Create(Helix & helix, const MString & name, const MVector & translation, Base & base) {
 			MStatus status;
-			/*MObject base_object, helix_object = helix.getObject(status);
-
-			if (!status) {
-				status.perror("Helix::getObject");
-				return status;
-			}
-
-			status = Helix_CreateBase(helix_object, name, translation, base_object);
-
-			base = base_object;
-
-			return status;*/
 
 			MObject helix_object = helix.getObject(status);
 
@@ -74,20 +66,45 @@ namespace Helix {
 			 * Attach the shapes
 			 */
 
-			MDagPathArray shapes;
+			/*
+			 * Here, the Shape is instanced, which should save on memory and file size
+			 * however, it seems as instancing decreases performance on large models
+			 */
+			
 
-			if (!(status = DNA::GetMoleculeAndArrowShapes(shapes))) {
-				status.perror("DNA::GetMoleculeAndArrowShapes");
-				return status;
-			}
+			/*if (s_shape.isNull()) {
+				MFnDagNode shape_dagNode;
 
-			for(unsigned int i = 0; i < shapes.length(); ++i) {
-				MObject shape_object = shapes[i].node();
+				s_shape = shape_dagNode.create(::Helix::View::BaseShape::id, base_object, &status);
 
-				if (!(status = base_dagNode.addChild(shape_object, MFnDagNode::kNextPos, true))) {
-					status.perror("MFnDagNode::addChild");
+				if (!status) {
+					status.perror("MFnDagNode::create BaseShape");
 					return status;
 				}
+
+				 *
+				 * If the user creates a new scene, the shape will be deleted and our upcoming calls will crash
+				 * by tracking the shape we'll be notified when that occurs
+				 *
+
+				MNodeMessage::addNodePreRemovalCallback(s_shape, BaseModel_Shape_NodePreRemovalCallback, NULL, &status);
+			}
+			else if (!(status = base_dagNode.addChild(s_shape, MFnDagNode::kNextPos, true))) {
+				status.perror("MFnDagNode::addChild");
+				return status;
+			}*/
+
+			/*
+			 * Here a new copy of the shapes is made every time
+			 */
+
+			MFnDagNode shape_dagNode;
+
+			MObject shape_object = shape_dagNode.create(::Helix::View::BaseShape::id, base_object, &status);
+
+			if (!status) {
+				status.perror("MFnDagNode::create BaseShape");
+				return status;
 			}
 
 			base = base_object;
@@ -117,6 +134,70 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
+		}
+
+		/*
+		 * Optimized version that does not call any MEL commands
+		 */
+
+		MStatus Base::getMaterialColor(float & r, float & g, float & b, float & a) {
+			MStatus status;
+
+			MDagPath & dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath");
+				return status;
+			}
+
+			/*
+			 * We must iterate over the models Shape nodes, for the first we find that seem to have a material attached
+			 * originally, the idea was to use the listSets -extendToShape but it doesn't seem to work...
+			 */
+
+			unsigned int numShapes;
+			
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+				
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				if (MFnDagNode(shape).typeId(&status) == View::BaseShape::id) {
+					MPxSurfaceShapeUI *shapeUI = MPxSurfaceShapeUI::surfaceShapeUI(shape, &status);
+
+					if (!status) {
+						status.perror("MPxSurfaceShapeUI::surfaceShapeUI");
+						return status;
+					}
+
+					MMaterial material = shapeUI->material(shape);
+
+					MColor color;
+					material.getDiffuse(color);
+
+					r = color.r;
+					g = color.g;
+					b = color.b;
+					a = color.a;
+
+					return MStatus::kSuccess;
+				}
+
+				if (!status) {
+					status.perror("MFnDagNode::typeId");
+					return status;
+				}
+			}
+
+			return MStatus::kNotFound;
 		}
 
 		MStatus Base::getMaterial(Material & material) {
@@ -185,6 +266,123 @@ namespace Helix {
 			return MStatus::kNotFound;
 		}
 
+		/*Color Base::getColor(MStatus & status) {
+			MPlug color_plug(getObject(status), HelixBase::aColor);
+
+			if (!status) {
+				status.perror("Base::getObject");
+				return Color();
+			}
+
+			//color.index = color_plug.asInt();
+
+			status = MStatus::kSuccess;
+
+			return Color(color_plug.asInt());
+		}
+
+		MStatus Base::setColor(const Color & color) {
+			MStatus status;
+			MPlug color_plug(getObject(status), HelixBase::aColor);
+
+			if (!status) {
+				status.perror("Base::getObject");
+				return status;
+			}
+
+			color_plug.setInt(color.index);
+			
+			return MStatus::kSuccess;
+		}*/
+
+		/*
+		MStatus Base::setMaterial(const Material & material) {
+			if (material.getMaterial().length() == 0)
+				return MStatus::kSuccess;
+
+			MStatus status;
+			MDagPath base_dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath");
+				return status;
+			}
+
+			if (!(status = MGlobal::executeCommand(MString("sets -noWarnings -forceElement ") + material.getMaterial() + " " + base_dagPath.fullPathName()))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Base::getMaterial(Material & material) {
+			MStatus status;
+
+			//Material *materials;
+			
+			size_t numMaterials;
+			Material::Iterator materials_begin = Material::AllMaterials_begin(status, numMaterials);
+
+			if (!status) {
+				status.perror("Material::AllMaterials_begin");
+				return status;
+			}
+
+			MDagPath & dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath");
+				return status;
+			}
+
+			 *
+			 * We must iterate over the models Shape nodes, for the first we find that seem to have material attached
+			 * originally, the idea was to use the listSets -extendToShape but it doesn't seem to work...
+			 *
+
+			unsigned int numShapes;
+			
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+				
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MCommandResult commandResult;
+				MStringArray stringArray;
+
+				if (!(status = MGlobal::executeCommand(MString("listSets -object ") + shape.fullPathName(), commandResult))) {
+					status.perror("MGlobal::executeCommand");
+					return status;
+				}
+
+				if (!(status = commandResult.getResult(stringArray))) {
+					status.perror("MCommandResult::getResult");
+					return status;
+				}
+
+				for(unsigned int j = 0; j < stringArray.length(); ++j) {
+					Material::Iterator materialIt;
+
+					if ((materialIt = std::find(materials_begin, Material::AllMaterials_end(), stringArray[j])) != Material::AllMaterials_end()) {
+						material = *materialIt;
+						return MStatus::kSuccess;
+					}
+				}
+			}
+
+			return MStatus::kNotFound;
+		}
+		*/
+
 		Base::Type Base::type(MStatus & status) {
 			MObject thisObject(getObject(status));
 
@@ -215,7 +413,7 @@ namespace Helix {
 			return (Base::Type) ((!isBackwardConnected ? Base::FIVE_PRIME_END : 0) | (!isForwardConnected ? Base::THREE_PRIME_END : 0));
 		}
 
-		MStatus Base::connect_forward(Base & target) {
+		MStatus Base::connect_forward(Base & target, bool ignorePreviousConnections) {
 			MStatus status;
 
 			/*
@@ -240,14 +438,16 @@ namespace Helix {
 			 * Remove all old connections
 			 */
 
-			if (!(status = disconnect_forward())) {
-				status.perror("Base::disconnect_forward");
-				return status;
-			}
+			if (!ignorePreviousConnections) {
+				if (!(status = disconnect_forward())) {
+					status.perror("Base::disconnect_forward");
+					return status;
+				}
 
-			if (!(status = target.disconnect_backward())) {
-				status.perror("Base::disconnect_backward");
-				return status;
+				if (!(status = target.disconnect_backward())) {
+					status.perror("Base::disconnect_backward");
+					return status;
+				}
 			}
 
 			MPlug forwardPlug (thisObject, HelixBase::aForward), backwardPlug (targetObject, HelixBase::aBackward);
@@ -351,7 +551,7 @@ namespace Helix {
 			return Base_disconnect_attribute(thisObject, ::Helix::HelixBase::aBackward);
 		}
 
-		MStatus Base::connect_opposite(Base & target) {
+		MStatus Base::connect_opposite(Base & target, bool ignorePreviousConnections) {
 			MStatus status;
 
 			/*
@@ -376,14 +576,16 @@ namespace Helix {
 			 * Remove all old connections
 			 */
 
-			if (!(status = disconnect_opposite())) {
-				status.perror("Base::disconnect_opposite");
-				return status;
-			}
+			if (!ignorePreviousConnections) {
+				if (!(status = disconnect_opposite())) {
+					status.perror("Base::disconnect_opposite");
+					return status;
+				}
 
-			if (!(status = target.disconnect_opposite())) {
-				status.perror("Base::disconnect_opposite");
-				return status;
+				if (!(status = target.disconnect_opposite())) {
+					status.perror("Base::disconnect_opposite");
+					return status;
+				}
 			}
 
 			MPlug thisLabelPlug (thisObject, HelixBase::aLabel), targetLabelPlug (targetObject, HelixBase::aLabel);

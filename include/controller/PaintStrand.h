@@ -162,6 +162,91 @@ namespace Helix {
 				}
 			}
 		};
+
+		/*
+		 * This one is used by the JSON importer, it is not interested in undo functionality as the strand has not existed before
+		 */
+
+		class PaintMultipleStrandsNoUndoFunctor {
+		public:
+			class SetMaterialFunctor {
+			public:
+				inline SetMaterialFunctor(Model::Material::ApplyMaterialToBases apply) : m_apply(apply) {
+
+				}
+
+				inline void operator() (Model::Base & base) {
+					MStatus status;
+
+					if (!(status = m_apply.add(base)))
+						m_status = status;
+				}
+
+				inline MStatus status() const {
+					return m_status;
+				}
+
+				inline const Model::Material::ApplyMaterialToBases & getApply() const {
+					return m_apply;
+				}
+
+			private:
+				Model::Material::ApplyMaterialToBases m_apply;
+				MStatus m_status;
+			};
+
+			inline void operator() (Model::Strand strand, Model::Material & material) {
+				/*
+				 * Randomize a new color, assume numMaterials > 0
+				 */
+
+				Model::Strand::ForwardIterator it = strand.forward_begin();
+
+				SetMaterialFunctor functor(material.setMaterialOnMultipleBases());
+				for_each_ref_itref(it, strand.forward_end(), functor);
+
+				if (!(m_status = functor.status())) {
+					m_status.perror("SetMaterialFunctor::status 1");
+					return;
+				}
+
+				if (!it.loop()) {
+					// Step back a step so that we don't color our base again. In the case of an end base with no backward connection, the loop will just be empty
+					strand.setDefiningBase(strand.getDefiningBase().backward());
+
+					for_each_ref(strand.reverse_begin(), strand.reverse_end(), functor);
+
+					if (!(m_status = functor.status())) {
+						m_status.perror("SetMaterialFunctor::status 2");
+						return;
+					}
+				}
+
+				if (!(m_status = functor.getApply().apply())) {
+					m_status.perror("Material::ApplyMaterialToBases");
+					return;
+				}
+			}
+
+			inline const MStatus & status() const {
+				return m_status;
+			}
+
+		private:
+			MStatus m_status;
+		};
+
+		class PaintMultipleStrandsNoUndoNoOverrideFunctor : public PaintMultipleStrandsNoUndoFunctor {
+		public:
+			inline void operator() (Model::Strand strand, Model::Material & material) {
+				MStatus status;
+				Model::Material m;
+
+				if (!(status = strand.getDefiningBase().getMaterial(m)))
+					PaintMultipleStrandsNoUndoFunctor::operator()(strand, material);
+			}
+		private:
+		};
 	}
 }
 

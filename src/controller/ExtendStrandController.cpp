@@ -250,13 +250,13 @@ namespace Helix {
 				 */
 
 				if (extendForward) {
-					if (!(status = previous_base.connect_forward(base))) {
+					if (!(status = previous_base.connect_forward(base, true))) {
 						status.perror("Base::connect_forward 1");
 						return status;
 					}
 				}
 				else {
-					if (!(status = base.connect_forward(previous_base))) {
+					if (!(status = base.connect_forward(previous_base, true))) {
 						status.perror("Base::connect_forward 2");
 						return status;
 					}
@@ -281,18 +281,29 @@ namespace Helix {
 						 * The opposite base exists, connect to it
 						 */
 
-						if (isDestinationForOpposite) {
-							if (!(status = opposite.connect_opposite(base))) {
-								status.perror("Base::connect_opposite 1");
-								return status;
+						Model::Helix opposite_base_helix = opposite.getParent(status);
+
+						if (!status) {
+							status.perror("Base::getParent");
+							return status;
+						}
+
+						if (helix == opposite_base_helix) {
+							if (isDestinationForOpposite) {
+								if (!(status = opposite.connect_opposite(base, true))) {
+									status.perror("Base::connect_opposite 1");
+									return status;
+								}
+							}
+							else {
+								if (!(status = base.connect_opposite(opposite, true))) {
+									status.perror("Base::connect_opposite 2");
+									return status;
+								}
 							}
 						}
-						else {
-							if (!(status = base.connect_opposite(opposite))) {
-								status.perror("Base::connect_opposite 2");
-								return status;
-							}
-						}
+						else
+							hasOppositeStrand = false;
 					}
 					else {
 						/*
@@ -306,15 +317,11 @@ namespace Helix {
 				}
 				else {
 
-					std::cerr << "Not extending to opposite" << std::endl;
-
 					/*
 					 * Since we're extending along a direction in which there does not seem to be any bases further away,
 					 *	we are extending the total length of the helix. It is important to track these changes as it requires us to
 					 *	rescale the cylinder
 					 */
-
-					std::cerr << "Increasing count for cylinder" << std::endl;
 
 					if (extendPositiveZ)
 						++positive_count;

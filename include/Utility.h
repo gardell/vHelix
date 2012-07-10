@@ -15,14 +15,21 @@
 
 #include <Definition.h>
 
+#include <model/Object.h>
+
 #include <iostream>
 #include <vector>
+#include <iterator>
 
 #include <maya/MObjectArray.h>
 #include <maya/MPlug.h>
 #include <maya/MDagPath.h>
 #include <maya/MVector.h>
 #include <maya/MTypeId.h>
+
+#include <maya/MArgList.h>
+#include <maya/MArgDatabase.h>
+#include <maya/MSelectionList.h>
 
 namespace Helix {
 	/*
@@ -95,6 +102,12 @@ namespace Helix {
 			func(*it);
 	}
 
+	template<typename It, typename Functor>
+	void for_each_ref_itref(It & it, It end, Functor & func) {
+		for(; it != end; ++it)
+			func(*it);
+	}
+
 	/*
 	 * The std::find passes by const, which is not optimal as the Object class does some caching
 	 */
@@ -132,6 +145,112 @@ namespace Helix {
 	template <typename T> int sgn(T val) {
 		return (T(0) < val) - (val < T(0));
 	}
+
+	/*
+	 * For commands: find all the nodes identified by the names given as arguments to parameters
+	 * The original version used member function pointers, thus:
+	 * MStatus (MSelectionList::* GetElementFunc) (unsigned int index, ElementT & element) const
+	 * worked, but only for getDependNode, as getDagPath has a third argument with a default value
+	 */
+
+	template<typename ArrayT, typename ElementT, ElementT (*GetElementFunc) (const MSelectionList & list, unsigned int index)>
+	MStatus ArgList_ArgumentNodes(const MArgList & args, const MSyntax & syntax, const char *flag, ArrayT & array) {
+		MStatus status;
+		MArgDatabase argDatabase(syntax, args, &status);
+
+		if (!status) {
+			status.perror("MArgDatabase::#ctor");
+			return status;
+		}
+
+		bool isFlagSet = argDatabase.isFlagSet(flag, &status);
+
+		if (!status) {
+			status.perror("MArgDatabase::isFlagSet");
+			return status;
+		}
+
+		if (!isFlagSet)
+			return MStatus::kNotFound;
+
+		MSelectionList list;
+
+		unsigned int num = argDatabase.numberOfFlagUses(flag);
+
+		for(unsigned int i = 0; i < num; ++i) {
+			MString path;
+
+			if (!(status = argDatabase.getFlagArgument(flag, i, path))) {
+				status.perror("MArgDatabase::getFlagArgument");
+				return status;
+			}
+
+			if (!(status = list.add(path))) {
+				status.perror(MString("MSelectionList::add: The object \"") + path + "\" was not found");
+				//return status;
+			}
+		}
+
+		/*
+		 * Now extract the dagpaths or objects from the MSelectionList
+		 */
+
+		for(unsigned int i = 0; i < list.length(); ++i) {
+			ElementT element;
+
+			/*
+			if (!(status = (list.*GetElementFunc) (i, element))) {
+				status.perror("MSelectionList::*GetElementFunc");
+				return status;
+			}
+			*/
+
+			array.append(GetElementFunc(list, i));
+		}
+
+		return MStatus::kSuccess;
+	}
+
+	/*
+	 * The above method was written to not distinguish between MDagPaths and MObjects, but as its syntax is a bit messy
+	 */
+
+	MStatus ArgList_GetObjects(const MArgList & args, const MSyntax & syntax, const char *flag, MObjectArray & result);
+	MStatus ArgList_GetDagPaths(const MArgList & args, const MSyntax & syntax, const char *flag, MDagPathArray & result);
+
+	/*
+	 * We could work with the lists of helices/bases directly and save some performance
+	 */
+
+	template<typename ElementT, typename ArrayT, typename ContainerT, MStatus (*GetElementsFunc) (const MArgList &, const MSyntax &, const char *, ArrayT &) >
+	MStatus ArgList_GetModelObjectsT(const MArgList & args, const MSyntax & syntax, const char *flag, ContainerT & result) {
+		MStatus status;
+		ArrayT objects;
+
+		if (!status = GetElementsFunc(args, syntax, flag, objects)) {
+			status.perror("GetElementsFunc");
+			return status;
+		}
+
+		std::copy(&objects[0], &objects[0] + objects.length(), std::back_insert_iterator<ContainerT> (result));
+
+		return MStatus::kSuccess;
+	}
+
+	/*
+	 * Some specializations as the syntax is messy for the function above
+	 */
+
+	template<typename ElementT, typename ContainerT>
+	inline MStatus ArgList_GetModelObjects(const MArgList & args, const MSyntax & syntax, const char *flag, ContainerT & result) {
+		return ArgList_GetModelObjectsT<MObject, MObjectArray, ContainerT, ArgList_GetObjects> (args, syntax, flag, result);
+	}
+
+	/*
+	 * Extract CV curves from an MObject
+	 */
+
+	MStatus CVCurveFromObject(const Model::Object & object, MPointArray & array);
 }
 
 

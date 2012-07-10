@@ -7,6 +7,7 @@
 
 #include <model/Helix.h>
 #include <model/Base.h>
+#include <view/HelixShape.h>
 
 #include <maya/MFnDagNode.h>
 #include <maya/MFnDependencyNode.h>
@@ -29,7 +30,7 @@ namespace Helix {
 			MStatus status;
 
 			MFnDagNode helix_dagNode;
-			MObject helix_object = helix_dagNode.create(::Helix::Helix::id, MObject::kNullObj, &status);
+			MObject helix_object = helix_dagNode.create(::Helix::Helix::id, name, MObject::kNullObj, &status);
 
 			if (!status) {
 				status.perror("MFnDagNode::create");
@@ -62,6 +63,18 @@ namespace Helix {
 			}
 
 			/*
+			 * Generate the helix shape node that will render bases
+			 */
+
+			MFnDagNode shape_dagNode;
+			MObject shape_object = shape_dagNode.create(::Helix::View::HelixShape::id, helix_object, &status);
+
+			if (!status) {
+				status.perror("MFnDagNode::create HelixShape");
+				return status;
+			}
+
+			/*
 			 * Set the transform
 			 */
 
@@ -86,7 +99,7 @@ namespace Helix {
 		 * Helper method, maybe a bit too general, could be put in Utility.cpp
 		 */
 
-		MStatus FindChildWithNameContaining(MDagPath & object, const char *contains, MDagPath & result) {
+		/*MStatus FindChildWithNameContaining(MDagPath & object, const char *contains, MDagPath & result) {
 			MStatus status;
 
 			unsigned int numChildren = object.childCount(&status);
@@ -120,21 +133,21 @@ namespace Helix {
 			}
 
 			return MStatus::kNotFound;
-		}
+		}*/
 
 		/*
 		 * Helper method. Get the cylinder object
 		 */
 
-		MStatus Helix_getCylinder(MDagPath & helix, MDagPath & cylinder) {
+		/*MStatus Helix_getCylinder(MDagPath & helix, MDagPath & cylinder) {
 			return FindChildWithNameContaining(helix, CYLINDERREPRESENTATION_NAME, cylinder);
-		}
+		}*/
 
 		/*
 		 * Helper method. Get the bottom and top caps of the cylinder
 		 */
 
-		MStatus Helix_getCylinderCaps(MDagPath & cylinder, MDagPath & topCap, MDagPath & bottomCap) {
+		/*MStatus Helix_getCylinderCaps(MDagPath & cylinder, MDagPath & topCap, MDagPath & bottomCap) {
 			MStatus status;
 			
 			if (!(status = FindChildWithNameContaining(cylinder, CYLINDERREPRESENTATION_NAME "_topCap", topCap))) {
@@ -148,18 +161,89 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
-		}
+		}*/
 
 		/*
 		 * Another helper method. This gets the makeNurbCylinder object connected to the cylinders shape
 		 */
 
-		MStatus Helix_getMakeNurbCylinder(MDagPath & cylinder, MObject & makeNurbCylinder) {
+		/*MStatus Helix_getPolyCylinder(MDagPath & cylinder, MObject & polyCylinder) {
 			MStatus status;
 
 			/*
 			 * Extend the cylinder to the shape
-			 */
+			 *
+
+			unsigned int numShapes;
+
+			if (!(status = cylinder.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath cylinderShape = cylinder;
+
+				if (!(status = cylinderShape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MObject cylinderShapeObject = cylinderShape.node(&status);
+
+				if (!status) {
+					status.perror("MDagPath::node shape");
+					return status;
+				}
+
+				MFnDependencyNode cylinder_dependencyNode(cylinderShapeObject);
+
+				/*
+				 * Follow the .create attribute on the cylinder shape
+				 *
+
+				MObject createAttribute = cylinder_dependencyNode.attribute("inMesh", &status);
+
+				if (!status) {
+					status.perror("MFnDependencyNode::attribute");
+					return status;
+				}
+
+				MPlug createPlug(cylinderShapeObject, createAttribute);
+
+				MPlugArray targetPlugs;
+				bool isConnected = createPlug.connectedTo(targetPlugs, true, true, &status);
+
+				if (!status) {
+					status.perror("MPlug::connectedTo");
+					return status;
+				}
+
+				if (!isConnected || targetPlugs.length() < 1) {
+					std::cerr << "There is no connected plug on the cylinder shape" << std::endl;
+					return MStatus::kFailure;
+				}
+
+				polyCylinder = targetPlugs[0].node(&status);
+
+				if (!status) {
+					status.perror("MDagPathArray[0]::node");
+					return status;
+				}
+
+				return MStatus::kSuccess;
+			}
+
+			return MStatus::kNotFound;
+		}*/
+
+		/*MStatus Helix_getMakeNurbCylinder(MDagPath & cylinder, MObject & makeNurbCylinder) {
+			MStatus status;
+
+			 *
+			 * Extend the cylinder to the shape
+			 *
 
 			MDagPath cylinderShape = cylinder;
 
@@ -177,9 +261,9 @@ namespace Helix {
 
 			MFnDependencyNode cylinder_dependencyNode(cylinderShapeObject);
 
-			/*
+			 *
 			 * Follow the .create attribute on the cylinder shape
-			 */
+			 *
 
 			MObject createAttribute = cylinder_dependencyNode.attribute("create", &status);
 
@@ -211,18 +295,18 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
-		}
+		}*/
 
 		/*
 		 * Help method, change the Z coordinate of an MDagPath object via a MFnTransform. Used to move not only the cylinder, but its top and bottom caps
 		 */
 
-		MStatus SetZTranslationOnDagPath(const MDagPath & dagPath, double z) {
+		/*MStatus SetZTranslationOnDagPath(const MDagPath & dagPath, double z) {
 			MStatus status;
 
 			/*
 			 * Find the translation of the object
-			 */
+			 *
 
 			MVector translation;
 			MFnTransform transform(dagPath);
@@ -236,7 +320,7 @@ namespace Helix {
 
 			/*
 			 * Ok, update the translation
-			 */
+			 *
 
 			translation.z = z;
 
@@ -246,20 +330,77 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
-		}
+		}*/
 
 		MStatus Helix::setCylinderRange(double origo, double height) {
 			MStatus status;
-			MDagPath helix = getDagPath(status), cylinder;//, topCap, bottomCap;
-
-			std::cerr << "setCylinderRange: origo = " << origo << ", height = " << height << std::endl;
+			MDagPath helix = getDagPath(status), cylinder;
 
 			if (!status) {
 				status.perror("Helix::getDagPath");
 				return status;
 			}
 
-			std::cerr << __FUNCTION__ << ": getCylinder: " << std::endl;
+			MDagPath helix_shape;
+			unsigned int numShapes;
+			
+			if (!(status = helix.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				helix_shape = helix;
+
+				if (!(status = helix_shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MFnDagNode helix_shape_dagNode(helix_shape);
+
+				if (helix_shape_dagNode.typeId(&status) == View::HelixShape::id) {
+					/*
+					 * Found the correct shape
+					 */
+
+					MObject helix_shape_object = helix_shape.node(&status);
+
+					if (!status) {
+						status.perror("MDagPath::node");
+						return status;
+					}
+
+					MPlug origoPlug(helix_shape_object, View::HelixShape::aOrigo), heightPlug(helix_shape_object, View::HelixShape::aHeight);
+
+					if (!(status = origoPlug.setFloat((float) origo))) {
+						status.perror("OrigopPlug::setFloat");
+						return status;
+					}
+
+					if (!(status = heightPlug.setFloat((float) height))) {
+						status.perror("HeightPlug::setFloat");
+						return status;
+					}
+
+					return MStatus::kSuccess;
+				}
+
+				if (!status) {
+					status.perror("MFnDagNode::typeId");
+					return status; 
+				}
+			}
+
+			return MStatus::kNotFound;
+
+			/*MStatus status;
+			MDagPath helix = getDagPath(status), cylinder;//, topCap, bottomCap;
+
+			if (!status) {
+				status.perror("Helix::getDagPath");
+				return status;
+			}
 
 			if (!(status = Helix_getCylinder(helix, cylinder))) {
 				if (status == MStatus::kNotFound)
@@ -269,14 +410,10 @@ namespace Helix {
 				return status;
 			}
 
-			std::cerr << __FUNCTION__ << ": setZTranslationOnDagPath " << std::endl;
-
 			if (!(status = SetZTranslationOnDagPath(cylinder, origo))) {
 				status.perror("SetZTranslationOnDagPath on cylinder");
 				return status;
 			}
-
-			std::cerr << __FUNCTION__ << ": getCylinderCaps: " << std::endl;
 
 			/*if (!(status = Helix_getCylinderCaps(cylinder, topCap, bottomCap))) {
 				status.perror("Helix_getCylinderCaps");
@@ -300,58 +437,54 @@ namespace Helix {
 
 			/*
 			 * Find the makeNurbCylinder object
-			 */
+			 *
 
-			MObject makeNurbCylinder;
+			MObject polyCylinder;
 
-			std::cerr << __FUNCTION__ << ": getMakeNurbCylinder: " << std::endl;
-
-			if (!(status = Helix_getMakeNurbCylinder(cylinder, makeNurbCylinder))) {
+			if (!(status = Helix_getPolyCylinder(cylinder, polyCylinder))) {
 				status.perror("Helix_getMakeNurbCylinder");
 				return status;
 			}
 
 			/*
 			 * Ok we have the makeNurbCylinder object. Is has an attribute called heightRatio that we're looking for
-			 */
+			 *
 
-			MFnDependencyNode makeNurbCylinder_dependencyNode(makeNurbCylinder);
+			MFnDependencyNode makeNurbCylinder_dependencyNode(polyCylinder);
 
-			std::cerr << __FUNCTION__ << ": heightRatio attribute: " << std::endl;
-
-			MObject heightRatioAttribute = makeNurbCylinder_dependencyNode.attribute("heightRatio", &status);
+			MObject heightAttribute = makeNurbCylinder_dependencyNode.attribute("height", &status);
 
 			if (!status) {
 				status.perror("MFnDependencyNode::attribute 1");
 				return status;
 			}
 
-			std::cerr << __FUNCTION__ << ": radius: " << std::endl;
+			/*std::cerr << __FUNCTION__ << ": radius: " << std::endl;
 
 			MObject radiusAttribute = makeNurbCylinder_dependencyNode.attribute("radius", &status);
 
 			if (!status) {
 				status.perror("MFnDependencyNode::attribute 2");
 				return status;
-			}
+			}*
 
-			MPlug heightRatioPlug(makeNurbCylinder, heightRatioAttribute), radiusPlug(makeNurbCylinder, radiusAttribute);
-			double radius;
+			MPlug heightPlug(polyCylinder, heightAttribute);//, radiusPlug(makeNurbCylinder, radiusAttribute);
+			/*double radius;
 
 			std::cerr << __FUNCTION__ << ": get radius: " << std::endl;
 
 			if (!(status = radiusPlug.getValue(radius))) {
 				status.perror("MPlug::getValue");
 				return status;
-			}
+			}*/
 
 			/*
-			 * Ok update the heightRatio
-			 */
+			 * Ok update the height
+			 *
 
-			std::cerr << __FUNCTION__ << ": set heightRatio: " << std::endl;
+			std::cerr << __FUNCTION__ << ": set height: " << std::endl;
 
-			if (!(status = heightRatioPlug.setValue(height / radius))) {
+			if (!(status = heightPlug.setValue(height))) {
 				status.perror("MPlug::setValue");
 				return status;
 			}
@@ -360,7 +493,7 @@ namespace Helix {
 
 			// FIXME: Update the translations of the bottom and top cap
 
-			return MStatus::kSuccess;
+			return MStatus::kSuccess;*/
 		}
 
 		MStatus Helix::getCylinderRange(double & origo, double & height) {
@@ -372,14 +505,53 @@ namespace Helix {
 				return status;
 			}
 
-			if (!(status = Helix_getCylinder(helix, cylinder))) {
+			unsigned int numShapes;
+
+			if (!(status = helix.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath helix_shape = helix;
+
+				if (!(status = helix_shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				if (MFnDagNode(helix_shape).typeId(&status) == View::HelixShape::id) {
+					MObject helix_shape_object = helix_shape.node(&status);
+
+					if (!status) {
+						status.perror("MDagPath::node");
+						return status;
+					}
+
+					MPlug origoPlug(helix_shape_object, View::HelixShape::aOrigo), heightPlug(helix_shape_object, View::HelixShape::aHeight);
+
+					origo = origoPlug.asFloat();
+					height = heightPlug.asFloat();
+
+					return MStatus::kSuccess;
+				}
+				else if (!status) {
+					status.perror("MFnDagNode::typeId");
+					return status;
+				}
+			}
+
+			return MStatus::kNotFound;
+
+			/*if (!(status = Helix_getCylinder(helix, cylinder))) {
 				status.perror("Helix_getCylinder");
 				return status;
 			}
 
 			/*
 			 * Find the translation of the cylinder
-			 */
+			 *
 
 			MVector translation;
 			MFnTransform cylinder_transform(cylinder);
@@ -393,7 +565,89 @@ namespace Helix {
 
 			/*
 			 * Find the makeNurbCylinder object
-			 */
+			 *
+
+			MObject polyCylinder;
+
+			if (!(status = Helix_getPolyCylinder(cylinder, polyCylinder))) {
+				status.perror("Helix_getMakeNurbCylinder");
+				return status;
+			}
+
+			/*
+			 * Ok we have the makeNurbCylinder object. Is has an attribute called heightRatio that we're looking for
+			 *
+
+			MFnDependencyNode polyCylinder_dependencyNode(polyCylinder);
+
+			MObject heightAttribute = polyCylinder_dependencyNode.attribute("height", &status);
+
+			if (!status) {
+				status.perror("MFnDependencyNode::attribute 1");
+				return status;
+			}
+
+			/*MObject radiusAttribute = makeNurbCylinder_dependencyNode.attribute("radius", &status);
+
+			if (!status) {
+				status.perror("MFnDependencyNode::attribute 2");
+				return status;
+			}*
+
+			MPlug heightPlug(polyCylinder, heightAttribute);//, radiusPlug(makeNurbCylinder, radiusAttribute);
+			//double height, radius;
+
+			if (!(status = heightPlug.getValue(height))) {
+				status.perror("MPlug::getValue 1");
+				return status;
+			}
+
+			/*if (!(status = radiusPlug.getValue(radius))) {
+				status.perror("MPlug::getValue 2");
+				return status;
+			}*/
+
+			/*
+			 * Ok we have everything we need, calculate the requested values
+			 *
+
+			origo = translation.z;
+			//height = heightRatio * radius;
+
+			return MStatus::kSuccess;*/
+		}
+
+		/*MStatus Helix::getCylinderRange(double & origo, double & height) {
+			MStatus status;
+			MDagPath helix = getDagPath(status), cylinder;
+
+			if (!status) {
+				status.perror("Helix::getDagPath");
+				return status;
+			}
+
+			if (!(status = Helix_getCylinder(helix, cylinder))) {
+				status.perror("Helix_getCylinder");
+				return status;
+			}
+
+			 *
+			 * Find the translation of the cylinder
+			 *
+
+			MVector translation;
+			MFnTransform cylinder_transform(cylinder);
+
+			translation = cylinder_transform.getTranslation(MSpace::kTransform, &status);
+
+			if (!status) {
+				status.perror("MFnTransform::getTranslation");
+				return status;
+			}
+
+			 *
+			 * Find the makeNurbCylinder object
+			 *
 
 			MObject makeNurbCylinder;
 
@@ -402,9 +656,9 @@ namespace Helix {
 				return status;
 			}
 
-			/*
+			 *
 			 * Ok we have the makeNurbCylinder object. Is has an attribute called heightRatio that we're looking for
-			 */
+			 *
 
 			MFnDependencyNode makeNurbCylinder_dependencyNode(makeNurbCylinder);
 
@@ -435,20 +689,24 @@ namespace Helix {
 				return status;
 			}
 
-			/*
+			 *
 			 * Ok we have everything we need, calculate the requested values
-			 */
+			 *
 
 			origo = translation.z;
 			height = heightRatio * radius;
 
 			return MStatus::kSuccess;
-		}
+		}*/
 
-		bool Helix::hasCylinder(MStatus & status) {
-			/*
+		/*bool Helix::hasCylinder(MStatus & status) {
+			 *
 			 * Find a cylinder that is child to this helix with the name given in CYLINDERREPRESENTATION_NAME
-			 */
+			 *
+
+			return true;
+
+			// REMOVE THIS
 
 			MDagPath thisDagPath = getDagPath(status), cylinder;
 
@@ -475,14 +733,14 @@ namespace Helix {
 			}
 
 			return isValid;
-		}
+		}*/
 
-		MStatus Helix::createCylinder(double origo, double height) {
+		/*MStatus Helix::createCylinder(double origo, double height) {
 			MStatus status;
 
-			/*
+			 *
 			 * This is still easiest to do using MEL for a lot of reasons
-			 */
+			 *
 
 			MDagPath helix_dagPath = getDagPath(status);
 
@@ -491,6 +749,18 @@ namespace Helix {
 				return status;
 			}
 
+			if (!(status = MGlobal::executeCommand(
+					MString("$cylinder = `polyCylinder -radius ") + DNA::RADIUS + " -height " + height + (" -name \"" CYLINDERREPRESENTATION_NAME "\" -axis 0.0 0.0 1.0`;\n"
+					"setAttr ($cylinder[0] + \".overrideEnabled\") 1;"
+					"setAttr ($cylinder[0] + \".overrideDisplayType\") 2;"
+					"$parented_cylinder = `parent -relative $cylinder[0] ") + helix_dagPath.fullPathName() + ("`;\n"
+					"move -relative 0.0 0.0 ") + origo + "$parented_cylinder[0]\n"
+					))) {
+				status.perror("MGlobal::executeCommand");
+				return status;
+			}
+
+			/*
 			if (!(status = MGlobal::executeCommand(
 					MString("$cylinder = `cylinder -radius ") + DNA::RADIUS + " -heightRatio " + (height / DNA::RADIUS) + (" -name \"" CYLINDERREPRESENTATION_NAME "\" -axis 0.0 0.0 1.0`;\n"
 					"$topCap = `planarSrf -name \"" CYLINDERREPRESENTATION_NAME "_topCap\" -ch false ($cylinder[0] + \".u[0]\")`;\n"
@@ -504,9 +774,10 @@ namespace Helix {
 				status.perror("MGlobal::executeCommand");
 				return status;
 			}
+			*
 
 			return MStatus::kSuccess;
-		}
+		}*/
 
 		/*
 		 * Helper method for recursively search parents for a helix object
@@ -785,6 +1056,17 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
+		}
+
+		unsigned int Helix::numChildren(MStatus & status) {
+			MFnDagNode helix_dagNode(getObject(status));
+
+			if (!status) {
+				status.perror("Helix::getObject");
+				return 0;
+			}
+
+			return helix_dagNode.childCount(&status);
 		}
 	}
 }

@@ -5,6 +5,8 @@
  *      Author: johan
  */
 
+#include <opengl.h>
+
 #include <Locator.h>
 #include <Tracker.h>
 #include <HelixBase.h>
@@ -58,146 +60,16 @@ namespace Helix {
 	bool HelixLocator::s_gl_initialized = false, HelixLocator::s_gl_failed = false;
 	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0, HelixLocator::s_screen_dimensions_uniform = -1, HelixLocator::s_halo_size_attrib_location = -1;
 	
-#ifndef MAC_PLUGIN
-	PFNGLCREATEPROGRAMPROC glCreateProgram;
-	PFNGLCREATESHADERPROC glCreateShader;
-	PFNGLATTACHSHADERPROC glAttachShader;
-	PFNGLCOMPILESHADERPROC glCompileShader;
-	PFNGLLINKPROGRAMPROC glLinkProgram;
-	PFNGLSHADERSOURCEPROC glShaderSource;
-	PFNGLDELETESHADERPROC glDeleteShader;
-	PFNGLDELETEPROGRAMPROC glDeleteProgram;
-	PFNGLUSEPROGRAMPROC glUseProgram;
-	PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
-	PFNGLGETSHADERIVPROC glGetShaderiv;
-	PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
-	PFNGLGETPROGRAMIVPROC glGetProgramiv;
-	PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-	PFNGLUNIFORM2FPROC glUniform2f;
-	PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
-	PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-	PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
-	PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-#endif /* N MAC_PLUGIN */
-	
 	HelixLocator::~HelixLocator() {
 		
 	}
 
 	void HelixLocator::initializeGL() {
 
-		//
-		// New OpenGL 2.0 based renderer. Initialize the two shaders and the program
-		//
-
-		// Load the OpenGL 2.0 procedures
-		// FIXME: Signal the errors in a better way
-
 #if defined(WIN32) || defined(WIN64)
-		if (wglGetProcAddress == NULL) {
-			std::cerr << "Fatal, wglGetProcAddress is not available" << std::endl;
-			s_gl_failed = true;
-			return;
-		}
-#endif /* WIN* */
+		installGLExtensions();
+#endif /* WINDOWS */
 
-#ifndef MAC_PLUGIN
-		if ((glCreateProgram = (PFNGLCREATEPROGRAMPROC) GETPROCADDRESS("glCreateProgram")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glCreateShader = (PFNGLCREATESHADERPROC) GETPROCADDRESS("glCreateShader")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-		if ((glAttachShader = (PFNGLATTACHSHADERPROC) GETPROCADDRESS("glAttachShader")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glCompileShader = (PFNGLCOMPILESHADERPROC) GETPROCADDRESS("glCompileShader")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glLinkProgram = (PFNGLLINKPROGRAMPROC) GETPROCADDRESS("glLinkProgram")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glShaderSource = (PFNGLSHADERSOURCEPROC) GETPROCADDRESS("glShaderSource")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glDeleteShader = (PFNGLDELETESHADERPROC) GETPROCADDRESS("glDeleteShader")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glDeleteProgram = (PFNGLDELETEPROGRAMPROC) GETPROCADDRESS("glDeleteProgram")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glUseProgram = (PFNGLUSEPROGRAMPROC) GETPROCADDRESS("glUseProgram")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC) GETPROCADDRESS("glGetShaderInfoLog")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetShaderiv = (PFNGLGETSHADERIVPROC) GETPROCADDRESS("glGetShaderiv")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC) GETPROCADDRESS("glGetProgramInfoLog")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetProgramiv = (PFNGLGETPROGRAMIVPROC) GETPROCADDRESS("glGetProgramiv")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) GETPROCADDRESS("glGetUniformLocation")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glUniform2f = (PFNGLUNIFORM2FPROC) GETPROCADDRESS("glUniform2f")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC) GETPROCADDRESS("glGetAttribLocation")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC) GETPROCADDRESS("glEnableVertexAttribArray")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glDisableVertexAttribArray = (PFNGLDISABLEVERTEXATTRIBARRAYPROC) GETPROCADDRESS("glDisableVertexAttribArray")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-		if ((glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC) GETPROCADDRESS("glVertexAttribPointer")) == NULL) {
-			std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
-			s_gl_failed = true;
-		}
-
-#endif /* N MAC_PLUGIN */
-		
 		// Setup the shaders and programs
 
 		if ((s_program = glCreateProgram()) == 0) {
@@ -503,200 +375,34 @@ namespace Helix {
 		 * Might also be a bit faster, and definitely easier to read
 		 */
 
-		MObjectArray selectedChildBases, selectedChildBasesWithNeighbours;
+		MObjectArray selectedBases, selectedChildBasesWithNeighbours;
 		Model::Helix helix(MFnDagNode(thisMObject()).parent(0, &stat)); // We can assume our node has a parent and that it is only the helix
-
+		
 		if (!stat) {
 			stat.perror("MFnDagNode::parent");
 			return;
 		}
 
-		if (!(stat = helix.getSelectedChildBases(selectedChildBases))) {
+		MFnTransform helix_transform(helix.getDagPath(stat));
+
+		if (!stat) {
+			stat.perror("Helix::getDagPath");
+			return;
+		}
+
+		/*if (!(stat = helix.getSelectedChildBases(selectedChildBases))) {
 			stat.perror("Helix::getSelectedChildBases");
 			return;
-		}
+		}*/
 
-		/*
-		 * When the user hasn't selected anything
-		 */
-
-		if (selectedChildBases.length() == 0)
+		if (!(stat = Model::Base::AllSelected(selectedBases))) {
+			stat.perror("Base::AllSelected");
 			return;
-
-		/*
-		 * Iterate over all bases and iterate over their strands to extract neighbour bases
-		 */
-
-		for(unsigned int i = 0; i < selectedChildBases.length(); ++i) {
-			Model::Base base(selectedChildBases[i]);
-			Model::Strand strand(base);
-
-			Model::Strand::ForwardIterator it = strand.forward_begin();
-			for(; it != strand.forward_end(); ++it) {
-				selectedChildBasesWithNeighbours.append(it->getObject(stat));
-
-				if (!stat) {
-					stat.perror("Base::getObject");
-					return;
-				}
-			}
-
-			if (!it.loop()) {
-				for(Model::Strand::BackwardIterator bit = ++strand.reverse_begin(); bit != strand.reverse_end(); ++bit) {
-					selectedChildBasesWithNeighbours.append(bit->getObject(stat));
-
-					if (!stat) {
-						stat.perror("Base::getObject");
-						return;
-					}
-				}
-			}
 		}
 
 		/*
-		 * Data declaration, same as old code, might need a cleanup
+		 * Setup OpenGL rendering state
 		 */
-		
-		size_t vertices_count = selectedChildBasesWithNeighbours.length();
-
-		// NOTE; Multiply length by two if adjacent bases are to be rendered. See code above!!
-		float *vertices = new float[vertices_count * 3], *line_vertices = new float[vertices_count * 3 * 2], *halo_diameters = new float[vertices_count];
-		unsigned char *colors = new unsigned char[vertices_count * 4], *line_colors = new unsigned char[vertices_count * 4 * 2];
-		char *sequence = new char[vertices_count];
-		unsigned int /*vertex_index = 0, */ line_index = 0;
-
-		/*
-		 * Data gathering
-		 */
-
-		for(unsigned int i = 0; i < selectedChildBasesWithNeighbours.length(); ++i) {
-			Model::Base base(selectedChildBasesWithNeighbours[i]);
-			MVector base_translation;
-
-			/*
-			 * Translation
-			 */
-
-			if (!(stat = base.getTranslation(base_translation, MSpace::kTransform))) {
-				stat.perror("Base::getTranslation");
-				return;
-			}
-
-			for(int j = 0; j < 3; ++j) {
-				vertices[i * 3 + j] = (float) base_translation[j];
-				line_vertices[line_index * 3 + j] = (float) base_translation[j];
-			}
-
-			/*
-			 * Halo radius and coloring
-			 */
-
-			/* FIXME: Check if this is a selected base, in that case color it red */
-
-			if (std::find(&selectedChildBases[0], &selectedChildBases[0] + selectedChildBases.length(), selectedChildBasesWithNeighbours[i]) != &selectedChildBases[0] + selectedChildBases.length()) {
-				/*
-				 * This is a selected base
-				 */
-
-				for(int j = 0; j < 4; ++j) {
-					colors[i * 4 + j] = static_colors[0][j];
-					line_colors[line_index * 4 + j] = static_colors[0][j];
-				}
-				halo_diameters[i] = HALO_SELECTED_BASE_DIAMETER_MULTIPLIER;
-			}
-			else {
-				switch(base.type(stat)) {
-			
-				case Model::Base::FIVE_PRIME_END:
-					for(int j = 0; j < 4; ++j) {
-						colors[i * 4 + j] = static_colors[2][j];
-						line_colors[line_index * 4 + j] = static_colors[2][j];
-					}
-					halo_diameters[i] = HALO_FIVE_PRIME_BASE_DIAMETER_MULTIPLIER;
-					break;
-				case Model::Base::THREE_PRIME_END:
-					for(int j = 0; j < 4; ++j) {
-						colors[i * 4 + j] = static_colors[3][j];
-						line_colors[line_index * 4 + j] = static_colors[3][j];
-					}
-					halo_diameters[i] = HALO_THREE_PRIME_BASE_DIAMETER_MULTIPLIER;
-					break;
-				default:
-					for(int j = 0; j < 4; ++j) {
-						colors[i * 4 + j] = static_colors[1][j];
-						line_colors[line_index * 4 + j] = static_colors[1][j];
-					}
-					halo_diameters[i] = 1.0f;
-					break;
-				}
-			}
-
-			if (!stat) {
-				stat.perror("Base::type");
-				return;
-			}
-
-			/*
-			 * Label
-			 */
-
-			DNA::Name label;
-
-			if (!(stat = base.getLabel(label))) {
-				stat.perror("Base::getLabel");
-				return;
-			}
-
-			sequence[i] = label.toChar();
-
-			/*
-			 * Opposite base for line connection
-			 */
-
-			Model::Base opposite_base = base.opposite(stat);
-
-			if (stat) {
-				++line_index;
-
-				MVector opposite_base_translation;
-
-				if (!(stat = opposite_base.getTranslation(opposite_base_translation, MSpace::kTransform))) {
-					stat.perror("Base::getTranslation 2");
-					return;
-				}
-
-				for(int j = 0; j < 3; ++j)
-					line_vertices[line_index * 3 + j] = (float) opposite_base_translation[j];
-
-				/*
-				 * Opposite base type
-				 */
-
-				switch(opposite_base.type(stat)) {
-				case Model::Base::FIVE_PRIME_END:
-					for(int j = 0; j < 4; ++j)
-						line_colors[line_index * 4 + j] = static_colors[2][j];
-					break;
-				case Model::Base::THREE_PRIME_END:
-					for(int j = 0; j < 4; ++j)
-						line_colors[line_index * 4 + j] = static_colors[3][j];
-					break;
-				default:
-					for(int j = 0; j < 4; ++j)
-						line_colors[line_index * 4 + j] = static_colors[1][j];
-					break;
-				}
-
-				++line_index;
-			}
-			else if (stat != MStatus::kNotFound) {
-				stat.perror("Base::opposite");
-				return;
-			}
-		}
-
-		// The actual rendering using OpenGL
-		//
 
 		view.beginGL();
 
@@ -727,42 +433,249 @@ namespace Helix {
 		//glDisable(GL_DEPTH_TEST); // I think we want this, at least when we have blending
 		glDepthMask(GL_FALSE); // This is better than disabling the depth test, now blending works, but not through solid objects!
 
-		// Render halos using point sprites
-		//
+		/*
+		 * If the user has anything selected, render halos, lines, sequences etc
+		 */
 
-		if (!isOrtho && (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderHalo)) {
-			glEnableVertexAttribArray(s_halo_size_attrib_location);
-			glVertexAttribPointer(s_halo_size_attrib_location, 1, GL_FLOAT, GL_FALSE, 0, halo_diameters);
+		if (selectedBases.length() > 0) {
 
-			glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+			/*
+			 * Iterate over all bases and iterate over their strands to extract neighbour bases
+			 */
 
-			glEnable(GL_POINT_SPRITE);
-			glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+			for(unsigned int i = 0; i < selectedBases.length(); ++i) {
+				Model::Base base(selectedBases[i]);
+				Model::Strand strand(base);
 
-			glUseProgram(s_program);
+				Model::Strand::ForwardIterator it = strand.forward_begin();
+				for(; it != strand.forward_end(); ++it) {
 
-			glUniform2f(s_screen_dimensions_uniform, (GLfloat) view.portWidth(), (GLfloat) view.portHeight());
+					if (it->getParent(stat) == helix)
+						selectedChildBasesWithNeighbours.append(it->getObject(stat));
+					
 
-			glVertexPointer(3, GL_FLOAT, 0, vertices);
-			glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+					if (!stat) {
+						stat.perror("Base::getParent/Base::getObject 1");
+						return;
+					}
+				}
 
-			glDrawArrays(GL_POINTS, 0, GLsizei(vertices_count));
+				if (!it.loop()) {
+					for(Model::Strand::BackwardIterator bit = ++strand.reverse_begin(); bit != strand.reverse_end(); ++bit) {
+						if (bit->getParent(stat) == helix)
+							selectedChildBasesWithNeighbours.append(bit->getObject(stat));
 
-			glUseProgram(0);
+						if (!stat) {
+							stat.perror("Base::getParent/Base::getObject 2");
+							return;
+						}
+					}
+				}
+			}
 
-			glDisableVertexAttribArray(s_halo_size_attrib_location);
-		}
+			/*
+			 * Data declaration, same as old code, might need a cleanup
+			 */
+		
+			size_t vertices_count = selectedChildBasesWithNeighbours.length();
 
-		// Render the lines
-		//
+			// NOTE; Multiply length by two if adjacent bases are to be rendered. See code above!!
+			float *vertices = new float[vertices_count * 3], *line_vertices = new float[vertices_count * 3 * 2], *halo_diameters = new float[vertices_count];
+			unsigned char *colors = new unsigned char[vertices_count * 4], *line_colors = new unsigned char[vertices_count * 4 * 2];
+			char *sequence = new char[vertices_count];
+			unsigned int /*vertex_index = 0, */ line_index = 0;
 
-		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderPairLines) {
-			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
+			/*
+			 * Data gathering
+			 */
 
-			glColorPointer(4, GL_UNSIGNED_BYTE, 0, line_colors);
-			glVertexPointer(3, GL_FLOAT, 0, line_vertices);
+			for(unsigned int i = 0; i < selectedChildBasesWithNeighbours.length(); ++i) {
+				Model::Base base(selectedChildBasesWithNeighbours[i]);
+				MVector base_translation;
+
+				/*
+				 * Translation
+				 */
+
+				if (!(stat = base.getTranslation(base_translation, MSpace::kTransform))) {
+					stat.perror("Base::getTranslation");
+					return;
+				}
+
+				for(int j = 0; j < 3; ++j) {
+					vertices[i * 3 + j] = (float) base_translation[j];
+					line_vertices[line_index * 3 + j] = (float) base_translation[j];
+				}
+
+				/*
+				 * Halo radius and coloring
+				 */
+
+				/* FIXME: Check if this is a selected base, in that case color it red */
+
+				if (std::find(&selectedBases[0], &selectedBases[0] + selectedBases.length(), selectedChildBasesWithNeighbours[i]) != &selectedBases[0] + selectedBases.length()) {
+					/*
+					 * This is a selected base
+					 */
+
+					for(int j = 0; j < 4; ++j) {
+						colors[i * 4 + j] = static_colors[0][j];
+						line_colors[line_index * 4 + j] = static_colors[0][j];
+					}
+					halo_diameters[i] = HALO_SELECTED_BASE_DIAMETER_MULTIPLIER;
+				}
+				else {
+					switch(base.type(stat)) {
 			
-			glDrawArrays(GL_LINES, 0, GLsizei(line_index));
+					case Model::Base::FIVE_PRIME_END:
+						for(int j = 0; j < 4; ++j) {
+							colors[i * 4 + j] = static_colors[2][j];
+							line_colors[line_index * 4 + j] = static_colors[2][j];
+						}
+						halo_diameters[i] = HALO_FIVE_PRIME_BASE_DIAMETER_MULTIPLIER;
+						break;
+					case Model::Base::THREE_PRIME_END:
+						for(int j = 0; j < 4; ++j) {
+							colors[i * 4 + j] = static_colors[3][j];
+							line_colors[line_index * 4 + j] = static_colors[3][j];
+						}
+						halo_diameters[i] = HALO_THREE_PRIME_BASE_DIAMETER_MULTIPLIER;
+						break;
+					default:
+						for(int j = 0; j < 4; ++j) {
+							colors[i * 4 + j] = static_colors[1][j];
+							line_colors[line_index * 4 + j] = static_colors[1][j];
+						}
+						halo_diameters[i] = 1.0f;
+						break;
+					}
+				}
+
+				if (!stat) {
+					stat.perror("Base::type");
+					return;
+				}
+
+				/*
+				 * Label
+				 */
+
+				DNA::Name label;
+
+				if (!(stat = base.getLabel(label))) {
+					stat.perror("Base::getLabel");
+					return;
+				}
+
+				sequence[i] = label.toChar();
+
+				/*
+				 * Opposite base for line connection
+				 */
+
+				Model::Base opposite_base = base.opposite(stat);
+
+				if (stat) {
+					++line_index;
+
+					MVector opposite_base_translation;
+
+					if (!(stat = opposite_base.getTranslation(opposite_base_translation, MSpace::kTransform))) {
+						stat.perror("Base::getTranslation 2");
+						return;
+					}
+
+					for(int j = 0; j < 3; ++j)
+						line_vertices[line_index * 3 + j] = (float) opposite_base_translation[j];
+
+					/*
+					 * Opposite base type
+					 */
+
+					switch(opposite_base.type(stat)) {
+					case Model::Base::FIVE_PRIME_END:
+						for(int j = 0; j < 4; ++j)
+							line_colors[line_index * 4 + j] = static_colors[2][j];
+						break;
+					case Model::Base::THREE_PRIME_END:
+						for(int j = 0; j < 4; ++j)
+							line_colors[line_index * 4 + j] = static_colors[3][j];
+						break;
+					default:
+						for(int j = 0; j < 4; ++j)
+							line_colors[line_index * 4 + j] = static_colors[1][j];
+						break;
+					}
+
+					++line_index;
+				}
+				else if (stat != MStatus::kNotFound) {
+					stat.perror("Base::opposite");
+					return;
+				}
+			}
+
+			// Now render labels
+			//
+
+			glColor3ub(255, 255, 255);
+
+			if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderSequence) {
+				for(size_t i = 0; i < vertices_count; ++i) {
+					if (!(stat = view.drawText(MString(&sequence[i], 1), MPoint(vertices[i * 3], vertices[i * 3 + 1] + DNA::RADIUS * DNA::SEQUENCE_RENDERING_Y_OFFSET, vertices[i * 3 + 2]), M3dView::kCenter))) {
+						stat.perror("M3dView::drawText");
+						break;
+					}
+				}
+			}
+
+			// Render halos using point sprites
+			//
+
+			if (!isOrtho && (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderHalo)) {
+				glEnableVertexAttribArray(s_halo_size_attrib_location);
+				glVertexAttribPointer(s_halo_size_attrib_location, 1, GL_FLOAT, GL_FALSE, 0, halo_diameters);
+
+				glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, GL_TRUE);
+
+				glEnable(GL_POINT_SPRITE);
+				glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+				glUseProgram(s_program);
+
+				glUniform2f(s_screen_dimensions_uniform, (GLfloat) view.portWidth(), (GLfloat) view.portHeight());
+
+				glVertexPointer(3, GL_FLOAT, 0, vertices);
+				glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+
+				glDrawArrays(GL_POINTS, 0, GLsizei(vertices_count));
+
+				glUseProgram(0);
+
+				glDisableVertexAttribArray(s_halo_size_attrib_location);
+			}
+
+			// Render the lines
+			//
+
+			if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderPairLines) {
+				glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
+
+				glColorPointer(4, GL_UNSIGNED_BYTE, 0, line_colors);
+				glVertexPointer(3, GL_FLOAT, 0, line_vertices);
+			
+				glDrawArrays(GL_LINES, 0, GLsizei(line_index));
+			}
+
+			// Cleanup
+			//
+
+			delete vertices;
+			delete line_vertices;
+			delete line_colors;
+			delete colors;
+			delete sequence;
+			delete halo_diameters;
 		}
 
 		// Render cylinder direction arrow
@@ -848,34 +761,9 @@ namespace Helix {
 		}
 
 		glPopClientAttrib();
-		
-		// Now render labels
-		//
-
-		glColor3ub(255, 255, 255);
-
-		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderSequence) {
-			for(size_t i = 0; i < vertices_count; ++i) {
-				if (!(stat = view.drawText(MString(&sequence[i], 1), MPoint(vertices[i * 3], vertices[i * 3 + 1] + DNA::RADIUS * DNA::SEQUENCE_RENDERING_Y_OFFSET, vertices[i * 3 + 2]), M3dView::kCenter))) {
-					stat.perror("M3dView::drawText");
-					break;
-				}
-			}
-		}
-
 		glPopAttrib();
 
 		view.endGL();
-
-		// Cleanup
-		//
-
-		delete vertices;
-		delete line_vertices;
-		delete line_colors;
-		delete colors;
-		delete sequence;
-		delete halo_diameters;
 	}
 
 	bool HelixLocator::isBounded() const {

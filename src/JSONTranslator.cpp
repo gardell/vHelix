@@ -7,14 +7,12 @@
 
 #include <JSONTranslator.h>
 
-#include <model/Helix.h>
-
-#include <Helix.h>
-#include <HelixBase.h>
-#include <DNA.h>
-#include <PaintStrand.h> // Because new bases get a color assigned
+//#include <Helix.h>
+//#include <HelixBase.h>
+//#include <DNA.h>
+//#include <PaintStrand.h> // Because new bases get a color assigned
 #include <ToggleCylinderBaseView.h> // Because we refresh the cylinder/base view
-#include <Locator.h>
+//#include <Locator.h>
 #include <Utility.h>
 
 #include <maya/MArgDatabase.h>
@@ -31,12 +29,12 @@
 #include <maya/MQuaternion.h>
 #include <maya/MMatrix.h>
 
-#include <json/json.h>
+//#include <json/json.h>
 
-#include <fstream>
-#include <vector>
-#include <limits>
-#include <algorithm>
+//#include <fstream>
+//#include <vector>
+//#include <limits>
+//#include <algorithm>
 
 #ifndef MIN
 #define MIN(a, b)	((a) < (b) ? (a) : (b))
@@ -47,6 +45,41 @@
 #endif /* MAX */
 
 namespace Helix {
+	MStatus JSONTranslator::writer (const MFileObject& file, const MString& optionsString, MPxFileTranslator::FileAccessMode mode) {
+		std::cerr << "Can't write JSON files yet" << std::endl;
+
+		return MStatus::kSuccess;
+	}
+
+	MStatus JSONTranslator::reader (const MFileObject& file, const MString & options, MPxFileTranslator::FileAccessMode mode) {
+		return m_operator.parseFile(file.fullName().asChar());
+	}
+
+	bool JSONTranslator::haveWriteMethod () const {
+		return false;
+	}
+
+	bool JSONTranslator::haveReadMethod () const {
+		return true;
+	}
+
+	bool JSONTranslator::canBeOpened () const {
+		return true;
+	}
+
+	MString JSONTranslator::defaultExtension () const {
+		return "json";
+	}
+
+	MPxFileTranslator::MFileKind JSONTranslator::identifyFile(const MFileObject& file, const char* buffer, short size) const {
+		MString filePath = file.resolvedFullName().toLowerCase();
+		return strstr(filePath.asChar(), ".json") != NULL ? MPxFileTranslator::kIsMyFileType : MPxFileTranslator::kNotMyFileType;
+	}
+
+	void *JSONTranslator::creator() {
+		return new JSONTranslator();
+	}
+
 	//
 	// The JSON Importer part
 	//
@@ -55,7 +88,7 @@ namespace Helix {
 	// Note that staples length and scaf length are assumed to be the same, because slots can be empty, it seems to always be the case
 	//
 
-	struct JSON_import_helix {
+	/*struct JSON_import_helix {
 		int *loop, *skip, *strands[2], row, col, low, hi; // Note that stap and scaf are not multidimensional arrays, but each element has 4 ints.
 														  // The low and hi will contain the indices of the lowest and highest bases that are not [-1,-1,-1,-1]. Note that they will not be physical indices, but take care of skip and loop too!!
 		size_t length;
@@ -96,7 +129,7 @@ namespace Helix {
 			strands[0] = copy.strands[0];
 			strands[1] = copy.strands[1];
 			/*if (copy.strands[0] || copy.strands[1] || copy.loop || copy.skip)
-				std::cerr << "WARNING: JSON_import_helix::#ctor called with non-null memebers!" << std::endl;*/
+				std::cerr << "WARNING: JSON_import_helix::#ctor called with non-null memebers!" << std::endl;*
 			std::cerr << "JSON_import_helix copy constructor" << std::endl;
 		}
 	};
@@ -151,7 +184,7 @@ namespace Helix {
 
 	/*
 	 * Override the paint functor to increase the progress bar
-	 */
+	 *
 
 	class PaintMultipleStrandsWithProgressBar : public Controller::PaintMultipleStrandsFunctor {
 	public:
@@ -215,7 +248,7 @@ namespace Helix {
 				return MStatus::kFailure;
 			}
 
-			unsigned int binary_content_size = vstrands[vstrands_largest_num_element.index()] ["num"].asInt() + 1;*/
+			unsigned int binary_content_size = vstrands[vstrands_largest_num_element.index()] ["num"].asInt() + 1;*
 
 			int binary_content_size = 0;
 
@@ -431,7 +464,7 @@ namespace Helix {
 									DNA::STEP * directional_index), helixBase))) {
 								status.perror("Helix_CreateBase");
 								return status;
-							}*/
+							}*
 
 							{
 								Model::Helix helix_(helix);
@@ -461,7 +494,7 @@ namespace Helix {
 							if ((binary_content[i].strands[l][j * 4] == -1 && binary_content[i].strands[l][j * 4 + 1] == -1) /*||
 								(binary_content[i].strands[l][j * 4 + 2] == -1 && binary_content[i].strands[l][j * 4 + 3] == -1) ||
 								 (int) i != binary_content[i].strands[l][j * 4] ||
-								 (int) i != binary_content[i].strands[l][j * 4 + 2]*/) {
+								 (int) i != binary_content[i].strands[l][j * 4 + 2]*) {
 								MDagPath helixBase_dagPath;
 
 								if (!(status = MFnDagNode(helixBase).getPath(helixBase_dagPath))) {
@@ -573,7 +606,7 @@ namespace Helix {
 									return status;
 								}
 							}
-						}*/
+						}*
 					}
 				}
 
@@ -601,7 +634,7 @@ namespace Helix {
 		if (!(status = dgModifier.doIt())) {
 			status.perror("MDGModifier::doIt");
 			return status;
-		}*/
+		}*
 
 		MProgressWindow::endProgress();
 		if (!MProgressWindow::reserve())
@@ -615,7 +648,7 @@ namespace Helix {
 
 		/*
 		 * Paint all strands
-		 */
+		 *
 
 		std::cerr << "Coloring strands" << std::endl;
 
@@ -644,7 +677,7 @@ namespace Helix {
 
 
 			MProgressWindow::advanceProgress(1);
-		}*/
+		}*
 
 		if (!(status = MGlobal::executeCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -refresh true"))) {
 			status.perror("MGlobal::executeCommand");
@@ -958,7 +991,7 @@ namespace Helix {
 		}
 
 
-		std::cerr << "End dump" << std::endl;*/
+		std::cerr << "End dump" << std::endl;*
 
 		std::string document = writer.write(root);
 		std::fstream fileh(file.fullName().asChar(), std::ios_base::out);
@@ -1022,5 +1055,5 @@ namespace Helix {
 
 	void *JSONTranslator::creator() {
 		return new JSONTranslator();
-	}
+	}*/
 }

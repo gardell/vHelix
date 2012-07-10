@@ -36,7 +36,7 @@ namespace Helix {
 
 		static	MTypeId	id;
 
-		static MObject aForward, aBackward, aLabel;
+		static MObject aForward, aBackward, aLabel, aColor;
 	};
 
 	/*

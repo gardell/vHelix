@@ -70,7 +70,7 @@ namespace Helix {
 		
 	}
 
-	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel;//, HelixBase::aHelix_Backward, HelixBase::aHelix_Forward;
+	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel, HelixBase::aColor;//, HelixBase::aHelix_Backward, HelixBase::aHelix_Forward;
 	MTypeId HelixBase::id(HELIX_HELIXBASE_ID);
 
 	HelixBase::HelixBase() {
@@ -213,7 +213,7 @@ namespace Helix {
 	MStatus HelixBase::initialize() {
 		MStatus stat;
 
-		MFnNumericAttribute forwardAttr, backwardAttr, locatorAttr, helixForwardAttr, helixBackwardAttr;
+		MFnNumericAttribute forwardAttr, backwardAttr, locatorAttr, helixForwardAttr, helixBackwardAttr, colorAttr;
 		MFnEnumAttribute labelAttr;
 
 		aForward = forwardAttr.create("forward", "fw", MFnNumericData::kLong, 0, &stat);
@@ -242,9 +242,18 @@ namespace Helix {
 			labelAttr.addField(label, i);
 		}
 
+		aColor = colorAttr.create("color", "c", MFnNumericData::kInt, 0.0, &stat);
+
+		if (!stat) {
+			stat.perror("MFnNumericAttribute::create for color");
+			return stat;
+		}
+
 		addAttribute(aForward);
 		addAttribute(aBackward);
 		addAttribute(aLabel);
+		addAttribute(aColor);
+
 		return MStatus::kSuccess;
 	}
 }

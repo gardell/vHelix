@@ -75,7 +75,11 @@ namespace Helix {
 			 * The actually useful methods regarding materials
 			 */
 
-			//static MStatus GetAllMaterials(Material **materials, size_t & numMaterials);
+			/*
+			 * Create a new material and make it available with the AllMaterials*
+			 */
+
+			static MStatus Create(const MString & name, float color[3], Material & material);
 			
 			typedef std::vector<Material> Container;
 			typedef const Material * Iterator;
@@ -87,12 +91,30 @@ namespace Helix {
 				return &s_materials[0] + s_materials.size();
 			}
 
-			/*class RegisterMaterialFile {
+			MStatus getColor(float color[3]) const;
+
+			/*
+			 * Because setMaterial uses MEL, applying materials so many bases can be really slow. The JSON importer suffers from this
+			 * thus, by buffering a list of bases and executing a single MEL command for all of them, performance can be increased
+			 */
+
+			class ApplyMaterialToBases {
+				friend class Material;
 			public:
-				inline RegisterMaterialFile(const char *filepath) {
-					s_materialFiles.push_back(std::make_pair(MString(filepath), false));
+				MStatus add(Base & base);
+				MStatus apply() const;
+			protected:
+				inline ApplyMaterialToBases(const Material & material) : m_material(material) {
+
 				}
-			};*/
+
+				const Material & m_material;
+				MString m_concat;
+			};
+
+			inline ApplyMaterialToBases setMaterialOnMultipleBases() const {
+				return ApplyMaterialToBases(*this);
+			}
 
 		protected:
 			MString m_material;
@@ -102,10 +124,7 @@ namespace Helix {
 			 * The above GetAllMaterials call this method
 			 */
 
-			/*static MStatus CacheMaterials();
-			static void ResetMaterialFilesLoaded();*/
 			static Container s_materials;
-			//static std::vector<std::pair<MString, bool> > s_materialFiles;
 		};
 	}
 }
