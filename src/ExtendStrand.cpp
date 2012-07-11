@@ -68,15 +68,16 @@ namespace Helix {
 
 			MSelectionList selectionList;
 
+			std::cerr << "add targetName: " << targetName.asChar() << std::endl;
+
 			if (!(status = selectionList.add(targetName))) {
 				status.perror("ExtendStrand::doIt: MSelectionList::add");
 				return status;
 			}
 
-			MDagPath target_dagPath;
 			MObject target_object;
 
-			if (!(status = selectionList.getDagPath(0, target_dagPath, target_object))) {
+			if (!(status = selectionList.getDependNode(0, target_object))) {
 				status.perror("MSelectionList::getDagPath");
 				return status;
 			}

@@ -601,19 +601,14 @@ namespace Helix {
 			 */
 
 #ifndef MAC_PLUGIN
-			class SelectHelixFromMapElement {
+			class {
 			public:
-				/*inline Model::Helix operator() (const std::map<int, Helix>::value_type & input) const {
-					return input.second.helix;
-				}*/
 				inline Model::Helix operator() (const std::map<int, Helix>::iterator & input) const {
 					return input->second.helix;
 				}
 			} select_functor;
 
-			//std::transform(m_file.helices.begin(), m_file.helices.end(), std::back_insert_iterator< std::list<Model::Helix> >(helices), select_functor);
-
-			if (!(status = Model::Object::Select<std::map<int, Helix>::iterator, SelectHelixFromMapElement >(m_file.helices.begin(), m_file.helices.end(), select_functor))) {
+			if (!(status = Model::Object::Select(m_file.helices.begin(), m_file.helices.end(), select_functor))) {
 				status.perror("Object::Select");
 				return status;
 			}

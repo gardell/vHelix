@@ -23,7 +23,7 @@
 
 #include <DNA.h>
 
-#define MEL_EXTENDSTRAND_COMMAND "extendHelix"
+#define MEL_EXTENDSTRAND_COMMAND "extendStrand"
 
 namespace Helix {
 	class ExtendStrand : public MPxCommand {

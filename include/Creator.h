@@ -44,15 +44,41 @@ namespace Helix {
 
 	private:
 		/*
+		 * The createHelix along CV curve puts requirements on the generated bases
+		 * by implementing this class, the caller can accept or reject creation of certain bases
+		 */
+
+		class CreateBaseControl {
+		public:
+			/*
+			 * Return true to generate 'shared' coordinates for 'translation' in the operator below
+			 * By 'shared' it's a coordinate system above the helices. It is not necessary 'world' coordinates because this would
+			 * be inefficient (and there's no Maya method to acquire them), but also since the helices will *always* be in the same coordinate space
+			 * but not the bases on each helix, world coordinates are not required
+			 * return false is faster
+			 */
+
+			virtual bool generateSharedCoordinates() const;
+
+			/*
+			 * Return true to accept the creation of the base positioned at 'translation' and at index 'index'. if forward then forward strand, else backward strand
+			 */
+
+			virtual bool operator() (const MVector & translation, int index, bool forward) const;
+		};
+
+		/*
 		 * Before calling, the m_materials must be set
 		 */
 
-		MStatus createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix);
+		//MStatus createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
 
-		inline MStatus createHelix(int bases, double rotation = 0.0, const MVector & origo = MVector(0, 0, 0)) {
+		MStatus createHelix(int bases, Model::Helix & helix, const MMatrix & transform = MMatrix::identity, const CreateBaseControl & control = CreateBaseControl());
+
+		inline MStatus createHelix(int bases, const MMatrix & transform = MMatrix::identity, const CreateBaseControl & control = CreateBaseControl()) {
 			Model::Helix helix;
 
-			return createHelix(bases, rotation, origo, helix);
+			return createHelix(bases, helix, transform, control);
 		}
 
 		/*
@@ -63,19 +89,19 @@ namespace Helix {
 		 * Notice that the rotation is given in degrees
 		 */
 
-		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation = 0.0) {
+		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation = 0.0, const CreateBaseControl & control = CreateBaseControl()) {
 			Model::Helix helix;
-			return createHelix(origo, end, rotation, helix);
+			return createHelix(origo, end, rotation, helix, control);
 		}
 
-		MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix);
+		MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
 
-		inline MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation = 0.0) {
+		inline MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation = 0.0, const CreateBaseControl & control = CreateBaseControl()) {
 			Model::Helix helix;
-			return createHelix(origo, direction, bases, rotation, helix);
+			return createHelix(origo, direction, bases, rotation, helix, control);
 		}
 
-		MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix);
+		MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
 
 		/*
 		 * Create a number of helices along a CV curve. Notice that the curve's bending properties (bezier etc) are not taken into account

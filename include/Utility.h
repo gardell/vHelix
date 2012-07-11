@@ -146,6 +146,10 @@ namespace Helix {
 		return (T(0) < val) - (val < T(0));
 	}
 
+	template <typename T> int sgn_nozero(T val) {
+		return (T(0) <= val) - (val < T(0));
+	}
+
 	/*
 	 * For commands: find all the nodes identified by the names given as arguments to parameters
 	 * The original version used member function pointers, thus:

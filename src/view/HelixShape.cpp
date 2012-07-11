@@ -4,6 +4,15 @@
 #include <maya/MFnDagNode.h>
 #include <maya/MFnNumericAttribute.h>
 
+#define HELIXSHAPE_MARKING_MENU_COMMAND												\
+"global proc " HELIX_SHAPE_NAME "DagMenuProc( string $parent, string $child ) {\n"	\
+"	setParent -m $parent;\n"														\
+"	string $cmd = \"duplicate -target \" + $child;\n"								\
+"	menuItem -l \"Duplicate\" -rp \"N\" -c $cmd;\n"									\
+"	$cmd = \"findFivePrimeEnds\";\n"												\
+"	menuItem -l \"Find all 5' ends\" -rp \"S\" -c $cmd;\n"							\
+"}"
+
 namespace Helix {
 	namespace View {
 		MObject HelixShape::aOrigo, HelixShape::aHeight;
@@ -65,6 +74,13 @@ namespace Helix {
 
 			addAttribute(aOrigo);
 			addAttribute(aHeight);
+
+			/*
+			 * Setup the marking menus for HelixShape using MEL
+			 */
+
+			if (!(status = MGlobal::executeCommandOnIdle(HELIXSHAPE_MARKING_MENU_COMMAND)))
+				status.perror("No marking menus for HelixShape will be available: ");
 
 			return MStatus::kSuccess;
 		}

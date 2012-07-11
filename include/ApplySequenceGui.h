@@ -33,6 +33,7 @@ namespace Helix {
 		virtual bool hasSyntax () const;
 
 		static void *creator();
+		static MSyntax newSyntax();
 	};
 }
 

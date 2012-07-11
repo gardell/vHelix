@@ -61,9 +61,9 @@
 	new RegisterCommand(MEL_FINDFIVEPRIMEENDS_COMMAND, Helix::FindFivePrimeEnds::creator, Helix::FindFivePrimeEnds::newSyntax),							\
 	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),											\
 	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),										\
-	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator),																\
+	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator, Helix::ApplySequenceGui::newSyntax),																\
 	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),											\
-	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator),																		\
+	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																		\
 	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),			\
 	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),					\
 	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),										\
