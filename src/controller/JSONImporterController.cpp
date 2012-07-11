@@ -411,7 +411,7 @@ namespace Helix {
 			 */
 
 			for(std::map<int, Helix>::iterator it = m_file.helices.begin(); it != m_file.helices.end(); ++it) {
-				int index = 0;
+				//int index = 0;
 
 				for(size_t i = 0; i < it->second.scaf.size(); ++i) {
 					if (it->second.scaf[i].isValid()) {
@@ -603,7 +603,7 @@ namespace Helix {
 
 			class {
 			public:
-				inline Model::Helix operator() (std::pair<int, Helix> input) const {
+				inline Model::Helix operator() (const std::map<int, Helix>::value_type & input) const {
 					return input.second.helix;
 				}
 			} select_functor;
