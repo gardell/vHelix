@@ -15,6 +15,7 @@
 		AA5A581815AD72DE00604421 /* BaseShapeUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA5A581215AD72DE00604421 /* BaseShapeUI.cpp */; };
 		AA5A581B15AD72DE00604421 /* HelixShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA5A581515AD72DE00604421 /* HelixShape.cpp */; };
 		AA5A581C15AD72DE00604421 /* HelixShapeUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */; };
+		AA5A581E15AD74FB00604421 /* JSONImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */; };
 		AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C515823F4000F30976 /* BaseModel.cpp */; };
 		AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C615823F4000F30976 /* HelixModel.cpp */; };
 		AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285C715823F4000F30976 /* MaterialModel.cpp */; };
@@ -58,6 +59,7 @@
 		AA5A581215AD72DE00604421 /* BaseShapeUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseShapeUI.cpp; path = src/view/BaseShapeUI.cpp; sourceTree = "<group>"; };
 		AA5A581515AD72DE00604421 /* HelixShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelixShape.cpp; path = src/view/HelixShape.cpp; sourceTree = "<group>"; };
 		AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelixShapeUI.cpp; path = src/view/HelixShapeUI.cpp; sourceTree = "<group>"; };
+		AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JSONImporterController.cpp; sourceTree = "<group>"; };
 		AAA285C515823F4000F30976 /* BaseModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseModel.cpp; sourceTree = "<group>"; };
 		AAA285C615823F4000F30976 /* HelixModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelixModel.cpp; sourceTree = "<group>"; };
 		AAA285C715823F4000F30976 /* MaterialModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MaterialModel.cpp; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */,
 				AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */,
 				AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */,
 				AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */,
@@ -309,6 +312,7 @@
 				AA5A581815AD72DE00604421 /* BaseShapeUI.cpp in Sources */,
 				AA5A581B15AD72DE00604421 /* HelixShape.cpp in Sources */,
 				AA5A581C15AD72DE00604421 /* HelixShapeUI.cpp in Sources */,
+				AA5A581E15AD74FB00604421 /* JSONImporterController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
