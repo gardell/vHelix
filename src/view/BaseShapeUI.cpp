@@ -134,7 +134,7 @@ namespace Helix {
 				return false;
 			}
 
-			BaseShape *shape = (BaseShape *) surfaceShape();
+			//BaseShape *shape = (BaseShape *) surfaceShape();
 			MStatus status;
 
 			M3dView view = selectInfo.view();

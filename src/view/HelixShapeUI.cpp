@@ -89,8 +89,6 @@ namespace Helix {
 			 * Set selection color
 			 */
 
-			M3dView::ColorTable activeColorTable = M3dView::kActiveColors;
-            M3dView::ColorTable dormantColorTable = M3dView::kDormantColors;
 			MColor borderColor;
 
 			switch (request.displayStatus())
