@@ -597,10 +597,10 @@ namespace Helix {
 
 			/*
 			 * Select the newly created helices
+			 * FIXME: Figure out why GCC can't use the shorter and faster template version
 			 */
 
-			//std::list<Model::Helix> helices;
-
+#ifndef MAC_PLUGIN
 			class SelectHelixFromMapElement {
 			public:
 				/*inline Model::Helix operator() (const std::map<int, Helix>::value_type & input) const {
@@ -613,10 +613,20 @@ namespace Helix {
 
 			//std::transform(m_file.helices.begin(), m_file.helices.end(), std::back_insert_iterator< std::list<Model::Helix> >(helices), select_functor);
 
-			if (!(status = Model::Object::Select(m_file.helices.begin(), m_file.helices.end(), select_functor))) {
+			if (!(status = Model::Object::Select<std::map<int, Helix>::iterator, SelectHelixFromMapElement >(m_file.helices.begin(), m_file.helices.end(), select_functor))) {
 				status.perror("Object::Select");
 				return status;
 			}
+#else
+			std::list<Model::Helix> helices;
+			for(std::map<int, Helix>::iterator it = m_file.helices.begin(); it != m_file.helices.end(); ++it)
+				helices.push_back(it->second.helix);
+			
+			if (!(status = Model::Object::Select(helices.begin(), helices.end()))) {
+				status.perror("Object::Select");
+				return status;
+			}
+#endif /* MAC_PLUGIN */
 
 			MProgressWindow::endProgress();
 

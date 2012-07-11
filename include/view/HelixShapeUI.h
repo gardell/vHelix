@@ -31,11 +31,11 @@
 	"const float PI = 3.14159265358979323846264;\n",											\
 																								\
 	"void main() {\n",																			\
-	"	vec4 wVertex = gl_ModelViewMatrix * vec4(gl_Vertex.xy, range.x + (gl_Vertex.z - 0.5) * range.y, 1.0);\n"	\
+	"	vec4 wVertex = gl_ModelViewMatrix * vec4(gl_Vertex.xy, range.x + (gl_Vertex.z - 0.5) * range.y, 1.0);\n",	\
 	"	gl_Position = gl_ProjectionMatrix * wVertex;\n",										\
 	"	EyeVec = -vec3(wVertex);\n",															\
 	"	Normal = gl_NormalMatrix * vec3(gl_Vertex.xy, 0.0);\n",									\
-	"	TexCoord = vec2(atan(gl_Vertex.y, gl_Vertex.x) / (2 * PI) + 0.5, gl_Vertex.z);\n",		\
+	"	TexCoord = vec2(atan(gl_Vertex.y, gl_Vertex.x) / (2.0 * PI) + 0.5, gl_Vertex.z);\n",	\
 	"}\n"
 
 #define HELIXSHAPE_GLSL_VERTEX_SHADER_COUNT 11
@@ -61,7 +61,7 @@
 	"	vec3 N = normalize(Normal), L = normalize(EyeVec), E = normalize(EyeVec), R = reflect(-L, N);\n",				\
 	"	float lambertTerm = dot(N, L), x = fract(xcoord * 2.0);\n",														\
 	"	float border = step(0.05, x) * (1.0 - step(0.95, x)) * step(0.05, y) * (1.0 - step(range.y - 0.05, y));\n",		\
-	"	gl_FragColor = vec4(texColor.rgb * lambertTerm * border + borderColor * (1 - border), 1.0);\n",					\
+	"	gl_FragColor = vec4(texColor.rgb * lambertTerm * border + borderColor * (1.0 - border), 1.0);\n",					\
 	"}\n"
 
 // vec4(TexCoord, 0.0, 1.0) + 0.01 * 

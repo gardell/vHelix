@@ -44,8 +44,8 @@
 	"void main() {\n",																			\
 	"	vec3 N = normalize(Normal), L = normalize(EyeVec), E = normalize(EyeVec), R = reflect(-L, N);\n",		\
 	"	float lambertTerm = dot(N, L);\n",														\
-	"	float borderFlag = smoothstep(0.3 * (border * 2 - 1), 0.7 * border, abs(lambertTerm));\n",								\
-	"	gl_FragColor = vec4(borderColor * (1 - borderFlag) + borderFlag * color * max(0.0, lambertTerm), 1.0);\n",		\
+	"	float borderFlag = smoothstep(0.3 * (border * 2.0 - 1.0), 0.7 * border, abs(lambertTerm));\n",								\
+	"	gl_FragColor = vec4(borderColor * (1.0 - borderFlag) + borderFlag * color * max(0.0, lambertTerm), 1.0);\n",		\
 	"}\n"
 
 #define BASESHAPE_GLSL_FRAGMENT_SHADER_COUNT 10
