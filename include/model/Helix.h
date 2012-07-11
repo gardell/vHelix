@@ -142,7 +142,7 @@ namespace Helix {
 			 * Only used for memory allocation
 			 */
 			
-			unsigned int Helix::numChildren(MStatus & status);
+			unsigned int numChildren(MStatus & status);
 
 		private:
 			bool hasCylinder(MStatus & status);
