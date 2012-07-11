@@ -18,15 +18,9 @@
 #include <GL/glext.h>
 #include <GL/glu.h>
 
-#define HELIXSHAPE_CYLINDER_SLICES	32
-
 #endif /* N MAC_PLUGIN */
 
-/*
-	"float atan2(float f) {\n",																	\
-	"	float a = atan(f);\n"																	\
-	"	return 
-	*/
+#define HELIXSHAPE_CYLINDER_SLICES	32
 
 #define HELIXSHAPE_GLSL_VERTEX_SHADER															\
 	"uniform vec2 range;\n",																	\

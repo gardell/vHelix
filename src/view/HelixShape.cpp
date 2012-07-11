@@ -1,5 +1,4 @@
 #include <view/HelixShape.h>
-#include <view/HelixGeometryIterator.h>
 #include <model/Helix.h>
 
 #include <maya/MFnDagNode.h>
