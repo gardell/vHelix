@@ -83,6 +83,33 @@ namespace Helix {
 				return MStatus::kSuccess;
 			}
 
+			template<typename It, typename OperatorT>
+			static MStatus Select(It it, It end, OperatorT op) {
+				MSelectionList list;
+				MStatus status;
+
+				for(; it != end; ++it) {
+					// This is to abstract the type to Object, thus the template will work with many types as described above
+					// Notice that MSelectionList did not like add(MObject) as it didn't work. Thus using MDagPaths
+
+					MDagPath dagPath = Object(op(it)).getDagPath(status);
+
+					if (!status) {
+						status.perror("Object::getDagPath");
+						return status;
+					}
+
+					list.add(dagPath);
+				}
+
+				if (!(status = MGlobal::setActiveSelectionList(list))) {
+					status.perror("MGlobal::setActiveSelectionList");
+					return status;
+				}
+
+				return MStatus::kSuccess;
+			}
+
 			/*
 			 * I left these constructors non-explicit, makes it nice to use std::copy, but might confuse at times
 			 */
