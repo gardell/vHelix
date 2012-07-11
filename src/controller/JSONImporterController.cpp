@@ -601,7 +601,7 @@ namespace Helix {
 
 			std::list<Model::Helix> helices;
 
-			class {
+			class SelectHelixFromMapElement {
 			public:
 				inline Model::Helix operator() (const std::map<int, Helix>::value_type & input) const {
 					return input.second.helix;
