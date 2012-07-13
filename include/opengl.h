@@ -7,15 +7,6 @@
 
 #include <Definition.h>
 
-#if defined(WIN32) || defined(WIN64)
-#define GETPROCADDRESS(str)		wglGetProcAddress((LPCSTR) str)
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#else
-#define GETPROCADDRESS(str)		glXGetProcAddressARB((const GLubyte *) str)
-#endif /* No windows */
-
-
 #ifdef MAC_PLUGIN
 
 #include <OpenGL/gl.h>
@@ -36,6 +27,16 @@
 bool installGLExtensions();
 
 #endif /* N MAC_PLUGIN */
+
+#if defined(WIN32) || defined(WIN64)
+#define GETPROCADDRESS(str)		wglGetProcAddress((LPCSTR) str)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#define GETPROCADDRESS(str)		glXGetProcAddressARB((const GLubyte *) str)
+#include <GL/glx.h>
+#include <GL/glxext.h>
+#endif /* No windows */
 
 
 #endif /* N _VHELIX_OPENGL_H_ */

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <list>
 #include <iterator>
+#include <climits>
 
 namespace Helix {
 	namespace Controller {
@@ -600,7 +601,7 @@ namespace Helix {
 			 * FIXME: Figure out why GCC can't use the shorter and faster template version
 			 */
 
-#ifndef MAC_PLUGIN
+#ifndef __GNUC__
 			class {
 			public:
 				inline Model::Helix operator() (const std::map<int, Helix>::iterator & input) const {

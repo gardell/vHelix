@@ -29,6 +29,8 @@
 #include <maya/MQuaternion.h>
 #include <maya/MMatrix.h>
 
+#include <cstring>
+
 //#include <json/json.h>
 
 //#include <fstream>
