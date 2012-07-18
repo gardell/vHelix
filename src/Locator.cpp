@@ -23,6 +23,7 @@
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MPlugArray.h>
 #include <maya/MFnCamera.h>
+#include <maya/MGlobal.h>
 
 #include <model/Helix.h>
 #include <model/Strand.h>
@@ -58,7 +59,8 @@ namespace Helix {
 	const MTypeId transform_id(HELIX_TRANSFORM_ID);
 	//MObject HelixLocator::aBases;
 	bool HelixLocator::s_gl_initialized = false, HelixLocator::s_gl_failed = false;
-	GLint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0, HelixLocator::s_screen_dimensions_uniform = -1, HelixLocator::s_halo_size_attrib_location = -1;
+	GLuint HelixLocator::s_program = 0, HelixLocator::s_vertex_shader = 0, HelixLocator::s_fragment_shader = 0;
+	GLint HelixLocator::s_screen_dimensions_uniform = -1, HelixLocator::s_halo_size_attrib_location = -1;
 	
 	HelixLocator::~HelixLocator() {
 		
@@ -72,7 +74,7 @@ namespace Helix {
 
 		// Setup the shaders and programs
 
-		if ((s_program = glCreateProgram()) == 0) {
+		/*if ((s_program = glCreateProgram()) == 0) {
 			std::cerr << "Fatal, failed to create an OpenGL program object" << std::endl;
 			s_gl_failed = true;
 		}
@@ -134,21 +136,31 @@ namespace Helix {
 			s_gl_failed = true;
 		}
 
-		/*
+		 *
 		 * Set up screen height uniform required to scale the point sprites
-		 */
+		 *
 
 		if ((s_screen_dimensions_uniform = glGetUniformLocation(s_program, "screen")) == -1) {
 			std::cerr << "Failed to obtain location to screenHeight uniform variable" << std::endl;
 			s_gl_failed = true;
 		}
 
-		/*
+		 *
 		 * Setup halo size attribute for shader
-		 */
+		 *
 
 		if ((s_halo_size_attrib_location = glGetAttribLocation(s_program, HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME)) == -1) {
 			std::cerr << "Failed to obtain location of " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME << " attribute" << std::endl;
+			s_gl_failed = true;
+		}*/
+
+
+		MStatus status;
+
+		SETUPOPENGLSHADERS(GLSL_VERTEX_SHADER, GLSL_FRAGMENT_SHADER, "screen", &s_screen_dimensions_uniform, 1, HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME, &s_halo_size_attrib_location, 1, s_program, s_vertex_shader, s_fragment_shader, status);
+
+		if (!status) {
+			status.perror("Setup opengl shaders failed");
 			s_gl_failed = true;
 		}
 
@@ -681,6 +693,21 @@ namespace Helix {
 		// Render cylinder direction arrow
 		//
 
+		bool isHelixSelected;
+
+		{
+			isHelixSelected = false;
+			// FIXME
+			/*MSelectionList activeSelectionList;
+			if (!(stat = MGlobal::getActiveSelectionList(activeSelectionList)))
+				stat.perror("MGlobal::getActiveSelectionList");
+
+			isHelixSelected = activeSelectionList.hasItem(helix.getObject(stat));
+
+			if (isHelixSelected)
+				std::cerr << "Helix is selected" << std::endl;*/
+		}
+
 		if (ToggleLocatorRender::CurrentRender & ToggleLocatorRender::kRenderDirectionalArrow) {
 			static const float direction_arrow_vertices[] =
 			{
@@ -693,13 +720,22 @@ namespace Helix {
 					0.0f, 0.05f, -0.75f
 			};
 			static unsigned char direction_arrow_colors[] = {
-					0x0, 0x0, 0x0, 0x0,
+					/* Green for non-selected helices */
+					0x0, 0x7F, 0x0, 0x0,
 					0x0, 0x7F, 0x0, 0x7F,
 					0x0, 0x7F, 0x0, 0x7F,
 					0x0, 0xFF, 0x0, 0xFF,
 					0x0, 0x7F, 0x0, 0x7F,
 					0x0, 0x7F, 0x0, 0x7F,
-					0x0, 0x0, 0x0, 0x0
+					0x0, 0x7F, 0x0, 0x0,
+					/* Blue for selected helices */
+					0x0, 0x0, 0x7F, 0x0,
+					0x0, 0x0, 0x7F, 0x7F,
+					0x0, 0x0, 0x7F, 0x7F,
+					0x0, 0x0, 0xFF, 0xFF,
+					0x0, 0x0, 0x7F, 0x7F,
+					0x0, 0x0, 0x7F, 0x7F,
+					0x0, 0x0, 0x7F, 0x0
 			};
 
 			static unsigned char direction_arrow_contour_colors[] = {
@@ -751,9 +787,9 @@ namespace Helix {
 			 * Draw border surrounding the arrow
 			 */
 
-			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH);
+			glLineWidth(BASE_CONNECTIONS_LINE_WIDTH * (isHelixSelected ? 2.0f : 1.0f));
 
-			glColorPointer(4, GL_UNSIGNED_BYTE, 0, direction_arrow_contour_colors);
+			glColorPointer(4, GL_UNSIGNED_BYTE, 0, &direction_arrow_contour_colors[isHelixSelected ? 7 : 0]);
 			glDrawArrays(GL_LINE_LOOP, 0, 7);
 
 			if (renderingCylinder)

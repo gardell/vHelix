@@ -25,9 +25,9 @@
  */
 
 #define HELIX_LOCATOR_ID 0x02114121
-#define HELIX_TRANSFORM_ID 0x02114114 // If this changes in the Python vHelixTransform it MUST be changed here!
-#define PLUGIN_VENDOR "KI?"
-#define PLUGIN_VERSION "0.1 RC 1"
+#define HELIX_TRANSFORM_ID 0x02114114
+#define PLUGIN_VENDOR "Karolinska Institutet"
+#define PLUGIN_VERSION "0.1"
 
 #define HALO_TEXTURE_WIDTH 32
 #define HALO_INNER_DIAMETER 28
@@ -100,7 +100,8 @@ namespace Helix {
 		
 	protected:
 		static bool s_gl_initialized, s_gl_failed;
-		static GLint s_program, s_vertex_shader, s_fragment_shader, s_screen_dimensions_uniform, s_halo_size_attrib_location;
+		static GLuint s_program, s_vertex_shader, s_fragment_shader;
+		static GLint s_screen_dimensions_uniform, s_halo_size_attrib_location;
 
 		void initializeGL();
 	};

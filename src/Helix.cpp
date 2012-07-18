@@ -8,6 +8,8 @@
 #include <Helix.h>
 #include <maya/MFnMatrixAttribute.h>
 
+#include <view/ConnectSuggestionsLocatorNode.h>
+
 namespace Helix {
 	MObject Helix::aLeftStrand, Helix::aRightStrand;
 	MTypeId Helix::id(HELIX_HELIX_ID);
@@ -22,6 +24,19 @@ namespace Helix {
 
 	void *Helix::creator() {
 		return new Helix();
+	}
+
+	void Helix::postConstructor() {
+		MStatus status;
+
+		/*
+		 * For the ConnectSuggestionsLocatorNode
+		 */
+
+		MNodeMessage::addAttributeChangedCallback(thisMObject(), &View::MNodeMessage_Helix_AttributeChangedProc, this, &status);
+
+		if (!status)
+			status.perror("MNodeMessage::addAttributeChangedCallback");
 	}
 
 	MStatus Helix::initialize() {

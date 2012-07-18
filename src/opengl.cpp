@@ -23,12 +23,15 @@ struct {
 	PFNGLUNIFORM3FPROC glUniform3f;
 	PFNGLUNIFORM4FPROC glUniform4f;
 	PFNGLUNIFORM1IPROC glUniform1i;
+	PFNGLPOINTPARAMETERIPROC glPointParameteri;
 
 	PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
 	PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
 	PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
 	PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 	PFNGLBINDBUFFERPROC glBindBuffer;
+	PFNGLTEXIMAGE3DPROC glTexImage3D;
+	PFNGLACTIVETEXTUREPROC glActiveTexture;
 } s_gl = { false };
 
 #ifndef MAC_PLUGIN
@@ -159,6 +162,21 @@ bool installGLExtensions() {
 		return false;
 	}
 
+	if ((s_gl.glTexImage3D = (PFNGLTEXIMAGE3DPROC) GETPROCADDRESS("glTexImage3D")) == NULL) {
+		std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+		return false;
+	}
+
+	if ((s_gl.glActiveTexture = (PFNGLACTIVETEXTUREPROC) GETPROCADDRESS("glActiveTexture")) == NULL) {
+		std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+		return false;
+	}
+
+	if ((s_gl.glPointParameteri = (PFNGLPOINTPARAMETERIPROC) GETPROCADDRESS("glPointParameteri")) == NULL) {
+		std::cerr << "Fatal, Failed to load OpenGL shader procedures" << std::endl;
+		return false;
+	}
+
 	s_gl.installed = true;
 
 	return true;
@@ -258,7 +276,19 @@ GLAPI GLint APIENTRY glGetAttribLocation (GLuint program, const GLchar *name) {
 }
 
 GLAPI void APIENTRY glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) {
-	return s_gl.glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+	s_gl.glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+}
+
+GLAPI void APIENTRY glTexImage3D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels) {
+	s_gl.glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels);
+}
+
+GLAPI void APIENTRY glActiveTexture (GLenum texture) {
+	s_gl.glActiveTexture(texture);
+}
+
+GLAPI void APIENTRY glPointParameteri (GLenum pname, GLint param) {
+	s_gl.glPointParameteri(pname, param);
 }
 
 #endif /* N MAC_PLUGIN */

@@ -14,6 +14,7 @@
  */
 
 #include <Definition.h>
+#include <opengl.h>
 
 #include <model/Object.h>
 
@@ -30,6 +31,16 @@
 #include <maya/MArgList.h>
 #include <maya/MArgDatabase.h>
 #include <maya/MSelectionList.h>
+
+/*
+ * Convenient macro for the SetupOpenGLShaders below as our shader code is often as #defines
+ */
+
+#define SETUPOPENGLSHADERS(vertex_shader_source, fragment_shader_source, uniform_names, uniform_locations, uniform_count, attrib_names, attrib_locations, attrib_count, program, vertex_shader, fragment_shader, status)	\
+	{																																																						\
+		static const char *vss[] = { vertex_shader_source, NULL }, *fss[] = { fragment_shader_source, NULL }, *un[] = { uniform_names, NULL }, *an[] = { attrib_names, NULL };												\
+		status = SetupOpenGLShaders(vss, fss, un, uniform_locations, uniform_count, an, attrib_locations, attrib_count, program, vertex_shader, fragment_shader);															\
+	}
 
 namespace Helix {
 	/*
@@ -255,6 +266,14 @@ namespace Helix {
 	 */
 
 	MStatus CVCurveFromObject(const Model::Object & object, MPointArray & array);
+
+	/*
+	 * There's a lot of OpenGL shaders being used, so saving quite a lot of lines of code using this utility method
+	 * it's pretty static, but the shaders used are so primitive anyway
+	 * creates a set of vertex and fragment shaders + program, compiles, attaches and links them and finds the uniforms and attributes requested
+	 */
+
+	MStatus SetupOpenGLShaders(const char **vertex_shader_source, const char **fragment_shader_source, const char **uniform_names, GLint *uniform_locations, GLsizei uniform_count, const char **attrib_names, GLint *attrib_locations, GLsizei attrib_count, GLuint & program, GLuint & vertex_shader, GLuint & fragment_shader);
 }
 
 

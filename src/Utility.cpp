@@ -764,4 +764,90 @@ namespace Helix {
 
 		return MStatus::kNotFound;
 	}
+
+	MStatus SetupOpenGLShaders(const char **vertex_shader_source, const char **fragment_shader_source, const char **uniform_names, GLint *uniform_locations, GLsizei uniform_count, const char **attrib_names, GLint *attrib_locations, GLsizei attrib_count, GLuint & program, GLuint & vertex_shader, GLuint & fragment_shader) {
+		if ((program = glCreateProgram()) == 0) {
+			std::cerr << "Fatal, failed to create an OpenGL program object" << std::endl;
+			return MStatus::kFailure;
+		}
+
+		if ((vertex_shader = glCreateShader(GL_VERTEX_SHADER)) == 0) {
+			std::cerr << "Fatal, failed to create an OpenGL shader object" << std::endl;
+			return MStatus::kFailure;
+		}
+
+		if ((fragment_shader = glCreateShader(GL_FRAGMENT_SHADER)) == 0) {
+			std::cerr << "Fatal, failed to create an OpenGL shader object" << std::endl;
+			return MStatus::kFailure;
+		}
+
+		GLsizei vertex_shader_count, fragment_shader_count;
+
+		for(vertex_shader_count = 0; vertex_shader_source[vertex_shader_count] != NULL; ++vertex_shader_count);
+		for(fragment_shader_count = 0; fragment_shader_source[fragment_shader_count] != NULL; ++fragment_shader_count);
+
+		glShaderSource(vertex_shader, vertex_shader_count, vertex_shader_source, NULL);
+		glShaderSource(fragment_shader, fragment_shader_count, fragment_shader_source, NULL);
+
+		glCompileShader(vertex_shader);
+		glCompileShader(fragment_shader);
+
+		GLint status;
+
+		{
+			GLint shaders[] = { vertex_shader, fragment_shader };
+
+			for(int i = 0; i < 2; ++i) {
+				glGetShaderiv(shaders[i], GL_COMPILE_STATUS, &status);
+
+				if (status != GL_TRUE) {
+					GLint logLength;
+					glGetShaderiv(shaders[i], GL_INFO_LOG_LENGTH, &logLength);
+					GLchar *log = new GLchar[logLength];
+					glGetShaderInfoLog(shaders[i], logLength, NULL, log);
+
+					std::cerr << "OpenGL shader info log (" << (i + 1) << "): " << std::endl << log << std::endl << std::endl;
+
+					return MStatus::kSuccess;
+				}
+
+				glAttachShader(program, shaders[i]);
+			}
+		}
+
+		glLinkProgram(program);
+
+		glGetProgramiv(program, GL_LINK_STATUS, &status);
+
+		if (status != GL_TRUE) {
+			GLint logLength;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
+			GLchar *log = new GLchar[logLength];
+			glGetProgramInfoLog(program, logLength, NULL, log);
+
+			std::cerr << "OpenGL program info log: " << std::endl << log << std::endl << std::endl;
+
+			return MStatus::kSuccess;
+		}
+
+		/*
+		 * Find the requested uniforms
+		 */
+
+		for(GLsizei i = 0; i < uniform_count; ++i) {
+			if ((uniform_locations[i] = glGetUniformLocation(program, uniform_names[i])) == -1)
+				std::cerr << "Warning: Failed to obtain location for the uniform variable: \"" << uniform_names[i] << "\"" << std::endl;
+
+			std::cerr << "Found uniform named \"" << uniform_names[i] << "\" to be located at " << uniform_locations[i] << std::endl;
+		}
+
+		for(GLsizei i = 0; i < attrib_count; ++i) {
+			if ((attrib_locations[i] = glGetAttribLocation(program, attrib_names[i])) == -1)
+				std::cerr << "Warning: Failed to obtain location for the attrib variable: \"" << attrib_names[i] << "\"" << std::endl;
+
+			std::cerr << "Found attrib named \"" << attrib_names[i] << "\" to be located at " << attrib_locations[i] << std::endl;
+		}
+
+		return MStatus::kSuccess;
+	}
 }

@@ -23,7 +23,7 @@ namespace Helix {
 		HelixBase();
 		virtual ~HelixBase();
 
-		virtual	void postConstructor();
+		virtual void postConstructor();
 
 		MStatus connectionMade(const MPlug &plug, const MPlug &otherPlug, bool asSrc);
 		MStatus connectionBroken(const MPlug &plug, const MPlug &otherPlug, bool asSrc);

@@ -14,6 +14,8 @@
 #include <maya/MString.h>
 #include <maya/MMatrix.h>
 
+#include <iterator>
+
 /*
  * This is the interface used for modifying helices
  */
@@ -75,7 +77,7 @@ namespace Helix {
 			 * BaseIterator: Iterate over the bases belonging to this helix
 			 */
 
-			class BaseIterator {
+			class BaseIterator : public std::iterator<std::input_iterator_tag, Base> {
 				friend class Helix;
 			public:
 

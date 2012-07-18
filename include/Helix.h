@@ -22,6 +22,8 @@ namespace Helix {
 		Helix();
 		virtual ~Helix();
 
+		virtual	void postConstructor();
+
 		// Standard utility metods
 		//
 

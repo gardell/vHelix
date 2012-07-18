@@ -37,6 +37,9 @@
 #include <view/BaseShapeUI.h>
 #include <view/HelixShape.h>
 #include <view/HelixShapeUI.h>
+#include <view/ConnectSuggestionsLocatorNode.h>
+#include <view/ConnectSuggestionsContextCommand.h>
+#include <view/ConnectSuggestionsToolCommand.h>
 
 #include <maya/MFnPlugin.h>
 #include <maya/MGlobal.h>
@@ -52,33 +55,35 @@
 
 #include <ctime>
 
-#define REGISTER_OPERATIONS	\
-	new RegisterCommand(MEL_CREATEHELIX_COMMAND, Helix::Creator::creator, Helix::Creator::newSyntax),													\
-	new RegisterCommand(MEL_CREATEHELIX_GUI_COMMAND, Helix::CreatorGui::creator),																		\
-	new RegisterCommand(MEL_CONNECTBASES_COMMAND, Helix::Connect::creator, Helix::Connect::newSyntax),													\
-	new RegisterCommand(MEL_DISCONNECTBASE_COMMAND, Helix::Disconnect::creator, Helix::Disconnect::newSyntax),											\
-	new RegisterCommand(MEL_DUPLICATEHELICES_COMMAND, Helix::Duplicate::creator, Helix::Duplicate::newSyntax),											\
-	new RegisterCommand(MEL_FINDFIVEPRIMEENDS_COMMAND, Helix::FindFivePrimeEnds::creator, Helix::FindFivePrimeEnds::newSyntax),							\
-	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),											\
-	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),										\
-	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator, Helix::ApplySequenceGui::newSyntax),																\
-	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),											\
-	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																		\
-	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),			\
-	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),					\
-	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),										\
-	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),										\
-	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),	\
-	new RegisterTransform(HELIX_HELIXBASE_NAME, Helix::HelixBase::id, Helix::HelixBase::creator, Helix::HelixBase::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),	\
-	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),					\
-	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),															\
-	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),	\
+#define REGISTER_OPERATIONS																																																						\
+	new RegisterCommand(MEL_CREATEHELIX_COMMAND, Helix::Creator::creator, Helix::Creator::newSyntax),																																			\
+	new RegisterCommand(MEL_CREATEHELIX_GUI_COMMAND, Helix::CreatorGui::creator),																																								\
+	new RegisterCommand(MEL_CONNECTBASES_COMMAND, Helix::Connect::creator, Helix::Connect::newSyntax),																																			\
+	new RegisterCommand(MEL_DISCONNECTBASE_COMMAND, Helix::Disconnect::creator, Helix::Disconnect::newSyntax),																																	\
+	new RegisterCommand(MEL_DUPLICATEHELICES_COMMAND, Helix::Duplicate::creator, Helix::Duplicate::newSyntax),																																	\
+	new RegisterCommand(MEL_FINDFIVEPRIMEENDS_COMMAND, Helix::FindFivePrimeEnds::creator, Helix::FindFivePrimeEnds::newSyntax),																													\
+	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),																																	\
+	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),																																\
+	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator, Helix::ApplySequenceGui::newSyntax),																													\
+	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),																																\
+	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																																	\
+	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),																									\
+	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),																											\
+	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),																																\
+	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),																																\
+	new RegisterContextCommand(MEL_CONNECT_SUGGESTIONS_CONTEXT_COMMAND, Helix::View::ConnectSuggestionsContextCommand::creator, MEL_CONNECT_SUGGESTIONS_TOOL_COMMAND, Helix::View::ConnectSuggestionsToolCommand::creator, Helix::View::ConnectSuggestionsToolCommand::newSyntax),	\
+	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),																							\
+	new RegisterNode(CONNECT_SUGGESTIONS_LOCATOR_NAME, Helix::View::ConnectSuggestionsLocatorNode::id, &Helix::View::ConnectSuggestionsLocatorNode::creator, &Helix::View::ConnectSuggestionsLocatorNode::initialize, MPxNode::kLocatorNode),	\
+	new RegisterTransform(HELIX_HELIXBASE_NAME, Helix::HelixBase::id, Helix::HelixBase::creator, Helix::HelixBase::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),						\
+	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),										\
+	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),																																					\
+	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),																		\
 	new RegisterShape(HELIX_SHAPE_NAME, Helix::View::HelixShape::id, Helix::View::HelixShape::creator, Helix::View::HelixShape::initialize, Helix::View::HelixShapeUI::creator)
 
-#define MEL_REGISTER_MENU_COMMAND													\
+#define MEL_REGISTER_MENU_COMMAND															\
     "menu -tearOff true -label \"Helix\" -allowOptionBoxes true -parent $gMainWindow;\n"
 
-#define MEL_DEREGISTER_MENU_COMMAND													\
+#define MEL_DEREGISTER_MENU_COMMAND															\
     "menu -deleteAllItems"
 
 #ifdef WIN32
@@ -316,6 +321,39 @@ protected:
 	MCreatorFunction m_creatorFunction;
 	MInitializeFunction m_initFunction;
 	MCreatorFunction m_uiCreatorFunction;
+};
+
+class RegisterContextCommand : public Register {
+public:
+	RegisterContextCommand(const MString & commandName, MCreatorFunction creatorFunction, const MString & toolCmdName, MCreatorFunction toolCmdCreator, MCreateSyntaxFunction toolCmdSyntax = NULL) : m_commandName(commandName), m_creatorFunction(creatorFunction), m_toolCmdName(toolCmdName), m_toolCmdCreator(toolCmdCreator), m_toolCmdSyntax(toolCmdSyntax) {
+
+	}
+
+	virtual MStatus doRegister(MFnPlugin & plugin) {
+		MStatus status;
+
+		if (!(status = plugin.registerContextCommand(m_commandName, m_creatorFunction, m_toolCmdName, m_toolCmdCreator, m_toolCmdSyntax))) {
+			status.perror(MString("MFnPlugin::registerContextCommand: ") + m_commandName);
+			return status;
+		}
+
+		return MStatus::kSuccess;
+	}
+
+	virtual MStatus doDeregister(MFnPlugin & plugin) {
+		return plugin.deregisterContextCommand(m_commandName, m_toolCmdName);
+	}
+
+	virtual bool isValid() const {
+		return true;
+	}
+
+protected:
+	MString m_commandName;
+	MCreatorFunction m_creatorFunction;
+	MString m_toolCmdName;
+	MCreatorFunction m_toolCmdCreator;
+	MCreateSyntaxFunction m_toolCmdSyntax;
 };
 
 MString g_menuName;

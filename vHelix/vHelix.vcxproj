@@ -69,16 +69,18 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)\Debug\</OutDir>
+    <OutDir>$(SolutionDir)\maya2011\Debug\</OutDir>
     <TargetExt>.mll</TargetExt>
+    <IntDir>$(Platform)\maya2011\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\Release\</OutDir>
+    <OutDir>$(SolutionDir)\maya2011\Release\</OutDir>
     <TargetExt>.mll</TargetExt>
+    <IntDir>$(Platform)\maya2011\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -193,6 +195,10 @@
     <ClInclude Include="..\include\Utility.h" />
     <ClInclude Include="..\include\view\BaseShape.h" />
     <ClInclude Include="..\include\view\BaseShapeUI.h" />
+    <ClInclude Include="..\include\view\ConnectSuggestionsContext.h" />
+    <ClInclude Include="..\include\view\ConnectSuggestionsContextCommand.h" />
+    <ClInclude Include="..\include\view\ConnectSuggestionsLocatorNode.h" />
+    <ClInclude Include="..\include\view\ConnectSuggestionsToolCommand.h" />
     <ClInclude Include="..\include\view\HelixShape.h" />
     <ClInclude Include="..\include\view\HelixShapeUI.h" />
   </ItemGroup>
@@ -237,6 +243,10 @@
     <ClCompile Include="..\src\Utility.cpp" />
     <ClCompile Include="..\src\view\BaseShape.cpp" />
     <ClCompile Include="..\src\view\BaseShapeUI.cpp" />
+    <ClCompile Include="..\src\view\ConnectSuggestionsContext.cpp" />
+    <ClCompile Include="..\src\view\ConnectSuggestionsContextCommand.cpp" />
+    <ClCompile Include="..\src\view\ConnectSuggestionsLocatorNode.cpp" />
+    <ClCompile Include="..\src\view\ConnectSuggestionsToolCommand.cpp" />
     <ClCompile Include="..\src\view\HelixShape.cpp" />
     <ClCompile Include="..\src\view\HelixShapeUI.cpp" />
   </ItemGroup>

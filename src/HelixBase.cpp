@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <model/Base.h>
+#include <view/ConnectSuggestionsLocatorNode.h>
 
 namespace Helix {
 	//
@@ -89,9 +90,18 @@ namespace Helix {
 		MObject thisObject = thisMObject();
 
 		MNodeMessage::addNodePreRemovalCallback(thisObject, &MNode_NodePreRemovalCallbackFunc, this, &status);
-		
+
 		if (!status)
 			status.perror("MNodeMessage::addNodePreRemovalCallback");
+
+		/*
+		 * For the ConnectSuggestionsLocatorNode
+		 */
+
+		MNodeMessage::addAttributeChangedCallback(thisObject, &View::MNodeMessage_Base_AttributeChangedProc, this, &status);
+
+		if (!status)
+			status.perror("MNodeMessage::addAttributeChangedCallback");
 	}
 
 	MStatus HelixBase::connectionMade(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
