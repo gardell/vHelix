@@ -27,7 +27,8 @@ CPP_SRCS += \
 ../src/Tracker.cpp \
 ../src/Utility.cpp \
 ../src/jsoncpp.cpp \
-../src/main.cpp 
+../src/main.cpp \
+../src/opengl.cpp 
 
 OBJS += \
 ./src/ApplySequence.o \
@@ -53,7 +54,8 @@ OBJS += \
 ./src/Tracker.o \
 ./src/Utility.o \
 ./src/jsoncpp.o \
-./src/main.o 
+./src/main.o \
+./src/opengl.o 
 
 CPP_DEPS += \
 ./src/ApplySequence.d \
@@ -79,7 +81,8 @@ CPP_DEPS += \
 ./src/Tracker.d \
 ./src/Utility.d \
 ./src/jsoncpp.d \
-./src/main.d 
+./src/main.d \
+./src/opengl.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
