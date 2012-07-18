@@ -70,7 +70,7 @@ namespace Helix {
 				return;
 			}
 
-			MDagPath path = request.multiPath();
+			//MDagPath path = request.multiPath();
 			MMaterial material = request.material();
 			MColor color, borderColor;
 

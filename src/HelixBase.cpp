@@ -98,10 +98,12 @@ namespace Helix {
 		 * For the ConnectSuggestionsLocatorNode
 		 */
 
-		MNodeMessage::addAttributeChangedCallback(thisObject, &View::MNodeMessage_Base_AttributeChangedProc, this, &status);
+		// FIXME: This degrades performance a lot
+
+		/*MNodeMessage::addAttributeChangedCallback(thisObject, &View::MNodeMessage_Base_AttributeChangedProc, this, &status);
 
 		if (!status)
-			status.perror("MNodeMessage::addAttributeChangedCallback");
+			status.perror("MNodeMessage::addAttributeChangedCallback");*/
 	}
 
 	MStatus HelixBase::connectionMade(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
