@@ -176,7 +176,8 @@ namespace Helix {
 				/* We don't have access to the attribute MObjects, thus a slower string comparison is the only way. Also no 'translate' node triggers events for groups, translateX, translateY and translateZ does */
 				
 				if (strstr(plug.name().asChar(), "translate")) {
-					ConnectSuggestionsLocatorNode::UpdateTransform(Model::Object(plug.node(&status)));
+					Model::Object node(plug.node(&status));
+					ConnectSuggestionsLocatorNode::UpdateTransform(node);
 
 					if (!status)
 						status.perror("MPlug::node");
@@ -351,7 +352,9 @@ namespace Helix {
 			 * Track the destruction of our own object as when this happens, we need to detach our listeners from all bases and helices in the scene
 			 */
 
-			m_preRemovalCallbackId = MNodeMessage::addNodePreRemovalCallback(thisMObject(), MMessage_ConnectSuggestionsLocatorNode_preRemovalCallback, this, &status);
+			MObject thisObject = thisMObject();
+			
+			m_preRemovalCallbackId = MNodeMessage::addNodePreRemovalCallback(thisObject, &MMessage_ConnectSuggestionsLocatorNode_preRemovalCallback, this, &status);
 
 			if (!status)
 				status.perror("MNodeMessage::addNodePreRemovalCallback");
@@ -360,7 +363,7 @@ namespace Helix {
 			 * Attach ourselves to selection events in order to track potential connections
 			 */
 
-			m_activeListModifiedCallbackId = MModelMessage::addCallback(MModelMessage::kActiveListModified, MModelMessage_ConnectSuggestionsLocatorNode_activeListModified, this, &status);
+			m_activeListModifiedCallbackId = MModelMessage::addCallback(MModelMessage::kActiveListModified, &MModelMessage_ConnectSuggestionsLocatorNode_activeListModified, this, &status);
 
 			if (!status)
 				status.perror("MModelMessage::addCallback");
@@ -622,8 +625,10 @@ namespace Helix {
 						return status;
 					}
 
-					if ((translation - base_translation).length() < CONNECT_SUGGESTIONS_MAX_DISTANCE)
-						s_closeBasesTable.push_back(BasePair(base, Model::Base(path)));
+					if ((translation - base_translation).length() < CONNECT_SUGGESTIONS_MAX_DISTANCE) {
+						Model::Base otherBase(path);
+						s_closeBasesTable.push_back(BasePair(base, otherBase));
+					}
 				}
 
 				if (!status) {
@@ -716,7 +721,7 @@ namespace Helix {
 			 * Setup textures
 			 */
 
-			const GLubyte slideTexture[] = { CONNECT_SUGGESTIONS_SLIDE_TEXTURE };//, arrowTexture[] = { CONNECT_SUGGESTIONS_ARROW_TEXTURE };
+			//const GLubyte slideTexture[] = { CONNECT_SUGGESTIONS_SLIDE_TEXTURE };//, arrowTexture[] = { CONNECT_SUGGESTIONS_ARROW_TEXTURE };
 
 			GLCALL(glPushAttrib(GL_TEXTURE_BIT));
 			GLCALL(glGenTextures(1, &s_drawData.texture));
@@ -779,10 +784,23 @@ namespace Helix {
 
 			return MStatus::kNotFound;
 		}
+		
+		struct Hit {
+			double scale, distance;
+			std::list< ConnectSuggestionsLocatorNode::BasePair >::iterator it;
+			
+			inline Hit(std::list< ConnectSuggestionsLocatorNode::BasePair >::iterator it_, double scale_, double distance_) : it(it_), scale(scale_), distance(distance_) {
+				
+			}
+			
+			inline bool operator<(const Hit & h) const {
+				return distance < h.distance;
+			}
+		};
 
 		void ConnectSuggestionsLocatorNode::onPress(int x, int y, M3dView & view, ConnectSuggestionsContext & context) {
 			MStatus status;
-			double shift = 0.0;
+			//double shift = 0.0;
 
 			MPoint near_p, far_p;
 
@@ -792,19 +810,6 @@ namespace Helix {
 			}
 
 			MVector u = near_p - far_p;
-
-			struct Hit {
-				double scale, distance;
-				std::list< BasePair >::iterator it;
-
-				inline Hit(std::list< BasePair >::iterator it_, double scale_, double distance_) : it(it_), scale(scale_), distance(distance_) {
-
-				}
-
-				inline bool operator<(const Hit & h) const {
-					return distance < h.distance;
-				}
-			};
 
 			std::list<Hit> hits;
 
@@ -932,6 +937,17 @@ namespace Helix {
 				view.refresh(true);
 			}
 		}
+		
+		class Condition {
+		public:
+			inline Condition(MObject & node_) : node(node_) { }
+			
+			inline bool operator() (ConnectSuggestionsLocatorNode::BasePair & pair) const {
+				return pair.first == node || pair.second == node;
+			}
+			
+			MObject node;
+		};
 
 		void MNodeMessage_closeBasesTable_base_preRemovalCallback(MObject & node, void *clientData) {
 			/*
@@ -940,17 +956,6 @@ namespace Helix {
 			 */
 
 			std::cerr << "Removing all references in the suggestions table for node: " << MFnDagNode(node).fullPathName().asChar() << std::endl;
-
-			class Condition {
-			public:
-				inline Condition(MObject & node_) : node(node_) { }
-
-				inline bool operator() (ConnectSuggestionsLocatorNode::BasePair & pair) const {
-					return pair.first == node || pair.second == node;
-				}
-
-				MObject node;
-			};
 
 			std::list<ConnectSuggestionsLocatorNode::BasePair>::iterator it;
 			

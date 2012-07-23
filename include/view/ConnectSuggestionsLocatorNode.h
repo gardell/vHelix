@@ -29,7 +29,7 @@ namespace Helix {
 		void MModelMessage_ConnectSuggestionsLocatorNode_activeListModified(void *clientData);
 
 		class ConnectSuggestionsLocatorNode : public MPxLocatorNode {
-		protected:
+		public:
 			struct BasePair {
 				Model::Base first, second;
 				MCallbackId preRemovalCallbackId[2];
@@ -120,16 +120,16 @@ namespace Helix {
 
 			static MStatus UpdateBase(Model::Base & base);
 			
+			class UpdateHelix_BaseOp {
+			public:
+				inline void operator()(Model::Base & base) const {
+					UpdateBase(base);
+				}
+			};
+			
 			static inline MStatus UpdateHelix(Model::Helix & helix) {
-				class {
-				public:
-					inline void operator()(Model::Base & base) const {
-						UpdateBase(base);
-					}
-				} op;
-
-				std::for_each(helix.begin(), helix.end(), op);
-
+				std::for_each(helix.begin(), helix.end(), UpdateHelix_BaseOp());
+				
 				return MStatus::kSuccess;
 			}
 

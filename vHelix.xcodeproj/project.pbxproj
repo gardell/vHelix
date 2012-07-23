@@ -24,6 +24,14 @@
 		AAA285D315823F5A00F30976 /* ConnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D015823F5A00F30976 /* ConnectController.cpp */; };
 		AAA285D415823F5A00F30976 /* DisconnectController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D115823F5A00F30976 /* DisconnectController.cpp */; };
 		AAA285D515823F5A00F30976 /* PaintStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA285D215823F5A00F30976 /* PaintStrandController.cpp */; };
+		AAA9C55B15BD831100A165A1 /* ConnectSuggestionsContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C55615BD831100A165A1 /* ConnectSuggestionsContext.cpp */; };
+		AAA9C55C15BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C55715BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp */; };
+		AAA9C55D15BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */; };
+		AAA9C55E15BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C55915BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp */; };
+		AAA9C55F15BD831100A165A1 /* double_arrow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C55A15BD831100A165A1 /* double_arrow.cpp */; };
+		AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56115BD866700A165A1 /* opengl.cpp */; };
+		AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */; };
+		AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */; };
 		AACE30601588D6EA00F4A033 /* DuplicateController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */; };
 		AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */; };
 		AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */; };
@@ -68,6 +76,14 @@
 		AAA285D015823F5A00F30976 /* ConnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConnectController.cpp; sourceTree = "<group>"; };
 		AAA285D115823F5A00F30976 /* DisconnectController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DisconnectController.cpp; sourceTree = "<group>"; };
 		AAA285D215823F5A00F30976 /* PaintStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PaintStrandController.cpp; sourceTree = "<group>"; };
+		AAA9C55615BD831100A165A1 /* ConnectSuggestionsContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectSuggestionsContext.cpp; path = src/view/ConnectSuggestionsContext.cpp; sourceTree = "<group>"; };
+		AAA9C55715BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectSuggestionsContextCommand.cpp; path = src/view/ConnectSuggestionsContextCommand.cpp; sourceTree = "<group>"; };
+		AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectSuggestionsLocatorNode.cpp; path = src/view/ConnectSuggestionsLocatorNode.cpp; sourceTree = "<group>"; };
+		AAA9C55915BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectSuggestionsToolCommand.cpp; path = src/view/ConnectSuggestionsToolCommand.cpp; sourceTree = "<group>"; };
+		AAA9C55A15BD831100A165A1 /* double_arrow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = double_arrow.cpp; path = src/view/double_arrow.cpp; sourceTree = "<group>"; };
+		AAA9C56115BD866700A165A1 /* opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = opengl.cpp; path = src/opengl.cpp; sourceTree = "<group>"; };
+		AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TargetHelixBaseBackward.cpp; path = src/TargetHelixBaseBackward.cpp; sourceTree = "<group>"; };
+		AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToggleShowSuggestedConnections.cpp; path = src/ToggleShowSuggestedConnections.cpp; sourceTree = "<group>"; };
 		AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DuplicateController.cpp; sourceTree = "<group>"; };
 		AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequence.cpp; path = src/ApplySequence.cpp; sourceTree = "<group>"; };
 		AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequenceGui.cpp; path = src/ApplySequenceGui.cpp; sourceTree = "<group>"; };
@@ -120,6 +136,9 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AAA9C56115BD866700A165A1 /* opengl.cpp */,
+				AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */,
+				AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */,
 				AA5A581015AD72C300604421 /* view */,
 				AA2990F3158B865E0077DEFB /* ExtendStrand.cpp */,
 				AAA285CF15823F5A00F30976 /* controller */,
@@ -176,6 +195,11 @@
 		AA5A581015AD72C300604421 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				AAA9C55615BD831100A165A1 /* ConnectSuggestionsContext.cpp */,
+				AAA9C55715BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp */,
+				AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */,
+				AAA9C55915BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp */,
+				AAA9C55A15BD831100A165A1 /* double_arrow.cpp */,
 				AA5A581115AD72DE00604421 /* BaseShape.cpp */,
 				AA5A581215AD72DE00604421 /* BaseShapeUI.cpp */,
 				AA5A581515AD72DE00604421 /* HelixShape.cpp */,
@@ -313,6 +337,14 @@
 				AA5A581B15AD72DE00604421 /* HelixShape.cpp in Sources */,
 				AA5A581C15AD72DE00604421 /* HelixShapeUI.cpp in Sources */,
 				AA5A581E15AD74FB00604421 /* JSONImporterController.cpp in Sources */,
+				AAA9C55B15BD831100A165A1 /* ConnectSuggestionsContext.cpp in Sources */,
+				AAA9C55C15BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp in Sources */,
+				AAA9C55D15BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp in Sources */,
+				AAA9C55E15BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp in Sources */,
+				AAA9C55F15BD831100A165A1 /* double_arrow.cpp in Sources */,
+				AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */,
+				AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */,
+				AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,19 +31,21 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 363688632;
-			PBXWorkspaceStateSaveDate = 363688632;
+			PBXPerProjectTemplateStateSaveDate = 364740782;
+			PBXWorkspaceStateSaveDate = 364740782;
 		};
 		perUserProjectItems = {
-			AA5A581F15AD75D200604421 /* PBXBookmark */ = AA5A581F15AD75D200604421 /* PBXBookmark */;
-			AA5A582015ADD29900604421 /* PBXTextBookmark */ = AA5A582015ADD29900604421 /* PBXTextBookmark */;
-			AA5A582115ADD29900604421 /* PBXTextBookmark */ = AA5A582115ADD29900604421 /* PBXTextBookmark */;
-			AA5A582315ADD29900604421 /* PBXTextBookmark */ = AA5A582315ADD29900604421 /* PBXTextBookmark */;
-			AA5A582415ADD29900604421 /* PBXTextBookmark */ = AA5A582415ADD29900604421 /* PBXTextBookmark */;
-			AA5A582615ADD29900604421 /* PBXTextBookmark */ = AA5A582615ADD29900604421 /* PBXTextBookmark */;
-			AA5A582C15ADD29900604421 /* PBXTextBookmark */ = AA5A582C15ADD29900604421 /* PBXTextBookmark */;
-			AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AA5A582015ADD29900604421 = AA5A582015ADD29900604421 /* PBXTextBookmark */;
+			AA5A582115ADD29900604421 = AA5A582115ADD29900604421 /* PBXTextBookmark */;
+			AA5A582315ADD29900604421 = AA5A582315ADD29900604421 /* PBXTextBookmark */;
+			AA78DD93158F185E001B1D84 = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
+			AAA9C54315BD809400A165A1 = AAA9C54315BD809400A165A1 /* PBXBookmark */;
+			AAA9C54415BD80AA00A165A1 = AAA9C54415BD80AA00A165A1 /* PBXTextBookmark */;
+			AAA9C54515BD80AA00A165A1 = AAA9C54515BD80AA00A165A1 /* PBXTextBookmark */;
+			AAA9C54715BD80AA00A165A1 = AAA9C54715BD80AA00A165A1 /* PBXTextBookmark */;
+			AAA9C54A15BD80AA00A165A1 = AAA9C54A15BD80AA00A165A1 /* PBXTextBookmark */;
+			AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */ = AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
@@ -58,22 +60,19 @@
 	};
 	AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {2896, 8008}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1083, 8476}}";
 			sepNavSelRange = "{12481, 0}";
-			sepNavVisRange = "{12183, 1160}";
+			sepNavVisRange = "{12165, 1101}";
+			sepNavWindowFrame = "{{345, 114}, {1264, 735}}";
 		};
 	};
 	AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1769, 8268}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1205, 8554}}";
 			sepNavSelRange = "{19009, 0}";
-			sepNavVisRange = "{0, 1289}";
-			sepNavWindowFrame = "{{706, 173}, {1264, 735}}";
+			sepNavVisRange = "{37, 1271}";
+			sepNavWindowFrame = "{{656, 173}, {1264, 735}}";
 		};
-	};
-	AA5A581F15AD75D200604421 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */;
 	};
 	AA5A582015ADD29900604421 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -97,6 +96,7 @@
 	};
 	AA5A582215ADD29900604421 /* JSONImporter.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = JSONImporter.h;
 		path = /Users/johangardell/Documents/vHelix/include/controller/JSONImporter.h;
 		sourceTree = "<absolute>";
@@ -111,50 +111,12 @@
 		vrLen = 1160;
 		vrLoc = 12183;
 	};
-	AA5A582415ADD29900604421 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A582515ADD29900604421 /* HelixShapeUI.h */;
-		rLen = 0;
-		rLoc = 9223372036854775811;
-		rType = 0;
-	};
-	AA5A582515ADD29900604421 /* HelixShapeUI.h */ = {
+	AA5A582715ADD29900604421 /* HelixShapeUI.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
 		name = HelixShapeUI.h;
 		path = /Users/johangardell/Documents/vHelix/include/view/HelixShapeUI.h;
 		sourceTree = "<absolute>";
-	};
-	AA5A582615ADD29900604421 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A582715ADD29900604421 /* HelixShapeUI.h */;
-		name = "HelixShapeUI.h: 64";
-		rLen = 0;
-		rLoc = 2474;
-		rType = 0;
-		vrLen = 1686;
-		vrLoc = 1103;
-	};
-	AA5A582715ADD29900604421 /* HelixShapeUI.h */ = {
-		isa = PBXFileReference;
-		name = HelixShapeUI.h;
-		path = /Users/johangardell/Documents/vHelix/include/view/HelixShapeUI.h;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {915, 1352}}";
-			sepNavSelRange = "{2474, 0}";
-			sepNavVisRange = "{1103, 1686}";
-		};
-	};
-	AA5A582C15ADD29900604421 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */;
-		name = "JSONImporterController.cpp: 600";
-		rLen = 0;
-		rLoc = 19009;
-		rType = 0;
-		vrLen = 1289;
-		vrLoc = 0;
 	};
 	AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -172,11 +134,6 @@
 		name = hashtable_policy.h;
 		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {913, 11791}}";
-			sepNavSelRange = "{29297, 0}";
-			sepNavVisRange = "{28730, 797}";
-		};
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
 		isa = PBXSourceControlManager;
@@ -191,6 +148,72 @@
 	AA97684B158208DB0049D263 /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	AAA9C54315BD809400A165A1 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
+	};
+	AAA9C54415BD80AA00A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A582715ADD29900604421 /* HelixShapeUI.h */;
+		name = "HelixShapeUI.h: 64";
+		rLen = 0;
+		rLoc = 2474;
+		rType = 0;
+		vrLen = 1663;
+		vrLoc = 1103;
+	};
+	AAA9C54515BD80AA00A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C54615BD80AA00A165A1 /* opengl.h */;
+		name = "opengl.h: 31";
+		rLen = 0;
+		rLoc = 540;
+		rType = 0;
+		vrLen = 547;
+		vrLoc = 167;
+	};
+	AAA9C54615BD80AA00A165A1 /* opengl.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = opengl.h;
+		path = /Users/johangardell/Documents/vHelix/include/opengl.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1055, 975}}";
+			sepNavSelRange = "{1329, 0}";
+			sepNavVisRange = "{845, 722}";
+		};
+	};
+	AAA9C54715BD80AA00A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
+		name = "HelixShapeUI.cpp: 442";
+		rLen = 0;
+		rLoc = 12481;
+		rType = 0;
+		vrLen = 1144;
+		vrLoc = 12165;
+	};
+	AAA9C54A15BD80AA00A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
+		name = "HelixShapeUI.cpp: 557";
+		rLen = 0;
+		rLoc = 16401;
+		rType = 0;
+		vrLen = 1553;
+		vrLoc = 15530;
+	};
+	AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
+		name = "HelixShapeUI.cpp: 442";
+		rLen = 0;
+		rLoc = 12481;
+		rType = 0;
+		vrLen = 1101;
+		vrLoc = 12165;
 	};
 	AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {
 		uiCtxt = {
