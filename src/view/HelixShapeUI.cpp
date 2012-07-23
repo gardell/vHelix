@@ -74,7 +74,7 @@ namespace Helix {
 			 * For first time usage, if there are no shaders, no VBO's and no primitive data downloaded
 			 */
 
-			if (s_drawData.failure) {
+			if (s_drawData.failure || m_drawData.failure) {
 				std::cerr << "GL broke" << std::endl;
 				return;
 			}
@@ -84,6 +84,9 @@ namespace Helix {
 
 			if (!s_drawData.initialized)
 				initializeDraw();
+
+			if (!m_drawData.initialized)
+				const_cast<HelixShapeUI *>(this)->initializeLocalDraw();
 
 			/*
 			 * Set selection color
@@ -160,42 +163,48 @@ namespace Helix {
 					return;
 				}
 
-				//std::cerr << "Base: " << base.getDagPath(status).fullPathName().asChar() << "sin: " << sin(atan2(base_translation.y, base_translation.x) - y * DEG2RAD(DNA::PITCH)) << std::endl;//" has color: " << colors[(y * 2 + x) * 4] << ", " << colors[(y * 2 + x) * 4 + 1] << ", " << colors[(y * 2 + x) * 4 + 2] << ", " << colors[(y * 2 + x) * 4 + 3]  <<  " at coordinates: " << x << ", " << y << std::endl;
-
-				/*if (colors[(y * 2 + x) * 4 + 3] < 0.5f) {
-					 *
-					 * This base does not have a material assigned
-					 *
-
-					std::cerr << "Base: " << base.getDagPath(status).fullPathName().asChar() << " does not have a material" << std::endl;
-
-					colors[(y * 2 + x) * 4] = 0.3f;
-					colors[(y * 2 + x) * 4 + 1] = 0.3f;
-					colors[(y * 2 + x) * 4 + 2] = 0.3f;
-					colors[(y * 2 + x) * 4 + 3] = 1.0f;
-				}*/
-
-				// REMOVE this
-
 				colors[(y * 2 + x) * 4 + 3] = 1.0f;
 			}
-			GLCALL(glPushAttrib(GL_TEXTURE_BIT | GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT));
-			GLCALL(glBindTexture(GL_TEXTURE_2D, s_drawData.texture));
 
-			GLCALL(glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT));
-			GLCALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
-			if (s_drawData.texture_height != texture_height) {
-				GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, texture_height, 0, GL_RGBA, GL_FLOAT, colors));
-				s_drawData.texture_height = texture_height;
+			/*
+			 * Notice that downloading textures to the graphics card is pretty expensive, thus, iterating over the whole texture here
+			 * to make sure it really changed could save us a lot of GPU processing time
+			 */
+
+			bool textureUpdate = true;
+
+			if (m_drawData.last_colors != NULL) {
+				if (m_drawData.texture_height == texture_height) {
+					if (std::equal(colors, colors +  texture_height * 2, m_drawData.last_colors))
+						textureUpdate = false;
+				}
+
+				delete[] m_drawData.last_colors;
 			}
-			else {
-				GLCALL(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, texture_height, GL_RGBA, GL_FLOAT, colors));
+
+			const_cast<HelixShapeUI *>(this)->m_drawData.last_colors = colors;
+
+			GLCALL(glPushAttrib(GL_TEXTURE_BIT | GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT));
+			GLCALL(glBindTexture(GL_TEXTURE_2D, m_drawData.texture));
+
+			if (textureUpdate) {
+				GLCALL(glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT));
+				GLCALL(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+				if (m_drawData.texture_height != texture_height) {
+					GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, texture_height, 0, GL_RGBA, GL_FLOAT, colors));
+					const_cast<HelixShapeUI *>(this)->m_drawData.texture_height = texture_height;
+				}
+				else {
+					GLCALL(glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, texture_height, GL_RGBA, GL_FLOAT, colors));
+				}
+				glPopClientAttrib();
 			}
-			glPopClientAttrib();
 
 			GLCALL(glUseProgram(s_drawData.program));
-			GLCALL(glUniform2f(s_drawData.range_uniform, (GLfloat) origo, (GLfloat) height));
-			GLCALL(glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b));
+			//GLCALL(glUniform2f(s_drawData.range_uniform, (GLfloat) origo, (GLfloat) height));
+			//GLCALL(glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b));
+			s_drawData.updateRangeUniform((GLfloat) origo, (GLfloat) height);
+			s_drawData.updateBorderColorUniform(borderColor.r, borderColor.g, borderColor.b);
 
 			GLCALL(glCallList(s_drawData.draw_display_list));
 
@@ -203,7 +212,10 @@ namespace Helix {
 
 			view.endGL();
 
-			delete[] colors;
+			/*
+			 * Don't delete the color array, it is saved for the next rendering
+			 */
+			//delete[] colors;
 		}
 
 		// Main selection routine
@@ -495,22 +507,6 @@ namespace Helix {
 				//s_drawData.failure = true;
 			}
 
-
-			/*
-			 * Textures
-			 */
-			
-			GLCALL(glPushAttrib(GL_TEXTURE_BIT));
-
-			GLCALL(glGenTextures(1, &s_drawData.texture));
-			GLCALL(glBindTexture(GL_TEXTURE_2D, s_drawData.texture));
-			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-
-			GLCALL(glPopAttrib());
-
 			/*
 			 * Generate a cylinder
 			 */
@@ -597,6 +593,48 @@ namespace Helix {
 			GLCALL(glEndList());
 
 			s_drawData.initialized = true;
+		}
+
+		void HelixShapeUI::initializeLocalDraw() {
+			/*
+			 * Textures
+			 */
+			
+			GLCALL(glPushAttrib(GL_TEXTURE_BIT));
+
+			GLCALL(glGenTextures(1, &m_drawData.texture));
+			GLCALL(glBindTexture(GL_TEXTURE_2D, m_drawData.texture));
+			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+			GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+
+			GLCALL(glPopAttrib());
+
+			m_drawData.initialized = true;
+		}
+
+		GLfloat g_HelixShapeUI_previous_range_uniform_values[2] = { std::numeric_limits<GLfloat>::infinity(), std::numeric_limits<GLfloat>::infinity() };
+
+		void HelixShapeUI::DrawData::updateRangeUniform(GLfloat origo, GLfloat height) const {
+			if (g_HelixShapeUI_previous_range_uniform_values[0] != origo || g_HelixShapeUI_previous_range_uniform_values[1] != height) {
+				GLCALL(glUniform2f(range_uniform, origo, height));
+
+				g_HelixShapeUI_previous_range_uniform_values[0] = origo;
+				g_HelixShapeUI_previous_range_uniform_values[1] = height;
+			}
+		}
+
+		GLfloat g_HelixShapeUI_previous_borderColor_uniform_values[3] = { -1.0f, -1.0f, -1.0f };
+
+		void HelixShapeUI::DrawData::updateBorderColorUniform(GLfloat r, GLfloat g, GLfloat b) const {
+			if (g_HelixShapeUI_previous_borderColor_uniform_values[0] != r || g_HelixShapeUI_previous_borderColor_uniform_values[1] != g || g_HelixShapeUI_previous_borderColor_uniform_values[2] != b) {
+				GLCALL(glUniform3f(borderColor_uniform, r, g, b));
+
+				g_HelixShapeUI_previous_borderColor_uniform_values[0] = r;
+				g_HelixShapeUI_previous_borderColor_uniform_values[1] = g;
+				g_HelixShapeUI_previous_borderColor_uniform_values[2] = b;
+			}
 		}
 
 		HelixShapeUI::DrawData HelixShapeUI::s_drawData;

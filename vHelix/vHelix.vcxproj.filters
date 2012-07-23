@@ -183,6 +183,12 @@
     <ClInclude Include="..\include\view\ConnectSuggestionsToolCommand.h">
       <Filter>Header Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ToggleShowSuggestedConnections.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TargetHelixBaseBackward.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -322,6 +328,15 @@
     </ClCompile>
     <ClCompile Include="..\src\view\ConnectSuggestionsToolCommand.cpp">
       <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ToggleShowSuggestedConnections.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\view\double_arrow.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TargetHelixBaseBackward.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

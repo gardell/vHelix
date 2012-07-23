@@ -439,12 +439,12 @@ namespace Helix {
 			 */
 
 			if (!ignorePreviousConnections) {
-				if (!(status = disconnect_forward())) {
+				if (!(status = disconnect_forward(true))) {
 					status.perror("Base::disconnect_forward");
 					return status;
 				}
 
-				if (!(status = target.disconnect_backward())) {
+				if (!(status = target.disconnect_backward(true))) {
 					status.perror("Base::disconnect_backward");
 					return status;
 				}
@@ -463,6 +463,27 @@ namespace Helix {
 				status.perror("MDGModifier::doIt");
 				return status;
 			}
+
+			/*
+			 * Previously we did this in the connectionBroke/connectionMade but that was very unstable
+			 */
+
+			MDagPath thisDagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath() this");
+				return status;
+			}
+
+			MDagPath targetDagPath = target.getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath() target");
+				return status;
+			}
+
+			if (!(status = MGlobal::executeCommand(MString("aimConstraint -aimVector 0 0 -1.0 ") + targetDagPath.fullPathName() + " " + thisDagPath.fullPathName() + ";", false)))
+				status.perror("MGlobal::executeCommand");
 
 			return MStatus::kSuccess;
 		}
@@ -527,7 +548,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus Base::disconnect_forward() {
+		MStatus Base::disconnect_forward(bool ignorePerpendicular) {
 			MStatus status;
 			MObject thisObject = getObject(status);
 
@@ -536,16 +557,69 @@ namespace Helix {
 				return status;
 			}
 
+			/*
+			 * Remove aimConstraints
+			 */
+
+			MDagPath dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Base::getDagPath");
+				return status;
+			}
+
+			MString this_fullPathName = dagPath.fullPathName();
+
+			if (ignorePerpendicular) {
+				if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0;", false)))
+					status.perror("MGlobal::executeCommand");
+			}
+			else {
+				if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+					status.perror("MGlobal::executeCommand");
+			}
+
 			return Base_disconnect_attribute(thisObject, ::Helix::HelixBase::aForward);
 		}
 
-		MStatus Base::disconnect_backward() {
+		MStatus Base::disconnect_backward(bool ignorePerpendicular) {
 			MStatus status;
 			MObject thisObject = getObject(status);
 
 			if (!status) {
 				status.perror("Base::getObject()");
 				return status;
+			}
+
+			/*
+			 * Remove aimConstraints
+			 */
+
+			Base b(backward(status));
+
+			if (!status && status != MStatus::kNotFound) {
+				status.perror("Base::backward");
+				return status;
+			}
+
+			if (status) {
+				MDagPath dagPath = b.getDagPath(status);
+
+				if (!status) {
+					status.perror("Base::getDagPath");
+					return status;
+				}
+
+				MString this_fullPathName = dagPath.fullPathName();
+
+				if (ignorePerpendicular) {
+					if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0;", false)))
+						status.perror("MGlobal::executeCommand");
+				}
+				else {
+					if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+						status.perror("MGlobal::executeCommand");
+				}
 			}
 
 			return Base_disconnect_attribute(thisObject, ::Helix::HelixBase::aBackward);

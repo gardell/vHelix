@@ -24,7 +24,7 @@
 #include <maya/MPlugArray.h>
 
 namespace Helix {
-	MDagPathArray HelixTracker::s_selectedBases, HelixTracker::s_selectedNeighbourBases, HelixTracker::s_selectedFivePrimeBases, HelixTracker::s_selectedThreePrimeBases, HelixTracker::s_selectedAdjacentBases;
+	/*MDagPathArray HelixTracker::s_selectedBases, HelixTracker::s_selectedNeighbourBases, HelixTracker::s_selectedFivePrimeBases, HelixTracker::s_selectedThreePrimeBases, HelixTracker::s_selectedAdjacentBases;
 
 	HelixTracker::HelixTracker() {
 
@@ -232,5 +232,5 @@ namespace Helix {
 
 	MStatus HelixTracker::deregisterOnSelectionChangedListener() {
 		return MGlobal::executeCommand(MEL_DEREGISTER_ONSELECTIONCHANGED_COMMAND_NATIVE, false);
-	}
+	}*/
 }

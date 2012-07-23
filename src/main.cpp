@@ -29,9 +29,11 @@
 #include <ExtendGui.h>
 #include <ToggleCylinderBaseView.h>
 #include <ToggleLocatorRender.h>
+#include <ToggleShowSuggestedConnections.h>
 #include <ExportStrands.h>
 #include <JSONTranslator.h>
 #include <RetargetBase.h>
+#include <TargetHelixBaseBackward.h>
 
 #include <view/BaseShape.h>
 #include <view/BaseShapeUI.h>
@@ -69,8 +71,10 @@
 	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																																	\
 	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),																									\
 	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),																											\
+	new RegisterCommand(MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, Helix::ToggleShowSuggestedConnections::creator, Helix::ToggleShowSuggestedConnections::newSyntax),																			\
 	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),																																\
 	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),																																\
+	new RegisterCommand(MEL_TARGET_HELIXBASE_BACKWARD, Helix::TargetHelixBaseBackward::creator, Helix::TargetHelixBaseBackward::newSyntax),																																\
 	new RegisterContextCommand(MEL_CONNECT_SUGGESTIONS_CONTEXT_COMMAND, Helix::View::ConnectSuggestionsContextCommand::creator, MEL_CONNECT_SUGGESTIONS_TOOL_COMMAND, Helix::View::ConnectSuggestionsToolCommand::creator, Helix::View::ConnectSuggestionsToolCommand::newSyntax),	\
 	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),																							\
 	new RegisterNode(CONNECT_SUGGESTIONS_LOCATOR_NAME, Helix::View::ConnectSuggestionsLocatorNode::id, &Helix::View::ConnectSuggestionsLocatorNode::creator, &Helix::View::ConnectSuggestionsLocatorNode::initialize, MPxNode::kLocatorNode),	\
@@ -108,6 +112,7 @@
 {	"Connect bases", "Connect the two selected bases", MEL_CONNECTBASES_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'c' },	\
 {	"Disconnect bases", "Disconnect the selected base", MEL_DISCONNECTBASE_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'v' },	\
 {	"Extend strand", "Extend the selected strands", MEL_EXTENDSTRAND_GUI_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
+{	"Visual base connection tool", "Visually drag potential connections", "setToolTo `connectSuggestionsContext`;", "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'x' },	\
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Find 5' ends", "Find all 5' ends on selected strands", MEL_FINDFIVEPRIMEENDS_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"Paint strand", "Paint the strand of the currently selected base with a random color", MEL_PAINTSTRAND_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'p' },	\
@@ -116,6 +121,7 @@
 {	"Export strands", "Export all or selected bases strands to Excel or a text file", MEL_EXPORTSTRANDS_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Toggle cylinder or bases view", "Show the cylinder or base representation of the helices", MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -toggle true", "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 't' },	\
+{	"Toggle show suggested connections", "Show potential inter-helix base connections", MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'z' },	\
 {	"Render", "Toggle rendering of some of the HUD elements", "", "", false, true, false, -1, ACCEL_NONE },	\
 {	"Halo", "Display the colored halos around bases", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"halo\\\"", "", false, false, false, HALOS_CHECKED, ACCEL_NONE },	\
 {	"Pair lines", "Display the base pair connected lines", MEL_TOGGLELOCATORRENDER_COMMAND " -toggle \\\"pair_line\\\"", "", false, false, false, 1, ACCEL_NONE },	\

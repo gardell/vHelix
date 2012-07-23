@@ -996,14 +996,58 @@ namespace Helix {
 		
 		MStatus Helix::getRelatives(MObjectArray & helices) {
 			MStatus status;
-			MObject thisObject = getObject(status);
 
-			if (!status) {
-				status.perror("Helix::getObject");
-				return status;
+			for(BaseIterator it = begin(); it != end(); ++it) {
+				Model::Base backward;
+
+				backward = it->backward(status);
+
+				if (!status && status != MStatus::kNotFound) {
+					status.perror("Base::backward");
+					return status;
+				}
+
+				if (status) {
+					Model::Helix parent = backward.getParent(status);
+
+					if (!status) {
+						status.perror("Base::getParent");
+						return status;
+					}
+
+					if (!status) {
+						status.perror("Helix::getObject");
+						return status;
+					}
+
+					if (parent != *this) {
+						MObject parent_object = parent.getObject(status);
+
+						if (!status) {
+							status.perror("Helix::getObject");
+							return status;
+						}
+
+						if (std::find(&helices[0], &helices[0] + helices.length(), parent_object) == &helices[0] + helices.length()) {
+							helices.append(parent_object);
+						
+							MObjectArray parent_relatives;
+							parent.getRelatives(parent_relatives);
+
+							/*
+							 * Copy the ones that arent in 'helices'
+							 */
+
+							for(unsigned int i = 0; i < parent_relatives.length(); ++i) {
+								if (std::find(&helices[0], &helices[0] + helices.length(), parent_relatives[i]) == &helices[0] + helices.length())
+									helices.append(parent_relatives[i]);
+							}
+						}
+					}
+				}
 			}
 
-			return Helix_Relatives(thisObject, helices);
+			return MStatus::kSuccess;
 		}
 
 		MStatus Helix::ToggleCylinderOrBases() {

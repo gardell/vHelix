@@ -88,6 +88,15 @@ namespace Helix {
 				bool initialized, failure;
 
 				DrawData() : initialized(false), failure(false) { }
+
+				/*
+				 * To cache some and not call all glUniform* everytime, we track the values set and only download them if there's a change
+				 * this requires that these methods are always used when making the calls
+				 */
+
+				void updateBorderUniform(GLfloat value) const;
+				void updateBorderColorUniform(GLfloat r, GLfloat g, GLfloat b) const;
+				void updateColorUniform(GLfloat r, GLfloat g, GLfloat b) const;
 			} static s_drawData;
 		};
 	}

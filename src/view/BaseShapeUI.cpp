@@ -93,30 +93,39 @@ namespace Helix {
             {
             case M3dView::kLead :
 				borderColor = view.colorAtIndex( LEAD_COLOR);
-				glUniform1f(s_drawData.border_uniform, 1.0f);
-				glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				//glUniform1f(s_drawData.border_uniform, 1.0f);
+				s_drawData.updateBorderUniform(1.0f);
+				//glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				s_drawData.updateBorderColorUniform(borderColor.r, borderColor.g, borderColor.b);
 				break;
             case M3dView::kActive :
                 borderColor = view.colorAtIndex( ACTIVE_COLOR);
-				glUniform1f(s_drawData.border_uniform, 1.0f);
-				glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				//glUniform1f(s_drawData.border_uniform, 1.0f);
+				s_drawData.updateBorderUniform(1.0f);
+				//glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				s_drawData.updateBorderColorUniform(borderColor.r, borderColor.g, borderColor.b);
                 break;
             case M3dView::kActiveAffected :
                 borderColor = view.colorAtIndex( ACTIVE_AFFECTED_COLOR);
-				glUniform1f(s_drawData.border_uniform, 0.0f);
+				//glUniform1f(s_drawData.border_uniform, 0.0f);
+				s_drawData.updateBorderUniform(0.0f);
                 break;
             case M3dView::kDormant :
 				borderColor = view.colorAtIndex( DORMANT_COLOR, M3dView::kDormantColors);
-				glUniform1f(s_drawData.border_uniform, 0.0f);
+				//glUniform1f(s_drawData.border_uniform, 0.0f);
+				s_drawData.updateBorderUniform(0.0f);
                 break;
             case M3dView::kHilite :
                 borderColor = view.colorAtIndex( HILITE_COLOR);
-				glUniform1f(s_drawData.border_uniform, 1.0f);
-				glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				//glUniform1f(s_drawData.border_uniform, 1.0f);
+				s_drawData.updateBorderUniform(1.0f);
+				//glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
+				s_drawData.updateBorderColorUniform(borderColor.r, borderColor.g, borderColor.b);
                 break;
             }
 
-			glUniform3f(s_drawData.color_uniform, color.r, color.g, color.b);
+			//glUniform3f(s_drawData.color_uniform, color.r, color.g, color.b);
+			s_drawData.updateColorUniform(color.r, color.g, color.b);
 
 			glCallList(s_drawData.display_list);
 
@@ -288,6 +297,40 @@ namespace Helix {
 
 			//s_drawData.failure = false;
 			s_drawData.initialized = true;
+		}
+
+		GLfloat g_BaseShapeUI_previous_border_uniform_value = std::numeric_limits<GLfloat>::infinity();
+
+		void BaseShapeUI::DrawData::updateBorderUniform(GLfloat value) const {
+			if (value != g_BaseShapeUI_previous_border_uniform_value) {
+				glUniform1f(s_drawData.border_uniform, value);
+
+				g_BaseShapeUI_previous_border_uniform_value = value;
+			}
+		}
+
+		GLfloat g_BaseShapeUI_previous_borderColor_uniform_values[3] = { -1.0f, -1.0f, -1.0f };
+
+		void BaseShapeUI::DrawData::updateBorderColorUniform(GLfloat r, GLfloat g, GLfloat b) const {
+			if (r != g_BaseShapeUI_previous_borderColor_uniform_values[0] || g != g_BaseShapeUI_previous_borderColor_uniform_values[1] || b != g_BaseShapeUI_previous_borderColor_uniform_values[2]) {
+				glUniform3f(borderColor_uniform, r, g, b);
+
+				g_BaseShapeUI_previous_borderColor_uniform_values[0] = r;
+				g_BaseShapeUI_previous_borderColor_uniform_values[1] = g;
+				g_BaseShapeUI_previous_borderColor_uniform_values[2] = b;
+			}
+		}
+
+		GLfloat g_BaseShapeUI_previous_color_uniform_values[3] = { -1.0f, -1.0f, -1.0f };
+
+		void BaseShapeUI::DrawData::updateColorUniform(GLfloat r, GLfloat g, GLfloat b) const {
+			if (r != g_BaseShapeUI_previous_color_uniform_values[0] || g != g_BaseShapeUI_previous_color_uniform_values[1] || b != g_BaseShapeUI_previous_color_uniform_values[2]) {
+				glUniform3f(color_uniform, r, g, b);
+
+				g_BaseShapeUI_previous_color_uniform_values[0] = r;
+				g_BaseShapeUI_previous_color_uniform_values[1] = g;
+				g_BaseShapeUI_previous_color_uniform_values[2] = b;
+			}
 		}
 	}
 }

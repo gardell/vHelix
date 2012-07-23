@@ -58,7 +58,7 @@
 	"	vec4 texColor = texture2D(texture, vec2((sign(fract(xcoord) * 2.0 - 1.0) + 1.0) / 4.0 + 0.25, TexCoord.y));\n",	\
 	"	if (texColor.a < 0.5)\n",																\
 	"		discard;\n",																		\
-	"	vec3 N = normalize(Normal), L = normalize(EyeVec), E = normalize(EyeVec), R = reflect(-L, N);\n",				\
+	"	vec3 N = normalize(Normal), L = normalize(EyeVec), R = reflect(-L, N);\n",				\
 	"	float lambertTerm = dot(N, L), x = fract(xcoord * 2.0);\n",														\
 	"	float border = step(0.05, x) * (1.0 - step(0.95, x)) * step(0.05, y) * (1.0 - step(range.y - 0.05, y));\n",		\
 	"	gl_FragColor = vec4(texColor.rgb * lambertTerm * border + borderColor * (1.0 - border), 1.0);\n",					\
@@ -86,22 +86,46 @@ namespace Helix {
 			 */
 
 			static void initializeDraw();
+			void initializeLocalDraw();
 
 		protected:
 
 			/*
-			 * OpenGL data
+			 * OpenGL static data shared between helices
 			 */
 
 			struct DrawData {
-				GLuint program, vertex_shader, fragment_shader, draw_display_list, select_display_list, texture;
+				GLuint program, vertex_shader, fragment_shader, draw_display_list, select_display_list;//, texture;
 				GLint texture_uniform, range_uniform, borderColor_uniform;
+				//GLsizei texture_height; // If the number of bases change, we have to resize the texture
+
+				bool initialized, failure;
+				//GLfloat *last_colors;
+
+				DrawData() : /*texture_height(0), */initialized(false), failure(false)/*, last_colors(NULL)*/ { }
+
+				/*
+				 * Might slightly improve performance by caching the uniform variable updates
+				 */
+				void updateRangeUniform(GLfloat origo, GLfloat height) const;
+				void updateBorderColorUniform(GLfloat r, GLfloat g, GLfloat b) const;
+
+			} static s_drawData;
+
+			/*
+			 * OpenGL data unique for the helix
+			 */
+
+			struct DrawData_Local {
+				GLuint texture;
 				GLsizei texture_height; // If the number of bases change, we have to resize the texture
 
 				bool initialized, failure;
+				GLfloat *last_colors;
 
-				DrawData() : texture_height(0), initialized(false), failure(false) { }
-			} static s_drawData;
+				DrawData_Local() : texture_height(0), initialized(false), failure(false), last_colors(NULL) { }
+				~DrawData_Local() { if (last_colors) delete[] last_colors; }
+			} m_drawData;
 		};
 	}
 }

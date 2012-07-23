@@ -48,10 +48,10 @@ namespace Helix {
 			 * Remove the newly created connection
 			 */
 
-			/*if (!(status = m_previous_connections[0][0].disconnect_forward())) {
+			if (!(status = m_previous_connections[0][0].disconnect_forward())) {
 				status.perror("Base::disconnect_forward");
 				return status;
-			}*/
+			}
 
 			/*
 			 * Make the old connections. Note that there is no connect_backward method, thus the indices have been switched

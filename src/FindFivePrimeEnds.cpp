@@ -8,6 +8,9 @@
 #include <FindFivePrimeEnds.h>
 #include <HelixBase.h>
 
+#include <model/Helix.h>
+#include <model/Base.h>
+
 #include <maya/MSyntax.h>
 #include <maya/MItDag.h>
 #include <maya/MFnDagNode.h>
@@ -41,7 +44,22 @@ namespace Helix {
 		}
 
 		for (; !itDag.isDone(); itDag.next()) {
-			MDagPath dagPath;
+			Model::Base base(itDag.currentItem(&status));
+
+			if (!status) {
+				status.perror("MItDag::currentItem");
+				return status;
+			}
+
+			if (base.type(status) == Model::Base::FIVE_PRIME_END)
+				activeSelectionList.add(base.getObject(status));
+
+			if (!status) {
+				status.perror("Base::type or MSelectionList::add");
+				return status;
+			}
+
+			/*MDagPath dagPath;
 
 			if (!(status = itDag.getPath(dagPath))) {
 				status.perror("MItDag::getPath");
@@ -98,7 +116,7 @@ namespace Helix {
 					if (!hasHelixBaseConnected)
 						activeSelectionList.add(dagPath);
 				}
-			}
+			}*/
 		}
 
 		// Select all the bases in our array

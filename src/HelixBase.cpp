@@ -8,6 +8,7 @@
 #include <HelixBase.h>
 #include <DNA.h>
 #include <Utility.h>
+#include <TargetHelixBaseBackward.h>
 
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnEnumAttribute.h>
@@ -18,6 +19,7 @@
 #include <maya/MFileIO.h>
 #include <maya/MMessage.h>
 #include <maya/MNodeMessage.h>
+#include <maya/MModelMessage.h>
 
 #include <list>
 #include <algorithm>
@@ -26,55 +28,45 @@
 #include <view/ConnectSuggestionsLocatorNode.h>
 
 namespace Helix {
-	//
-	// FIXME: To fix the crashes, we need to have a callback for both the pending deletion and the deleted events
-	// During the deletion, a bool will be set, and no aimconstraint operations can be executed
-	// All requests to aimconstraints must be saved to be executed later in the deleted event
-	// Try to execute the aimconstraint in that event, but there's a chance that won't work either in case we're deleting the whole TREE
-	// Check that! If that's the case we're upp for some trouble
-	// Note that we DO want to execute the aimconstraint directly if the node's NOT being deleted (cause the callback will never be triggered ofc)
-	// But also because subsequent connects (as a reconnect spawn disconnect and after a new connect)
-
-	//
-	// There's a bug in Maya (or lack of a feature?) that makes it impossible to execute certain commands in the connectionBroken method
-	// cause it will crash Maya if the node is the way of being deleted. Here we try to hook up to some callbacks to see if there's some way
-	// to get around this issue.
-	//
-
-	// Yes, a global variable here is not multithread aware etc, but (i think) there's no multithreading being done by Maya when nodes are deleted anyway
-	// Since there's no way in Maya to obtain an MPx*-object from a MObject, this is the easiest and fastest way of tracking the connected base
-	
-	struct BaseDeletionStorage {
-		MObject base;
-		bool inProgress;
-		std::list<MObject> delayedModificationQueue; // The objects that is going to be modified later by an *OnIdle call
-	} g_BaseDeletion = { MObject::kNullObj, false };
-
-	bool HelixBase_AllowedToRetargetBase(const MObject & base) {
+	/*void MNodeMessage_preRemovalCallbackFunc(MObject & node, void *clientData) {
+		/*
+		 * Find backward connected if any
+		 *
 		MStatus status;
+		Model::Base backward = Model::Base(node).backward(status);
+
+		if (!status && status != MStatus::kNotFound)
+			status.perror("Base::backward");
 		
-		std::list<MObject>::iterator baseIt = std::find(g_BaseDeletion.delayedModificationQueue.begin(), g_BaseDeletion.delayedModificationQueue.end(), base);
+		if (status)
+			static_cast<HelixBase *> (MFnDagNode(backward.getObject(status)).userNode())->onForwardConnectedNodePreRemoval(node);
 
-		if (baseIt != g_BaseDeletion.delayedModificationQueue.end()) {
-			g_BaseDeletion.delayedModificationQueue.erase(baseIt);
-			g_BaseDeletion.delayedModificationQueue.remove(base); // Just to make sure there are no multiple occurences
-
-			return true;
-		}
-
-		return false;
+		/*HelixBase & base = *static_cast<HelixBase *> (clientData);
+		base.m_nodeIsBeingRemoved = true;
+		base.onRemovePreConnectionBroken();*
 	}
 
-	void MNode_NodePreRemovalCallbackFunc(MObject & node, void *clientData) {
-		g_BaseDeletion.base = node;
-		g_BaseDeletion.inProgress = true;
-		
+	void MModelMessage_removedFromModelCallbackFunc(MObject & node, void *clientData) {
+		/*HelixBase & base = *static_cast<HelixBase *> (clientData);
+		base.onRemovePostConnectionBroken();
+		base.m_nodeIsBeingRemoved = false;*
 	}
 
-	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel, HelixBase::aColor;//, HelixBase::aHelix_Backward, HelixBase::aHelix_Forward;
+	void MModelMessage_addedToModelCallbackFunc(MObject & node, void *clientData) {
+		/*HelixBase & base = *static_cast<HelixBase *> (MFnDagNode(node).userNode());
+
+		base.onPreConnectionMade(base.m_nodeRevived);
+
+		/*
+		 * The next trigger will be due to an undo thus reviving the node. First call will be due to creation of the node and has this set to false
+		 *
+		base.m_nodeRevived = true;*
+	}*/
+
+	MObject HelixBase::aForward, HelixBase::aBackward, HelixBase::aLabel;
 	MTypeId HelixBase::id(HELIX_HELIXBASE_ID);
 
-	HelixBase::HelixBase() {
+	HelixBase::HelixBase()/* : m_nodeRevived(false), m_nodeIsBeingRemoved(false)*/ {
 
 	}
 
@@ -82,141 +74,54 @@ namespace Helix {
 
 	}
 
-	void HelixBase::postConstructor() {
+	//void HelixBase::postConstructor() {
 		// See the callback definition at the end of the file for information about what it does.
 		//
 
-		MStatus status;
+		/*MStatus status;
 		MObject thisObject = thisMObject();
 
-		MNodeMessage::addNodePreRemovalCallback(thisObject, &MNode_NodePreRemovalCallbackFunc, this, &status);
+		MNodeMessage::addNodePreRemovalCallback(thisObject, &MNodeMessage_preRemovalCallbackFunc, this, &status);
 
 		if (!status)
 			status.perror("MNodeMessage::addNodePreRemovalCallback");
 
-		/*
-		 * For the ConnectSuggestionsLocatorNode
-		 */
-
-		// FIXME: This degrades performance a lot
-
-		/*MNodeMessage::addAttributeChangedCallback(thisObject, &View::MNodeMessage_Base_AttributeChangedProc, this, &status);
+		MModelMessage::addNodeRemovedFromModelCallback(thisObject, &MModelMessage_removedFromModelCallbackFunc, this, &status);
 
 		if (!status)
-			status.perror("MNodeMessage::addAttributeChangedCallback");*/
-	}
+			status.perror("MModelMessage::addNodeRemovedFromModelCallback");
 
-	MStatus HelixBase::connectionMade(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
-		if (plug == HelixBase::aForward && otherPlug == HelixBase::aBackward) {
-			// This base has a new target, retarget its pointing arrow
-			MObject thisObject = thisMObject();
+		MModelMessage::addNodeAddedToModelCallback(thisObject, &MModelMessage_addedToModelCallbackFunc, this, &status);
 
-			// Don't apply stuff if the node is set for deletion. The reason for this is a bug in Maya, see the callback that sets this parameter for more information
+		if (!status)
+			status.perror("MModelMessage::addNodeAddedToModelCallback");*/
+	//}
 
+	//MStatus HelixBase::connectionMade(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
+		/*if (plug == HelixBase::aForward && otherPlug == HelixBase::aBackward) {
 			MStatus status;
-			MFnDagNode this_dagNode(thisObject), target_dagNode(otherPlug.node(&status));
 
-			if (!status) {
+			onForwardConnectionMade(otherPlug.node(&status));
+
+			if (!status)
 				status.perror("MPlug::node");
-				return status;
-			}
+		}*/
 
-			MDagPath this_dagPath, target_dagPath;
+	//	return MPxTransform::connectionMade(plug, otherPlug, asSrc);
+	//}
 
-			if (!(status = this_dagNode.getPath(this_dagPath))) {
-				status.perror("MFnDagNode::getPath");
-				return status;
-			}
-
-			if (!(status = target_dagNode.getPath(target_dagPath))) {
-				status.perror("MFnDagNode::getPath");
-				return status;
-			}
-
-			// Create aimConstraint
-			//
-
-			// DON'T USE executeCommandOnIdle since it will be executed too late in case of a disconnect followed by a new connect (will mess up everything)
-			// Also, OnIdle's are undoable, which gets VERY weird
-
-			g_BaseDeletion.delayedModificationQueue.remove(thisObject);
-			g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
-
-			if (!(status = MGlobal::executeCommand(MString("retargetBase -base ") + this_dagPath.fullPathName() + " -target " + target_dagPath.fullPathName() + ";", false))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
-			}
-		}
-
-		return MPxTransform::connectionMade(plug, otherPlug, asSrc);
-	}
-
-	MStatus HelixBase::connectionBroken(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
-		if (plug == aForward && otherPlug == aBackward) {
+	//MStatus HelixBase::connectionBroken(const MPlug &plug, const MPlug &otherPlug, bool asSrc) {
+		/*if (plug == aForward && otherPlug == aBackward) {
 			MStatus status;
-			MObject thisObject = thisMObject();
 
-			// FIXME: There's currently a bug that makes Maya crash if we try to make an aimconstraint on a node that is currently being deleted
-			// FIXME: There's also another bug that won't allow us to call removeAllAimConstraints because there _might_ be a new scene-operation, and in that case, Maya crashes
+			onForwardConnectionBroken(otherPlug.node(&status));
 
-			// Remove constraints
-			//
+			if (!status)
+				status.perror("MPlug::node");
+		}*/
 
-			if (g_BaseDeletion.base == thisObject)
-				return MPxTransform::connectionBroken(plug, otherPlug, asSrc);
-
-			if (!g_BaseDeletion.inProgress) {
-				if (!(status = HelixBase_RemoveAllAimConstraints(thisObject))) {
-					status.perror("removeAllAimConstraints");
-					return status;
-				}
-			}
-
-			// Create aimConstraint (perpendicular to the backward base makes it look clearly disconnected)
-			//
-			// Find the backward target
-			//
-
-			MPlug backwardPlug(thisObject, HelixBase::aBackward);
-			MPlugArray backward_connections;
-			backwardPlug.connectedTo(backward_connections, true, true, &status);
-
-			if (!status) {
-				status.perror("MPlug::connectedTo");
-				return status;
-			}
-
-			if (backward_connections.length() > 0) {
-				MFnDagNode this_dagNode(thisObject), target_dagNode(backward_connections[0].node(&status));
-
-				if (!status) {
-					status.perror("MPlug::node");
-					return status;
-				}
-
-				g_BaseDeletion.delayedModificationQueue.remove(thisObject);
-				g_BaseDeletion.delayedModificationQueue.push_back(thisObject);
-
-				if (g_BaseDeletion.inProgress) {
-					if (!(status = MGlobal::executeCommandOnIdle(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
-						status.perror("MGlobal::executeCommandOnIdle");
-						return status;
-					}
-
-					g_BaseDeletion.inProgress = false;
-				}
-				else {
-					if (!(status = MGlobal::executeCommand(MString("retargetBase -perpendicular 1 -base ") + this_dagNode.fullPathName() + " -target " + target_dagNode.fullPathName() + ";", false))) {
-						status.perror("MGlobal::executeCommandOnIdle");
-						return status;
-					}
-				}
-			}
-		}
-
-		return MPxTransform::connectionBroken(plug, otherPlug, asSrc);
-	}
-
+	//	return MPxTransform::connectionBroken(plug, otherPlug, asSrc);
+	//}
 
 	void *HelixBase::creator() {
 		return new HelixBase();
@@ -254,18 +159,104 @@ namespace Helix {
 			labelAttr.addField(label, i);
 		}
 
-		aColor = colorAttr.create("color", "c", MFnNumericData::kInt, 0.0, &stat);
-
-		if (!stat) {
-			stat.perror("MFnNumericAttribute::create for color");
-			return stat;
-		}
-
 		addAttribute(aForward);
 		addAttribute(aBackward);
 		addAttribute(aLabel);
-		addAttribute(aColor);
 
 		return MStatus::kSuccess;
 	}
+
+	/*void HelixBase::onRemovePreConnectionBroken() {
+		std::cerr << __FUNCTION__ << std::endl;
+	}
+
+	void HelixBase::onRemovePostConnectionBroken() {
+		std::cerr << __FUNCTION__ << std::endl;
+	}
+
+	void HelixBase::onPreConnectionMade(bool revived) {
+		if (!revived) {
+			std::cerr << __FUNCTION__ << " first time creation" << std::endl;
+		}
+		else
+			std::cerr << __FUNCTION__ << " after undo" << std::endl;
+	}
+
+	void HelixBase::onForwardConnectionMade(MObject & target) {
+		MStatus status;
+		MString target_fullPathName = MFnDagNode(target).fullPathName(), this_fullPathName = MFnDagNode(thisMObject()).fullPathName();
+
+		/*if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; aimConstraint -aimVector 0 0 -1.0 " + target_fullPathName + " " + this_fullPathName + ";", false)))
+			status.perror("MGlobal::executeCommand");*
+	}
+
+	/*void HelixBase::onForwardConnectionBroken(MObject & target) {
+		std::cerr << __FUNCTION__ << std::endl;
+
+		if (!isNodeBeingRemoved()) {
+			/* 
+			 * If this is due to our target being deleted, there's not much we're allowed to do
+			 *
+
+			MStatus status;
+
+			HelixBase & target_base = *static_cast<HelixBase *> (MFnDagNode(target).userNode(&status));
+
+			if (!status) {
+				status.perror("MFnDagNode::userNode");
+			}
+
+			MString this_fullPathName = MFnDagNode(thisMObject()).fullPathName();
+
+			if (target_base.isNodeBeingRemoved()) {
+				/*
+				 * Even though we're not interrested in accessing the node being deleted, Maya still crashes if we try to access any other nodes
+				 * By using executeCommandOnIdle we can avoid any crashes and just get some MEL error that we won't care about anyway
+				 * since the action was made due to a deletion, there's no chance that the delayed execution can mess up any upcoming connections
+				 * such as the ones created by the connect tool (up to 2 disconnects followed by a connect)
+				 */
+				/*if (!(status = MGlobal::executeCommandOnIdle(MString(MEL_TARGET_HELIXBASE_BACKWARD " -base ") + this_fullPathName, false)))
+					status.perror("MGlobal::executeCommandOnIdle");*/
+
+				/*
+				 * This will be handled by the event below. As Maya didn't allow us to do anything here
+				 *
+
+				return;
+			}
+
+			/*
+			 * This node is not being removed from the scene, we should be able to set up our aimConstraint.
+			 * Find our previous object
+			 *
+
+			if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+				status.perror("MGlobal::executeCommand");
+		}
+	}*/
+
+	//void HelixBase::onForwardConnectedNodePreRemoval(MObject & target) {
+		/*
+		 * Make perpendicular
+		 */
+
+		//MStatus status;
+		//MString this_fullPathName = MFnDagNode(thisMObject()).fullPathName();//, target_fullPathName = MFnDagNode(target).fullPathName();
+
+		/*if (!(status = MGlobal::executeCommandOnIdle(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+			status.perror("MGlobal::executeCommand");*/
+		/*if (!(status = MGlobal::executeCommandOnIdle(MString(MEL_TARGET_HELIXBASE_BACKWARD " -base ") + this_fullPathName, false)))
+			status.perror("MGlobal::executeCommandOnIdle");*/
+
+		/*if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName, false)))
+			status.perror("MGlobal::executeCommand");
+
+		MFnTransform transform(thisMObject());
+
+		double rotation[] = { 90.0, 0.0, 0.0 };
+		if (!(status = transform.rotateBy(rotation, MTransformationMatrix::kXYZ))) {
+			status.perror("MFnTransform::rotateBy");
+			return;
+		}*/
+	//}
 }

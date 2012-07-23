@@ -86,8 +86,8 @@ namespace Helix {
 				return status;
 			}
 
-			if (!HelixBase_AllowedToRetargetBase(baseDagPath.node()))
-				return MStatus::kSuccess;
+			/*if (!HelixBase_AllowedToRetargetBase(baseDagPath.node()))
+				return MStatus::kSuccess;*/
 		}
 
 		if (target.length() > 0) {

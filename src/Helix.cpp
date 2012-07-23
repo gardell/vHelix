@@ -11,7 +11,7 @@
 #include <view/ConnectSuggestionsLocatorNode.h>
 
 namespace Helix {
-	MObject Helix::aLeftStrand, Helix::aRightStrand;
+	//MObject Helix::aLeftStrand, Helix::aRightStrand;
 	MTypeId Helix::id(HELIX_HELIX_ID);
 
 	Helix::Helix() {
@@ -26,21 +26,23 @@ namespace Helix {
 		return new Helix();
 	}
 
-	void Helix::postConstructor() {
-		MStatus status;
+	/*void MNodeFunction_preRemovalCallback(MObject& node,void *clientData) {
+		std::cerr << __FUNCTION__ << std::endl;
+	}*/
 
-		/*
-		 * For the ConnectSuggestionsLocatorNode
-		 */
+	//void Helix::postConstructor() {
+		/*MStatus status;
 
-		MNodeMessage::addAttributeChangedCallback(thisMObject(), &View::MNodeMessage_Helix_AttributeChangedProc, this, &status);
+		MNodeMessage::addNodePreRemovalCallback(thisMObject(), MNodeFunction_preRemovalCallback, this, &status);
 
-		if (!status)
-			status.perror("MNodeMessage::addAttributeChangedCallback");
-	}
+		if (!status) {
+			status.perror("MNodeMessage::addNodePreRemovalCallback");
+			return;
+		}*/
+	//}
 
 	MStatus Helix::initialize() {
-		MStatus status;
+		/*MStatus status;
 
 		MFnMatrixAttribute leftStrandAttr, rightStrandAttr;
 
@@ -59,7 +61,7 @@ namespace Helix {
 		}
 
 		addAttribute(aLeftStrand);
-		addAttribute(aRightStrand);
+		addAttribute(aRightStrand);*/
 
 		return MStatus::kSuccess;
 	}

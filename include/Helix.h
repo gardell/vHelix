@@ -18,11 +18,12 @@
 
 namespace Helix {
 	class Helix : public MPxTransform {
+		//friend void MNodeFunction_preRemovalCallback(MObject& node,void *clientData);
 	public:
 		Helix();
 		virtual ~Helix();
 
-		virtual	void postConstructor();
+		//virtual	void postConstructor();
 
 		// Standard utility metods
 		//
@@ -32,7 +33,18 @@ namespace Helix {
 
 		static	MTypeId	id;
 
-		static MObject aLeftStrand, aRightStrand;
+		//static MObject aLeftStrand, aRightStrand;
+
+		/*
+		 * Only used by bases!
+		 */
+
+		/*inline bool isPreRemovalCalled() const {
+			return m_preRemovalCalled;
+		}
+
+	private:
+		bool m_preRemovalCalled;*/
 	};
 }
 

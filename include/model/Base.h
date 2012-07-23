@@ -71,8 +71,8 @@ namespace Helix {
 			 */
 
 			MStatus connect_forward(Base & target, bool ignorePreviousConnections = false);
-			MStatus disconnect_forward();
-			MStatus disconnect_backward();
+			MStatus disconnect_forward(bool ignorePerpendicular = false);
+			MStatus disconnect_backward(bool ignorePerpendicular = false);
 			MStatus connect_opposite(Base & target, bool ignorePreviousConnections = false);
 			MStatus disconnect_opposite();
 

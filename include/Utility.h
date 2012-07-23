@@ -51,7 +51,7 @@ namespace Helix {
 	 */
 
 	MStatus SelectedBases(MObjectArray & result);
-	MStatus SelectedStrands(MObjectArray & strands, MObjectArray & bases);
+	//MStatus SelectedStrands(MObjectArray & strands, MObjectArray & bases);
 	
 	bool HelixBase_NextBase(const MObject & base, const MObject & attribute, MDagPath & result, MStatus *retStatus = NULL);
 
@@ -61,11 +61,11 @@ namespace Helix {
 		Neither = 0
 	};
 
-	unsigned int HelixBase_endType(MObject & base, MStatus *retStatus = NULL);
+	//unsigned int HelixBase_endType(MObject & base, MStatus *retStatus = NULL);
 
-	MStatus Helix_Relatives(const MObject & helix, MObjectArray & result);
+	//MStatus Helix_Relatives(const MObject & helix, MObjectArray & result);
 
-	bool HelixBase_isForward(const MObject & base, MStatus *retStatus = NULL);
+	//bool HelixBase_isForward(const MObject & base, MStatus *retStatus = NULL);
 
 	MStatus HelixBases_sort(MObjectArray & input, MObjectArray & result);
 
@@ -242,7 +242,7 @@ namespace Helix {
 		MStatus status;
 		ArrayT objects;
 
-		if (!status = GetElementsFunc(args, syntax, flag, objects)) {
+		if (!(status = GetElementsFunc(args, syntax, flag, objects))) {
 			status.perror("GetElementsFunc");
 			return status;
 		}
@@ -256,7 +256,7 @@ namespace Helix {
 	 * Some specializations as the syntax is messy for the function above
 	 */
 
-	template<typename ElementT, typename ContainerT>
+	template<typename ContainerT>
 	inline MStatus ArgList_GetModelObjects(const MArgList & args, const MSyntax & syntax, const char *flag, ContainerT & result) {
 		return ArgList_GetModelObjectsT<MObject, MObjectArray, ContainerT, ArgList_GetObjects> (args, syntax, flag, result);
 	}

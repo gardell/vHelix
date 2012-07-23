@@ -26,7 +26,7 @@ for($obj in $neighbourBases) {
     print ($obj + "\n");
 }*/
 
-#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND																					\
+/*#define MEL_REGISTER_ONSELECTIONCHANGED_COMMAND																					\
 		"// Because our search is recursive\n"																					\
 		"proc appendNeighbours_Helix(string $base, string $starting_base, int $recursive, string $direction, string $neighbourBases[], string $ends[], string $adjacent[]) {\n"		\
 		"    // FIXME: If $base equals $starting_base we need to STOP, or a infinite loop will occur on circular strands!\n"	\
@@ -100,7 +100,7 @@ for($obj in $neighbourBases) {
  * the bases belonging to the selected helix or the cylinders helix. Connected inter-helix-bases will also be added!
  *
  * You don't call this method directly, it is done in a MEL script that is triggered as an event
- */
+ *
 
 namespace Helix {
 	class HelixTracker : public MPxCommand {
@@ -127,6 +127,6 @@ namespace Helix {
 		static MStatus deregisterOnSelectionChangedListener();
 		static MStatus recursiveSearchForNeighbourBases(MDagPath dagPath, MObject forward_attribute, MObject backward_attribute, MDagPathArray endBases, bool force = false);
 	};
-}
+}*/
 
 #endif /* HELIXTRACKER_H_ */

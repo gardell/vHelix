@@ -467,8 +467,10 @@
     <ClInclude Include="..\include\opengl.h" />
     <ClInclude Include="..\include\PaintStrand.h" />
     <ClInclude Include="..\include\RetargetBase.h" />
+    <ClInclude Include="..\include\TargetHelixBaseBackward.h" />
     <ClInclude Include="..\include\ToggleCylinderBaseView.h" />
     <ClInclude Include="..\include\ToggleLocatorRender.h" />
+    <ClInclude Include="..\include\ToggleShowSuggestedConnections.h" />
     <ClInclude Include="..\include\Tracker.h" />
     <ClInclude Include="..\include\Utility.h" />
     <ClInclude Include="..\include\view\BaseShape.h" />
@@ -515,8 +517,10 @@
     <ClCompile Include="..\src\opengl.cpp" />
     <ClCompile Include="..\src\PaintStrand.cpp" />
     <ClCompile Include="..\src\RetargetBase.cpp" />
+    <ClCompile Include="..\src\TargetHelixBaseBackward.cpp" />
     <ClCompile Include="..\src\ToggleCylinderBaseView.cpp" />
     <ClCompile Include="..\src\ToggleLocatorRender.cpp" />
+    <ClCompile Include="..\src\ToggleShowSuggestedConnections.cpp" />
     <ClCompile Include="..\src\Tracker.cpp" />
     <ClCompile Include="..\src\Utility.cpp" />
     <ClCompile Include="..\src\view\BaseShape.cpp" />
@@ -525,6 +529,7 @@
     <ClCompile Include="..\src\view\ConnectSuggestionsContextCommand.cpp" />
     <ClCompile Include="..\src\view\ConnectSuggestionsLocatorNode.cpp" />
     <ClCompile Include="..\src\view\ConnectSuggestionsToolCommand.cpp" />
+    <ClCompile Include="..\src\view\double_arrow.cpp" />
     <ClCompile Include="..\src\view\HelixShape.cpp" />
     <ClCompile Include="..\src\view\HelixShapeUI.cpp" />
   </ItemGroup>

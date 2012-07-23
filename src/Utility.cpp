@@ -192,7 +192,7 @@ namespace Helix {
 		return MStatus::kSuccess;
 	}
 
-	MStatus SelectedStrands(MObjectArray & strands, MObjectArray & bases) {
+	/*MStatus SelectedStrands(MObjectArray & strands, MObjectArray & bases) {
 		MStatus status;
 
 		if (!(status = SelectedBases(bases))) {
@@ -259,7 +259,7 @@ namespace Helix {
 		}
 
 		return MStatus::kSuccess;
-	}
+	}*/
 
 	// Helper method, returns true if the bases attribute has a HelixBase connected
 	//
@@ -319,7 +319,7 @@ namespace Helix {
 		return false;
 	}
 
-	unsigned int HelixBase_endType(MObject & base, MStatus *retStatus) {
+	/*unsigned int HelixBase_endType(MObject & base, MStatus *retStatus) {
 		MStatus status;
 
 		MPlug plugs[] = { MPlug(base, HelixBase::aForward), MPlug(base, HelixBase::aBackward) };
@@ -381,9 +381,9 @@ namespace Helix {
 			return FivePrime | ThreePrime;
 
 		return false;
-	}
+	}*/
 
-	MStatus Helix_Relatives(const MObject & helix, MObjectArray & result) {
+	/*MStatus Helix_Relatives(const MObject & helix, MObjectArray & result) {
 		MStatus status;
 
 		// Get all the children of the helix, find their connected bases and see if any of them are children of other helices
@@ -456,9 +456,9 @@ namespace Helix {
 		}
 
 		return MStatus::kSuccess;
-	}
+	}*/
 
-	bool HelixBase_isForward(const MObject & base, MStatus *retStatus) {
+	/*bool HelixBase_isForward(const MObject & base, MStatus *retStatus) {
 		MStatus status;
 
 		static const MObject directions[] = { HelixBase::aForward, HelixBase::aBackward };
@@ -519,7 +519,7 @@ namespace Helix {
 		std::cerr << "Failed to find prev/next base, assuming staple!" << std::endl;
 
 		return false;
-	}
+	}*/
 
 	// FIXME: Try to use the STL for sorting instead
 
