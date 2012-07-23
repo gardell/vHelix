@@ -35,10 +35,15 @@
 			PBXWorkspaceStateSaveDate = 363688632;
 		};
 		perUserProjectItems = {
-			AA78DD93158F185E001B1D84 = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
-			AA78DDAD158F1CEE001B1D84 = AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */;
-			AA78DDCA1598A57E001B1D84 = AA78DDCA1598A57E001B1D84 /* PBXTextBookmark */;
-			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
+			AA5A581F15AD75D200604421 /* PBXBookmark */ = AA5A581F15AD75D200604421 /* PBXBookmark */;
+			AA5A582015ADD29900604421 /* PBXTextBookmark */ = AA5A582015ADD29900604421 /* PBXTextBookmark */;
+			AA5A582115ADD29900604421 /* PBXTextBookmark */ = AA5A582115ADD29900604421 /* PBXTextBookmark */;
+			AA5A582315ADD29900604421 /* PBXTextBookmark */ = AA5A582315ADD29900604421 /* PBXTextBookmark */;
+			AA5A582415ADD29900604421 /* PBXTextBookmark */ = AA5A582415ADD29900604421 /* PBXTextBookmark */;
+			AA5A582615ADD29900604421 /* PBXTextBookmark */ = AA5A582615ADD29900604421 /* PBXTextBookmark */;
+			AA5A582C15ADD29900604421 /* PBXTextBookmark */ = AA5A582C15ADD29900604421 /* PBXTextBookmark */;
+			AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
+			AAF469CA158233EA00EC064F /* PBXTextBookmark */ = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
 		userBuildSettings = {
@@ -51,6 +56,106 @@
 		path = /Users/johangardell/Documents/vHelix/include/Locator.h;
 		sourceTree = "<absolute>";
 	};
+	AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {2896, 8008}}";
+			sepNavSelRange = "{12481, 0}";
+			sepNavVisRange = "{12183, 1160}";
+		};
+	};
+	AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1769, 8268}}";
+			sepNavSelRange = "{19009, 0}";
+			sepNavVisRange = "{0, 1289}";
+			sepNavWindowFrame = "{{706, 173}, {1264, 735}}";
+		};
+	};
+	AA5A581F15AD75D200604421 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */;
+	};
+	AA5A582015ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA78DDCB1598A57E001B1D84 /* hashtable_policy.h */;
+		name = "hashtable_policy.h: 828";
+		rLen = 0;
+		rLoc = 29297;
+		rType = 0;
+		vrLen = 797;
+		vrLoc = 28730;
+	};
+	AA5A582115ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A582215ADD29900604421 /* JSONImporter.h */;
+		name = "JSONImporter.h: 16";
+		rLen = 0;
+		rLoc = 235;
+		rType = 0;
+		vrLen = 491;
+		vrLoc = 0;
+	};
+	AA5A582215ADD29900604421 /* JSONImporter.h */ = {
+		isa = PBXFileReference;
+		name = JSONImporter.h;
+		path = /Users/johangardell/Documents/vHelix/include/controller/JSONImporter.h;
+		sourceTree = "<absolute>";
+	};
+	AA5A582315ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
+		name = "HelixShapeUI.cpp: 433";
+		rLen = 0;
+		rLoc = 12481;
+		rType = 0;
+		vrLen = 1160;
+		vrLoc = 12183;
+	};
+	AA5A582415ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A582515ADD29900604421 /* HelixShapeUI.h */;
+		rLen = 0;
+		rLoc = 9223372036854775811;
+		rType = 0;
+	};
+	AA5A582515ADD29900604421 /* HelixShapeUI.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = HelixShapeUI.h;
+		path = /Users/johangardell/Documents/vHelix/include/view/HelixShapeUI.h;
+		sourceTree = "<absolute>";
+	};
+	AA5A582615ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A582715ADD29900604421 /* HelixShapeUI.h */;
+		name = "HelixShapeUI.h: 64";
+		rLen = 0;
+		rLoc = 2474;
+		rType = 0;
+		vrLen = 1686;
+		vrLoc = 1103;
+	};
+	AA5A582715ADD29900604421 /* HelixShapeUI.h */ = {
+		isa = PBXFileReference;
+		name = HelixShapeUI.h;
+		path = /Users/johangardell/Documents/vHelix/include/view/HelixShapeUI.h;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {915, 1352}}";
+			sepNavSelRange = "{2474, 0}";
+			sepNavVisRange = "{1103, 1686}";
+		};
+	};
+	AA5A582C15ADD29900604421 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */;
+		name = "JSONImporterController.cpp: 600";
+		rLen = 0;
+		rLoc = 19009;
+		rType = 0;
+		vrLen = 1289;
+		vrLoc = 0;
+	};
 	AA78DD93158F185E001B1D84 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = AA2990F6158B86920077DEFB /* Locator.h */;
@@ -61,39 +166,17 @@
 		vrLen = 1200;
 		vrLoc = 2231;
 	};
-	AA78DDAD158F1CEE001B1D84 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA78DDAE158F1CEE001B1D84 /* hashtable_policy.h */;
-		name = "hashtable_policy.h: 828";
-		rLen = 0;
-		rLoc = 29297;
-		rType = 0;
-		vrLen = 883;
-		vrLoc = 28730;
-	};
-	AA78DDAE158F1CEE001B1D84 /* hashtable_policy.h */ = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = hashtable_policy.h;
-		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
-		sourceTree = "<absolute>";
-	};
-	AA78DDCA1598A57E001B1D84 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA78DDCB1598A57E001B1D84 /* hashtable_policy.h */;
-		name = "hashtable_policy.h: 828";
-		rLen = 0;
-		rLoc = 29297;
-		rType = 0;
-		vrLen = 840;
-		vrLoc = 28730;
-	};
 	AA78DDCB1598A57E001B1D84 /* hashtable_policy.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
 		name = hashtable_policy.h;
 		path = "/Developer/SDKs/MacOSX10.6.sdk/usr/include/c++/4.2.1/tr1/hashtable_policy.h";
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {913, 11791}}";
+			sepNavSelRange = "{29297, 0}";
+			sepNavVisRange = "{28730, 797}";
+		};
 	};
 	AA97684A158208DB0049D263 /* Source Control */ = {
 		isa = PBXSourceControlManager;
