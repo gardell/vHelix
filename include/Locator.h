@@ -21,7 +21,6 @@
  * This extension is as simple as possible, it just figures out what bases are selected, optionally its neighbours and the connected end bases
  * it marks these visually by rendering "halos" around the molecule models with different coloring and radius.
  * Currently, the halos are rendered as point sprites which are very fast and easy to implement.
- * It renders a generated texture of a halo, but this should be changed into a GLSL program for better quality
  */
 
 #define HELIX_LOCATOR_ID 0x02114121
@@ -41,7 +40,8 @@
 #define SELECTED_ADJACENT_FIVEPRIME_HALO_COLOR { 0x7F, 0x7F, 0xAF, 0x5F }
 #define SELECTED_ADJACENT_THREEPRIME_HALO_COLOR { 0x7F, 0xAF, 0x7F, 0x5F }
 
-#define HALO_POINT_SIZE "0.0007"
+#define HALO_POINT_SIZE "0.7"
+// #define HALO_POINT_SIZE "0.0007"
 #define BASE_CONNECTIONS_LINE_WIDTH 2.0f
 
 #define HALO_THREE_PRIME_BASE_DIAMETER_MULTIPLIER 1.05f
@@ -49,6 +49,8 @@
 #define HALO_SELECTED_BASE_DIAMETER_MULTIPLIER 1.15f
 
 #define HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME "diameter_multiplier"
+
+// screen.y * 
 
 #define GLSL_VERTEX_SHADER																									\
 		"#version 120\n",																									\
@@ -59,7 +61,7 @@
 		"attribute float " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME ";\n",														\
 		"void main() {\n",																									\
 		"    gl_Position = ftransform();\n",																				\
-		"    gl_PointSize = screen.x * screen.y * pointSize * " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME " / (2.0 * gl_Position.w);\n",	\
+		"    gl_PointSize = screen.x * pointSize * " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME " / (2.0 * gl_Position.w);\n",	\
 		"	 color = gl_Color;\n",																							\
 		"	 radius_multiplier = " HALO_DIAMETER_MULTIPLIER_ATTRIB_NAME ";\n",												\
 		"}\n"
