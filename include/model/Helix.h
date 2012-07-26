@@ -10,6 +10,7 @@
 
 #include <model/Object.h>
 #include <model/Base.h>
+#include <view/HelixShape.h>
 
 #include <maya/MString.h>
 #include <maya/MMatrix.h>
@@ -145,6 +146,18 @@ namespace Helix {
 			 */
 			
 			unsigned int numChildren(MStatus & status);
+
+			inline MStatus setShapesVisibility(bool visible) {
+				return Object::setShapesVisibility(visible, View::HelixShape::id);
+			}
+
+			inline MStatus toggleShapesVisibility() {
+				return Object::toggleShapesVisibility(View::HelixShape::id);
+			}
+
+			inline bool isAnyShapeVisible(MStatus & status) {
+				return Object::isAnyShapeVisible(View::HelixShape::id, status);
+			}
 
 		private:
 			bool hasCylinder(MStatus & status);

@@ -163,6 +163,46 @@ namespace Helix {
 		addAttribute(aBackward);
 		addAttribute(aLabel);
 
+		/*
+		 * Try to set DisconnectBehavior on the rotateX, rotateY, rotateZ attributes
+		 */
+
+		/*MFnAttribute rotateXAttr(MPxTransform::rotateX, &stat);
+
+		if (!stat) {
+			stat.perror("MFnAttribute::#ctor 1");
+			return stat;
+		}
+
+		if (!(stat = rotateXAttr.setDisconnectBehavior(MFnAttribute::kReset))) {
+			stat.perror("MFnAttribute::setDisconnectBehavior 1");
+			return stat;
+		}
+
+		MFnAttribute rotateYAttr(MPxTransform::rotateY, &stat);
+
+		if (!stat) {
+			stat.perror("MFnAttribute::#ctor 2");
+			return stat;
+		}
+
+		if (!(stat = rotateYAttr.setDisconnectBehavior(MFnAttribute::kReset))) {
+			stat.perror("MFnAttribute::setDisconnectBehavior 2");
+			return stat;
+		}
+
+		MFnAttribute rotateZAttr(MPxTransform::rotateZ, &stat);
+
+		if (!stat) {
+			stat.perror("MFnAttribute::#ctor 3");
+			return stat;
+		}
+
+		if (!(stat = rotateZAttr.setDisconnectBehavior(MFnAttribute::kReset))) {
+			stat.perror("MFnAttribute::setDisconnectBehavior 3");
+			return stat;
+		}*/
+
 		return MStatus::kSuccess;
 	}
 

@@ -214,8 +214,8 @@ namespace Helix {
 		 * Refresh cylinder/base view
 		 */
 
-		if (!(status = Model::Helix::RefreshCylinderOrBases()))
-			status.perror("Helix::RefreshCylinderOrBases");
+		/*if (!(status = Model::Helix::RefreshCylinderOrBases()))
+			status.perror("Helix::RefreshCylinderOrBases");*/
 
 		MProgressWindow::endProgress();
 

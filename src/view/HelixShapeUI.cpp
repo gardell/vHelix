@@ -45,8 +45,8 @@ namespace Helix {
 		//
 
 		void HelixShapeUI::draw( const MDrawRequest & request, M3dView & view ) const {
-			if (ToggleCylinderBaseView::CurrentView != 1)
-				return;
+			/*if (ToggleCylinderBaseView::CurrentView != 1)
+				return;*/
 
 			MStatus status;
 

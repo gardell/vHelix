@@ -10,6 +10,7 @@
 #include <maya/MFnTransform.h>
 #include <maya/MEulerRotation.h>
 #include <maya/MVector.h>
+#include <maya/MPlug.h>
 
 namespace Helix {
 	namespace Model {
@@ -160,6 +161,142 @@ namespace Helix {
 			}
 
 			return MStatus::kSuccess;
+		}
+
+		MStatus Object::setShapesVisibility(bool visible, MTypeId & typeId) {
+			MStatus status;
+			MDagPath dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Object::getDagPath");
+				return status;
+			}
+
+			unsigned int numShapes;
+
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MFnDagNode shape_dagNode(shape);
+
+				if (shape_dagNode.typeId(&status) == typeId) {
+					MPlug visibilityPlug(shape.node(), shape_dagNode.findPlug("visibility", &status));
+
+					if (!status) {
+						status.perror("MFnDagNode::findPlug");
+						return status;
+					}
+
+					if (!(status = visibilityPlug.setBool(visible))) {
+						status.perror("MPlug::setBool");
+						return status;
+					}
+				}
+				else if (!status) {
+					status.perror("MFnDagNode::typeId");
+					return status;
+				}
+			}
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Object::toggleShapesVisibility(MTypeId & typeId) {
+			MStatus status;
+			MDagPath dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Object::getDagPath");
+				return status;
+			}
+
+			unsigned int numShapes;
+
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return status;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return status;
+				}
+
+				MFnDagNode shape_dagNode(shape);
+
+				if (shape_dagNode.typeId(&status) == typeId) {
+					MPlug visibilityPlug(shape.node(), shape_dagNode.findPlug("visibility", &status));
+
+					if (!status) {
+						status.perror("MFnDagNode::findPlug");
+						return status;
+					}
+
+					if (!(status = visibilityPlug.setBool(!visibilityPlug.asBool()))) {
+						status.perror("MPlug::setBool");
+						return status;
+					}
+				}
+			}
+
+			return MStatus::kSuccess;
+		}
+
+		bool Object::isAnyShapeVisible(MTypeId & typeId, MStatus & status) {
+			MDagPath dagPath = getDagPath(status);
+
+			if (!status) {
+				status.perror("Object::getDagPath");
+				return false;
+			}
+
+			unsigned int numShapes;
+
+			if (!(status = dagPath.numberOfShapesDirectlyBelow(numShapes))) {
+				status.perror("MDagPath::numberOfShapesDirectlyBelow");
+				return false;
+			}
+
+			for(unsigned int i = 0; i < numShapes; ++i) {
+				MDagPath shape = dagPath;
+
+				if (!(status = shape.extendToShapeDirectlyBelow(i))) {
+					status.perror("MDagPath::extendToShapeDirectlyBelow");
+					return false;
+				}
+
+				MFnDagNode shape_dagNode(shape);
+
+				if (shape_dagNode.typeId(&status) == typeId) {
+					MPlug visibilityPlug(shape.node(), shape_dagNode.findPlug("visibility", &status));
+
+					if (!status) {
+						status.perror("MFnDagNode::findPlug");
+						return false;
+					}
+
+					if (visibilityPlug.asBool()) {
+						status = MStatus::kSuccess;
+						return true;
+					}
+				}
+			}
+
+			status = MStatus::kSuccess;
+			return false;
 		}
 	}
 }

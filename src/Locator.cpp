@@ -756,7 +756,7 @@ namespace Helix {
 
 			bool renderingCylinder = false;
 
-			if (ToggleCylinderBaseView::CurrentView == 1) {
+			if (helix.isAnyShapeVisible(stat)) {
 				/*
 				 * We're currently rendering cylinders, 
 				 * move the arrow outside the cylinder instead of just rendering it at origo
@@ -775,6 +775,8 @@ namespace Helix {
 					renderingCylinder = true;
 				}
 			}
+			else if (!stat)
+				stat.perror("Helix::isAnyShapeVisible");
 
 			glShadeModel(GL_SMOOTH);
 

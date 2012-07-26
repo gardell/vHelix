@@ -25,7 +25,7 @@
 #include <GL/gl.h>
 #include <GL/glext.h>
 
-#if !defined(WIN32) || !defined(WIN64)
+#if !defined(WIN32) && !defined(WIN64)
 #include <GL/glx.h>
 #include <GL/glxext.h>
 #endif /* N WINDOWS */

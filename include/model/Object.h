@@ -321,6 +321,16 @@ namespace Helix {
 			}
 
 		protected:
+			/*
+			 * Might be useful at sometimes. Sets the visibility attribute on all the objects attached shapes
+			 * used by the toggle cylinder/base view method
+			 * Note that typeId is the shapes type id, the Helix and Base classes implement inline wrappers that set these up
+			 */
+
+			MStatus setShapesVisibility(bool visible, MTypeId & typeId);
+			MStatus toggleShapesVisibility(MTypeId & typeId);
+			bool isAnyShapeVisible(MTypeId & typeId, MStatus & status);
+
 			inline void setObject(MObject object) {
 				m_object = object;
 			}

@@ -10,7 +10,7 @@
 
 #include <model/Object.h>
 #include <model/Material.h>
-#include <model/Color.h>
+#include <view/BaseShape.h>
 
 #include <DNA.h>
 
@@ -104,6 +104,18 @@ namespace Helix {
 			 */
 
 			Helix getParent(MStatus & status);
+
+			inline MStatus setShapesVisibility(bool visible) {
+				return Object::setShapesVisibility(visible, View::BaseShape::id);
+			}
+
+			inline MStatus toggleShapesVisibility() {
+				return Object::toggleShapesVisibility(View::BaseShape::id);
+			}
+
+			inline bool isAnyShapeVisible(MStatus & status) {
+				return Object::isAnyShapeVisible(View::BaseShape::id, status);
+			}
 
 		private:
 			/*

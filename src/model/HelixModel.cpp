@@ -75,6 +75,22 @@ namespace Helix {
 			}
 
 			/*
+			 * Make it invisible
+			 */
+
+			MPlug shapeVisibilityPlug(shape_object, shape_dagNode.findPlug("visibility", &status));
+
+			if (!status) {
+				status.perror("MFnDagNode::findPlug");
+				return status;
+			}
+
+			if (!(status = shapeVisibilityPlug.setBool(false))) {
+				status.perror("MPlug::setBool");
+				return status;
+			}
+
+			/*
 			 * Set the transform
 			 */
 
