@@ -32,6 +32,8 @@
 		AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56115BD866700A165A1 /* opengl.cpp */; };
 		AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */; };
 		AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */; };
+		AAA9C57E15C2914C00A165A1 /* CreateCurvesController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C57D15C2914C00A165A1 /* CreateCurvesController.cpp */; };
+		AAA9C58015C2915900A165A1 /* CreateCurves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */; };
 		AACE30601588D6EA00F4A033 /* DuplicateController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */; };
 		AAF468D515820E0800EC064F /* ApplySequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BD15820E0800EC064F /* ApplySequence.cpp */; };
 		AAF468D615820E0800EC064F /* ApplySequenceGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */; };
@@ -84,6 +86,8 @@
 		AAA9C56115BD866700A165A1 /* opengl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = opengl.cpp; path = src/opengl.cpp; sourceTree = "<group>"; };
 		AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TargetHelixBaseBackward.cpp; path = src/TargetHelixBaseBackward.cpp; sourceTree = "<group>"; };
 		AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToggleShowSuggestedConnections.cpp; path = src/ToggleShowSuggestedConnections.cpp; sourceTree = "<group>"; };
+		AAA9C57D15C2914C00A165A1 /* CreateCurvesController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CreateCurvesController.cpp; sourceTree = "<group>"; };
+		AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreateCurves.cpp; path = src/CreateCurves.cpp; sourceTree = "<group>"; };
 		AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DuplicateController.cpp; sourceTree = "<group>"; };
 		AAF468BD15820E0800EC064F /* ApplySequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequence.cpp; path = src/ApplySequence.cpp; sourceTree = "<group>"; };
 		AAF468BE15820E0800EC064F /* ApplySequenceGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ApplySequenceGui.cpp; path = src/ApplySequenceGui.cpp; sourceTree = "<group>"; };
@@ -136,6 +140,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */,
 				AAA9C56115BD866700A165A1 /* opengl.cpp */,
 				AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */,
 				AAA9C56315BD866700A165A1 /* ToggleShowSuggestedConnections.cpp */,
@@ -224,6 +229,7 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				AAA9C57D15C2914C00A165A1 /* CreateCurvesController.cpp */,
 				AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */,
 				AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */,
 				AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */,
@@ -345,6 +351,8 @@
 				AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */,
 				AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */,
 				AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */,
+				AAA9C57E15C2914C00A165A1 /* CreateCurvesController.cpp in Sources */,
+				AAA9C58015C2915900A165A1 /* CreateCurves.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

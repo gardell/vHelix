@@ -201,7 +201,7 @@ namespace Helix {
 			class BaseTypeFunc {
 			public:
 				inline BaseTypeFunc(Base::Type type) : m_type(type) { }
-				inline BaseTypeFunc(BaseTypeFunc & func) : m_type(func.m_type) { }
+				inline BaseTypeFunc(const BaseTypeFunc & func) : m_type(func.m_type) { }
 
 				inline bool operator() (Base & base) const {
 					MStatus status;

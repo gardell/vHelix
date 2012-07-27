@@ -31,20 +31,23 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 364740782;
-			PBXWorkspaceStateSaveDate = 364740782;
+			PBXPerProjectTemplateStateSaveDate = 365072703;
+			PBXWorkspaceStateSaveDate = 365072703;
 		};
 		perUserProjectItems = {
 			AA5A582015ADD29900604421 = AA5A582015ADD29900604421 /* PBXTextBookmark */;
 			AA5A582115ADD29900604421 = AA5A582115ADD29900604421 /* PBXTextBookmark */;
-			AA5A582315ADD29900604421 = AA5A582315ADD29900604421 /* PBXTextBookmark */;
 			AA78DD93158F185E001B1D84 = AA78DD93158F185E001B1D84 /* PBXTextBookmark */;
-			AAA9C54315BD809400A165A1 = AAA9C54315BD809400A165A1 /* PBXBookmark */;
 			AAA9C54415BD80AA00A165A1 = AAA9C54415BD80AA00A165A1 /* PBXTextBookmark */;
-			AAA9C54515BD80AA00A165A1 = AAA9C54515BD80AA00A165A1 /* PBXTextBookmark */;
-			AAA9C54715BD80AA00A165A1 = AAA9C54715BD80AA00A165A1 /* PBXTextBookmark */;
-			AAA9C54A15BD80AA00A165A1 = AAA9C54A15BD80AA00A165A1 /* PBXTextBookmark */;
-			AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */ = AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */;
+			AAA9C56015BD833A00A165A1 = AAA9C56015BD833A00A165A1 /* PBXBookmark */;
+			AAA9C56715C2912000A165A1 = AAA9C56715C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C56815C2912000A165A1 = AAA9C56815C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C56915C2912000A165A1 = AAA9C56915C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C56B15C2912000A165A1 = AAA9C56B15C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C56C15C2912000A165A1 = AAA9C56C15C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C56F15C2912000A165A1 = AAA9C56F15C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C57115C2912000A165A1 = AAA9C57115C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C57515C2912000A165A1 = AAA9C57515C2912000A165A1 /* PBXTextBookmark */;
 			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
@@ -101,16 +104,6 @@
 		path = /Users/johangardell/Documents/vHelix/include/controller/JSONImporter.h;
 		sourceTree = "<absolute>";
 	};
-	AA5A582315ADD29900604421 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
-		name = "HelixShapeUI.cpp: 433";
-		rLen = 0;
-		rLoc = 12481;
-		rType = 0;
-		vrLen = 1160;
-		vrLoc = 12183;
-	};
 	AA5A582715ADD29900604421 /* HelixShapeUI.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
@@ -149,10 +142,6 @@
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
 	};
-	AAA9C54315BD809400A165A1 /* PBXBookmark */ = {
-		isa = PBXBookmark;
-		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
-	};
 	AAA9C54415BD80AA00A165A1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = AA5A582715ADD29900604421 /* HelixShapeUI.h */;
@@ -163,49 +152,26 @@
 		vrLen = 1663;
 		vrLoc = 1103;
 	};
-	AAA9C54515BD80AA00A165A1 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AAA9C54615BD80AA00A165A1 /* opengl.h */;
-		name = "opengl.h: 31";
-		rLen = 0;
-		rLoc = 540;
-		rType = 0;
-		vrLen = 547;
-		vrLoc = 167;
-	};
 	AAA9C54615BD80AA00A165A1 /* opengl.h */ = {
 		isa = PBXFileReference;
 		lastKnownFileType = sourcecode.c.h;
 		name = opengl.h;
 		path = /Users/johangardell/Documents/vHelix/include/opengl.h;
 		sourceTree = "<absolute>";
+	};
+	AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1055, 975}}";
-			sepNavSelRange = "{1329, 0}";
-			sepNavVisRange = "{845, 722}";
+			sepNavIntBoundsRect = "{{0, 0}, {1902, 13247}}";
+			sepNavSelRange = "{30868, 0}";
+			sepNavVisRange = "{30420, 1612}";
+			sepNavWindowFrame = "{{565, 193}, {1264, 735}}";
 		};
 	};
-	AAA9C54715BD80AA00A165A1 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
-		name = "HelixShapeUI.cpp: 442";
-		rLen = 0;
-		rLoc = 12481;
-		rType = 0;
-		vrLen = 1144;
-		vrLoc = 12165;
+	AAA9C56015BD833A00A165A1 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */;
 	};
-	AAA9C54A15BD80AA00A165A1 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
-		name = "HelixShapeUI.cpp: 557";
-		rLen = 0;
-		rLoc = 16401;
-		rType = 0;
-		vrLen = 1553;
-		vrLoc = 15530;
-	};
-	AAA9C55115BD80BC00A165A1 /* PBXTextBookmark */ = {
+	AAA9C56715C2912000A165A1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = AA5A581615AD72DE00604421 /* HelixShapeUI.cpp */;
 		name = "HelixShapeUI.cpp: 442";
@@ -214,6 +180,94 @@
 		rType = 0;
 		vrLen = 1101;
 		vrLoc = 12165;
+	};
+	AAA9C56815C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C54615BD80AA00A165A1 /* opengl.h */;
+		name = "opengl.h: 65";
+		rLen = 0;
+		rLoc = 1329;
+		rType = 0;
+		vrLen = 722;
+		vrLoc = 845;
+	};
+	AAA9C56915C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C56A15C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */;
+		name = "ConnectSuggestionsLocatorNode.h: 134";
+		rLen = 0;
+		rLoc = 5547;
+		rType = 0;
+		vrLen = 1279;
+		vrLoc = 4453;
+	};
+	AAA9C56A15C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = ConnectSuggestionsLocatorNode.h;
+		path = /Users/johangardell/Documents/vHelix/include/view/ConnectSuggestionsLocatorNode.h;
+		sourceTree = "<absolute>";
+	};
+	AAA9C56B15C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */;
+		name = "ConnectSuggestionsLocatorNode.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 879;
+		vrLoc = 0;
+	};
+	AAA9C56C15C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */;
+		name = "ConnectSuggestionsLocatorNode.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 742;
+		vrLoc = 30224;
+	};
+	AAA9C56F15C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C57015C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */;
+		rLen = 0;
+		rLoc = 9223372036854775808;
+		rType = 0;
+	};
+	AAA9C57015C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = ConnectSuggestionsLocatorNode.h;
+		path = /Users/johangardell/Documents/vHelix/include/view/ConnectSuggestionsLocatorNode.h;
+		sourceTree = "<absolute>";
+	};
+	AAA9C57115C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C57215C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */;
+		name = "ConnectSuggestionsLocatorNode.h: 132";
+		rLen = 0;
+		rLoc = 5547;
+		rType = 0;
+		vrLen = 1511;
+		vrLoc = 4366;
+	};
+	AAA9C57215C2912000A165A1 /* ConnectSuggestionsLocatorNode.h */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = ConnectSuggestionsLocatorNode.h;
+		path = /Users/johangardell/Documents/vHelix/include/view/ConnectSuggestionsLocatorNode.h;
+		sourceTree = "<absolute>";
+	};
+	AAA9C57515C2912000A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */;
+		name = "ConnectSuggestionsLocatorNode.cpp: 950";
+		rLen = 0;
+		rLoc = 30868;
+		rType = 0;
+		vrLen = 1612;
+		vrLoc = 30420;
 	};
 	AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {
 		uiCtxt = {

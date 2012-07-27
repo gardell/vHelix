@@ -197,7 +197,88 @@
 	<key>Notifications</key>
 	<array/>
 	<key>OpenEditors</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>AAA9C56D15C2912000A165A1</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>ConnectSuggestionsLocatorNode.h</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>AAA9C56E15C2912000A165A1</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>ConnectSuggestionsLocatorNode.h</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>AAA9C57115C2912000A165A1</string>
+						<key>history</key>
+						<array>
+							<string>AAA9C56F15C2912000A165A1</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1264, 638}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>836 28 1264 679 0 0 1920 1058 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>AAA9C57315C2912000A165A1</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>ConnectSuggestionsLocatorNode.cpp</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>AAA9C57415C2912000A165A1</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>ConnectSuggestionsLocatorNode.cpp</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>AAA9C57515C2912000A165A1</string>
+						<key>history</key>
+						<array>
+							<string>AAA9C56015BD833A00A165A1</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1264, 638}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>565 249 1264 679 0 0 1920 1058 </string>
+			</dict>
+		</dict>
+	</array>
 	<key>PerspectiveWidths</key>
 	<array>
 		<integer>-1</integer>
@@ -276,8 +357,7 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>6</integer>
-									<integer>2</integer>
+									<integer>16</integer>
 									<integer>1</integer>
 									<integer>0</integer>
 								</array>
@@ -302,7 +382,7 @@
 							<real>186</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>618 206 1182 756 0 0 1920 1058 </string>
+						<string>477 252 1182 756 0 0 1920 1058 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -318,7 +398,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>HelixShapeUI.cpp</string>
+								<string>ConnectSuggestionsLocatorNode.cpp</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -326,11 +406,11 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>HelixShapeUI.cpp</string>
+										<string>ConnectSuggestionsLocatorNode.cpp</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>AAA9C55115BD80BC00A165A1</string>
+										<string>AAA9C56C15C2912000A165A1</string>
 										<key>history</key>
 										<array>
 											<string>AAF469CA158233EA00EC064F</string>
@@ -338,8 +418,10 @@
 											<string>AA5A582015ADD29900604421</string>
 											<string>AA5A582115ADD29900604421</string>
 											<string>AAA9C54415BD80AA00A165A1</string>
-											<string>AAA9C54515BD80AA00A165A1</string>
-											<string>AAA9C54715BD80AA00A165A1</string>
+											<string>AAA9C56715C2912000A165A1</string>
+											<string>AAA9C56815C2912000A165A1</string>
+											<string>AAA9C56915C2912000A165A1</string>
+											<string>AAA9C56B15C2912000A165A1</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -353,7 +435,7 @@
 								<key>Frame</key>
 								<string>{{0, 0}, {974, 418}}</string>
 								<key>RubberWindowFrame</key>
-								<string>618 206 1182 756 0 0 1920 1058 </string>
+								<string>477 252 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
@@ -373,7 +455,7 @@
 								<key>Frame</key>
 								<string>{{0, 423}, {974, 292}}</string>
 								<key>RubberWindowFrame</key>
-								<string>618 206 1182 756 0 0 1920 1058 </string>
+								<string>477 252 1182 756 0 0 1920 1058 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -538,10 +620,12 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>AA976852158209130049D263</string>
+		<string>AAA9C57315C2912000A165A1</string>
+		<string>AAA9C56D15C2912000A165A1</string>
 		<string>/Users/johangardell/Documents/vHelix/vHelix.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
-	<string>618 206 1182 756 0 0 1920 1058 </string>
+	<string>477 252 1182 756 0 0 1920 1058 </string>
 	<key>WindowToolsV3</key>
 	<array>
 		<dict>
