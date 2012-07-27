@@ -189,6 +189,12 @@
     <ClInclude Include="..\include\TargetHelixBaseBackward.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\controller\CreateCurves.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CreateCurves.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -337,6 +343,12 @@
     </ClCompile>
     <ClCompile Include="..\src\TargetHelixBaseBackward.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CreateCurves.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\CreateCurvesController.cpp">
+      <Filter>Source Files\controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -143,6 +143,16 @@ namespace Helix {
 		return end;
 	}
 
+	template<typename It, typename FunctT>
+	It find_if_itref_nonconst(It & it, It end, FunctT funct) {
+		for(; it != end; ++it) {
+			if (funct(*it))
+				return it;
+		}
+
+		return end;
+	}
+
 	/*
 	 * This method is for solving a bug in opening Maya files containing helices. FIXME: Move function definition and declaration
 	 */

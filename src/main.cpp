@@ -34,6 +34,7 @@
 #include <JSONTranslator.h>
 #include <RetargetBase.h>
 #include <TargetHelixBaseBackward.h>
+#include <CreateCurves.h>
 
 #include <view/BaseShape.h>
 #include <view/BaseShapeUI.h>
@@ -74,7 +75,8 @@
 	new RegisterCommand(MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, Helix::ToggleShowSuggestedConnections::creator, Helix::ToggleShowSuggestedConnections::newSyntax),																			\
 	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),																																\
 	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),																																\
-	new RegisterCommand(MEL_TARGET_HELIXBASE_BACKWARD, Helix::TargetHelixBaseBackward::creator, Helix::TargetHelixBaseBackward::newSyntax),																																\
+	new RegisterCommand(MEL_TARGET_HELIXBASE_BACKWARD, Helix::TargetHelixBaseBackward::creator, Helix::TargetHelixBaseBackward::newSyntax),																										\
+	new RegisterCommand(MEL_CREATE_CURVES_COMMAND, Helix::CreateCurves::creator, Helix::CreateCurves::newSyntax),																																\
 	new RegisterContextCommand(MEL_CONNECT_SUGGESTIONS_CONTEXT_COMMAND, Helix::View::ConnectSuggestionsContextCommand::creator, MEL_CONNECT_SUGGESTIONS_TOOL_COMMAND, Helix::View::ConnectSuggestionsToolCommand::creator, Helix::View::ConnectSuggestionsToolCommand::newSyntax),	\
 	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),																							\
 	new RegisterNode(CONNECT_SUGGESTIONS_LOCATOR_NAME, Helix::View::ConnectSuggestionsLocatorNode::id, &Helix::View::ConnectSuggestionsLocatorNode::creator, &Helix::View::ConnectSuggestionsLocatorNode::initialize, MPxNode::kLocatorNode),	\
@@ -119,6 +121,7 @@
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Apply sequence", "Apply a given sequence string to the currently selected strand and calculate connected staple sequences", MEL_APPLYSEQUENCE_GUI_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"Export strands", "Export all or selected bases strands to Excel or a text file", MEL_EXPORTSTRANDS_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
+{	"Create curves from strands", "Create curves from selected helices and strands, or the whole scene", MEL_CREATE_CURVES_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Toggle cylinder or bases view", "Show the cylinder or base representation of the helices", MEL_TOGGLECYLINDERBASEVIEW_COMMAND " -toggle true", "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 't' },	\
 {	"Toggle show suggested connections", "Show potential inter-helix base connections", MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'z' },	\

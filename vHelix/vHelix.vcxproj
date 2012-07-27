@@ -436,6 +436,7 @@
     <ClInclude Include="..\include\Connect.h" />
     <ClInclude Include="..\include\controller\ApplySequence.h" />
     <ClInclude Include="..\include\controller\Connect.h" />
+    <ClInclude Include="..\include\controller\CreateCurves.h" />
     <ClInclude Include="..\include\controller\Disconnect.h" />
     <ClInclude Include="..\include\controller\Duplicate.h" />
     <ClInclude Include="..\include\controller\ExportStrands.h" />
@@ -443,6 +444,7 @@
     <ClInclude Include="..\include\controller\JSONImporter.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
+    <ClInclude Include="..\include\CreateCurves.h" />
     <ClInclude Include="..\include\Creator.h" />
     <ClInclude Include="..\include\CreatorGui.h" />
     <ClInclude Include="..\include\Definition.h" />
@@ -488,12 +490,14 @@
     <ClCompile Include="..\src\Connect.cpp" />
     <ClCompile Include="..\src\controller\ApplySequenceController.cpp" />
     <ClCompile Include="..\src\controller\ConnectController.cpp" />
+    <ClCompile Include="..\src\controller\CreateCurvesController.cpp" />
     <ClCompile Include="..\src\controller\DisconnectController.cpp" />
     <ClCompile Include="..\src\controller\DuplicateController.cpp" />
     <ClCompile Include="..\src\controller\ExportStrandsController.cpp" />
     <ClCompile Include="..\src\controller\ExtendStrandController.cpp" />
     <ClCompile Include="..\src\controller\JSONImporterController.cpp" />
     <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
+    <ClCompile Include="..\src\CreateCurves.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />
     <ClCompile Include="..\src\Disconnect.cpp" />

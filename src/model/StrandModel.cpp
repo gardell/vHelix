@@ -21,5 +21,10 @@ namespace Helix {
 
 			return find_nonconst(++reverse_begin(), reverse_end(), base) != reverse_end();
 		}
+
+		bool Strand::operator==(Strand & strand) {
+			MStatus status;
+			return contains_base(strand.getDefiningBase(), status);
+		}
 	}
 }

@@ -28,6 +28,14 @@ namespace Helix {
 
 			}
 
+			inline Strand(const MObject & object) : m_base(object) {
+
+			}
+
+			inline Strand(const MDagPath & dagPath) : m_base(dagPath) {
+
+			}
+
 			/*
 			 * The iterator interfaces
 			 */
@@ -185,6 +193,26 @@ namespace Helix {
 				MStatus status;
 				return strand.contains_base(base, status);
 			}
+
+			/*
+			 * Can be used with std::find_if to find the end base
+			 */
+
+			class BaseTypeFunc {
+			public:
+				inline BaseTypeFunc(Base::Type type) : m_type(type) { }
+				inline BaseTypeFunc(BaseTypeFunc & func) : m_type(func.m_type) { }
+
+				inline bool operator() (Base & base) const {
+					MStatus status;
+					return base.type(status) == m_type;
+				}
+
+			private:
+				Base::Type m_type;
+			};
+
+			bool operator==(Strand & strand);
 
 		protected:
 			Base m_base; // The base defining the strand
