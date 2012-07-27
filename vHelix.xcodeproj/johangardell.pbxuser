@@ -1,7 +1,7 @@
 // !$*UTF8*$!
 {
 	08FB7793FE84155DC02AAC07 /* Project object */ = {
-		activeBuildConfigurationName = Debug;
+		activeBuildConfigurationName = "Maya 2013 Release";
 		activeSDKPreference = macosx10.6;
 		activeTarget = D2AAC0620554660B00DB518D /* vHelix */;
 		addToTargets = (
@@ -48,6 +48,15 @@
 			AAA9C56F15C2912000A165A1 = AAA9C56F15C2912000A165A1 /* PBXTextBookmark */;
 			AAA9C57115C2912000A165A1 = AAA9C57115C2912000A165A1 /* PBXTextBookmark */;
 			AAA9C57515C2912000A165A1 = AAA9C57515C2912000A165A1 /* PBXTextBookmark */;
+			AAA9C5BA15C2A0DB00A165A1 /* XCBuildMessageTextBookmark */ = AAA9C5BA15C2A0DB00A165A1 /* XCBuildMessageTextBookmark */;
+			AAA9C5C915C2A14100A165A1 /* PBXTextBookmark */ = AAA9C5C915C2A14100A165A1 /* PBXTextBookmark */;
+			AAA9C5CA15C2A14100A165A1 /* PBXBookmark */ = AAA9C5CA15C2A14100A165A1 /* PBXBookmark */;
+			AAA9C5CB15C2A14100A165A1 /* PBXTextBookmark */ = AAA9C5CB15C2A14100A165A1 /* PBXTextBookmark */;
+			AAA9C5D015C2A14100A165A1 /* PBXTextBookmark */ = AAA9C5D015C2A14100A165A1 /* PBXTextBookmark */;
+			AAA9C5D515C2A15600A165A1 /* PBXTextBookmark */ = AAA9C5D515C2A15600A165A1 /* PBXTextBookmark */;
+			AAA9C5D615C2A15600A165A1 /* PBXTextBookmark */ = AAA9C5D615C2A15600A165A1 /* PBXTextBookmark */;
+			AAA9C5DB15C2A17600A165A1 /* PBXTextBookmark */ = AAA9C5DB15C2A17600A165A1 /* PBXTextBookmark */;
+			AAA9C5DC15C2A17600A165A1 /* PBXTextBookmark */ = AAA9C5DC15C2A17600A165A1 /* PBXTextBookmark */;
 			AAF469CA158233EA00EC064F = AAF469CA158233EA00EC064F /* PBXTextBookmark */;
 		};
 		sourceControlManager = AA97684A158208DB0049D263 /* Source Control */;
@@ -161,7 +170,7 @@
 	};
 	AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1902, 13247}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1902, 13286}}";
 			sepNavSelRange = "{30868, 0}";
 			sepNavVisRange = "{30420, 1612}";
 			sepNavWindowFrame = "{{565, 193}, {1264, 735}}";
@@ -258,6 +267,12 @@
 		name = ConnectSuggestionsLocatorNode.h;
 		path = /Users/johangardell/Documents/vHelix/include/view/ConnectSuggestionsLocatorNode.h;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1699, 2171}}";
+			sepNavSelRange = "{5579, 0}";
+			sepNavVisRange = "{4341, 1505}";
+			sepNavWindowFrame = "{{656, 91}, {1264, 735}}";
+		};
 	};
 	AAA9C57515C2912000A165A1 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -268,6 +283,104 @@
 		rType = 0;
 		vrLen = 1612;
 		vrLoc = 30420;
+	};
+	AAA9C57D15C2914C00A165A1 /* CreateCurvesController.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1209, 2418}}";
+			sepNavSelRange = "{2959, 0}";
+			sepNavVisRange = "{1974, 1458}";
+			sepNavWindowFrame = "{{617, 279}, {1264, 735}}";
+		};
+	};
+	AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {913, 2184}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 507}";
+		};
+	};
+	AAA9C5BA15C2A0DB00A165A1 /* XCBuildMessageTextBookmark */ = {
+		isa = PBXTextBookmark;
+		comments = "Unused variable 'toggleViewNames'";
+		fRef = AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */;
+		fallbackIsa = XCBuildMessageTextBookmark;
+		rLen = 1;
+		rLoc = 124;
+		rType = 1;
+	};
+	AAA9C5C915C2A14100A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C55815BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp */;
+		name = "ConnectSuggestionsLocatorNode.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 742;
+		vrLoc = 30224;
+	};
+	AAA9C5CA15C2A14100A165A1 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */;
+	};
+	AAA9C5CB15C2A14100A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */;
+		name = "CreateCurves.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 507;
+		vrLoc = 0;
+	};
+	AAA9C5D015C2A14100A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */;
+		name = "ToggleCylinderBaseView.cpp: 201";
+		rLen = 0;
+		rLoc = 5213;
+		rType = 0;
+		vrLen = 1172;
+		vrLoc = 4482;
+	};
+	AAA9C5D515C2A15600A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */;
+		name = "CreateCurves.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 507;
+		vrLoc = 0;
+	};
+	AAA9C5D615C2A15600A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */;
+		name = "ToggleCylinderBaseView.cpp: 201";
+		rLen = 0;
+		rLoc = 5213;
+		rType = 0;
+		vrLen = 1172;
+		vrLoc = 4482;
+	};
+	AAA9C5DB15C2A17600A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */;
+		name = "CreateCurves.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 507;
+		vrLoc = 0;
+	};
+	AAA9C5DC15C2A17600A165A1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */;
+		name = "ToggleCylinderBaseView.cpp: 201";
+		rLen = 0;
+		rLoc = 5213;
+		rType = 0;
+		vrLen = 1172;
+		vrLoc = 4482;
 	};
 	AACE305F1588D6EA00F4A033 /* DuplicateController.cpp */ = {
 		uiCtxt = {
@@ -290,6 +403,13 @@
 			sepNavSelRange = "{18351, 0}";
 			sepNavVisRange = "{2262, 980}";
 			sepNavWindowFrame = "{{215, 119}, {1264, 735}}";
+		};
+	};
+	AAF468D115820E0800EC064F /* ToggleCylinderBaseView.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1205, 3120}}";
+			sepNavSelRange = "{5213, 0}";
+			sepNavVisRange = "{4482, 1172}";
 		};
 	};
 	AAF469B01582268A00EC064F /* Definition.h */ = {

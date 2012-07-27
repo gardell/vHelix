@@ -197,6 +197,8 @@ namespace Helix {
 			status.perror("Toggle");
 			return status;
 		}
+		
+		setResult(toggleViewNames[ToggleCylinderBaseView::CurrentView]);
 
 		return MStatus::kSuccess;
 	}
