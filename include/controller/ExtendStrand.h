@@ -2,6 +2,7 @@
 #define _CONTROLLER_EXTENDSTRAND_H_
 
 #include <controller/Operation.h>
+#include <model/Helix.h>
 #include <model/Base.h>
 
 #include <vector>
@@ -15,7 +16,7 @@ namespace Helix {
 		 *    the following bases must be paired along with the extension along the opposite base
 		 */
 
-		class ExtendStrand : public Operation<Model::Base, std::vector<Model::Base> > {
+		class VHELIXAPI ExtendStrand : public Operation<Model::Base, std::vector<Model::Base> > {
 		public:
 
 			/*

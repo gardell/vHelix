@@ -21,7 +21,7 @@ namespace Helix {
 		 * This is the controller for painting strands, these are implemented as functors used with the STL
 		 */
 
-		class PaintStrandOperation : public Operation<Model::Base, Model::Material, Model::Material> {
+		class VHELIXAPI PaintStrandOperation : public Operation<Model::Base, Model::Material, Model::Material> {
 		public:
 			PaintStrandOperation(Model::Material & material) : m_material(material) {
 
@@ -47,7 +47,7 @@ namespace Helix {
 		 * Utility class for painting multiple strands with multiple randomized colors
 		 */
 
-		class PaintMultipleStrandsFunctor {
+		class VHELIXAPI PaintMultipleStrandsFunctor {
 		public:
 			inline MStatus loadMaterials() {
 				MStatus status;
@@ -117,7 +117,7 @@ namespace Helix {
 		 * Extended utility class of the above where we look at the current color of the base and tries to pick another color
 		 */
 
-		class PaintMultipleStrandsWithNewColorFunctor : public PaintMultipleStrandsFunctor {
+		class VHELIXAPI PaintMultipleStrandsWithNewColorFunctor : public PaintMultipleStrandsFunctor {
 		public:
 			inline void operator() (Model::Strand strand) {
 				/*
@@ -167,7 +167,7 @@ namespace Helix {
 		 * This one is used by the JSON importer, it is not interested in undo functionality as the strand has not existed before
 		 */
 
-		class PaintMultipleStrandsNoUndoFunctor {
+		class VHELIXAPI PaintMultipleStrandsNoUndoFunctor {
 		public:
 			class SetMaterialFunctor {
 			public:
@@ -236,7 +236,7 @@ namespace Helix {
 			MStatus m_status;
 		};
 
-		class PaintMultipleStrandsNoUndoNoOverrideFunctor : public PaintMultipleStrandsNoUndoFunctor {
+		class VHELIXAPI PaintMultipleStrandsNoUndoNoOverrideFunctor : public PaintMultipleStrandsNoUndoFunctor {
 		public:
 			inline void operator() (Model::Strand strand, Model::Material & material) {
 				MStatus status;

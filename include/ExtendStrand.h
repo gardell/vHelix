@@ -26,7 +26,7 @@
 #define MEL_EXTENDSTRAND_COMMAND "extendStrand"
 
 namespace Helix {
-	class ExtendStrand : public MPxCommand {
+	class VHELIXAPI ExtendStrand : public MPxCommand {
 	public:
 		ExtendStrand();
 		virtual ~ExtendStrand();

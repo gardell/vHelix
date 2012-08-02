@@ -21,7 +21,7 @@
 #define MEL_EXTENDSTRAND_GUI_COMMAND "extendStrand_gui"
 
 namespace Helix {
-	class ExtendGui : public MPxCommand {
+	class VHELIXAPI ExtendGui : public MPxCommand {
 	public:
 		ExtendGui();
 		virtual ~ExtendGui();

@@ -24,7 +24,7 @@
 #define MEL_EXPORTSTRANDS_COMMAND "exportStrands"
 
 namespace Helix {
-	class ExportStrands : public MPxCommand {
+	class VHELIXAPI ExportStrands : public MPxCommand {
 	public:
 		ExportStrands();
 		virtual ~ExportStrands();

@@ -23,7 +23,7 @@ namespace Helix {
 	namespace Model {
 		class Base;
 
-		class Material {
+		class VHELIXAPI Material {
 		public:
 			inline Material(const MString & string) : m_material(string) {
 
@@ -87,9 +87,7 @@ namespace Helix {
 			static Iterator AllMaterials_begin(MStatus & status, Container::size_type & numMaterials);
 			static Iterator AllMaterials_begin(MStatus & status);
 			
-			static inline Iterator AllMaterials_end() {
-				return &s_materials[0] + s_materials.size();
-			}
+			static Iterator AllMaterials_end();
 
 			MStatus getColor(float color[3]) const;
 
@@ -118,13 +116,6 @@ namespace Helix {
 
 		protected:
 			MString m_material;
-
-		private:
-			/*
-			 * The above GetAllMaterials call this method
-			 */
-
-			static Container s_materials;
 		};
 	}
 }

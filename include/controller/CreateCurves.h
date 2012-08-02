@@ -16,7 +16,7 @@
 namespace Helix {
 	namespace Controller {
 
-		class CreateCurves {
+		class VHELIXAPI CreateCurves {
 		public:
 			/*
 			 * Creates strands either from the strands defined by the bases or by the ones defined by the helices

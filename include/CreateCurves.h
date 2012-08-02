@@ -10,7 +10,7 @@
 #define MEL_CREATE_CURVES_COMMAND "createStrandCurves"
 
 namespace Helix {
-	class CreateCurves : public MPxCommand {
+	class VHELIXAPI CreateCurves : public MPxCommand {
 	public:
 		CreateCurves();
 		virtual ~CreateCurves();

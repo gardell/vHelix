@@ -28,7 +28,7 @@ namespace Helix {
 		 * Base: Defines the interface for manipulating helix bases
 		 */
 
-		class Base : public Object {
+		class VHELIXAPI Base : public Object {
 			friend void BaseModel_Shape_NodePreRemovalCallback(MObject & node,void *clientData);
 		public:
 			enum Type {

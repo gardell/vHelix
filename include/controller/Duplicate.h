@@ -18,7 +18,7 @@ namespace Helix {
 		 * thus being able to create the bindings in the new helices
 		 */
 
-		class Duplicate {
+		class VHELIXAPI Duplicate {
 		public:
 			MStatus duplicate(const MObjectArray & helices);
 			MStatus undo();

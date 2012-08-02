@@ -25,7 +25,7 @@
 #define MEL_CONNECTBASES_COMMAND "connectBases"
 
 namespace Helix {
-	class Connect : public MPxCommand {
+	class VHELIXAPI Connect : public MPxCommand {
 	public:
 		Connect();
 		virtual ~Connect();

@@ -21,7 +21,7 @@
 #define MEL_CREATEHELIX_GUI_COMMAND "createHelix_gui"
 
 namespace Helix {
-	class CreatorGui : public MPxCommand {
+	class VHELIXAPI CreatorGui : public MPxCommand {
 	public:
 		CreatorGui();
 		virtual ~CreatorGui();

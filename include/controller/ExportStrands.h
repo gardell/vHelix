@@ -7,7 +7,7 @@
 
 namespace Helix {
 	namespace Controller {
-		class ExportStrands : public Operation<Model::Strand> {
+		class VHELIXAPI ExportStrands : public Operation<Model::Strand> {
 		public:
 			enum Mode {
 				COMMA_SEPARATED,

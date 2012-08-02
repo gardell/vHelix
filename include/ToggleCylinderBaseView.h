@@ -25,7 +25,7 @@
 #define MEL_TOGGLECYLINDERBASEVIEW_COMMAND "toggleCylinderBaseView"
 
 namespace Helix {
-	class ToggleCylinderBaseView : public MPxCommand {
+	class VHELIXAPI ToggleCylinderBaseView : public MPxCommand {
 	public:
 		ToggleCylinderBaseView();
 		virtual ~ToggleCylinderBaseView();

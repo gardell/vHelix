@@ -14,7 +14,7 @@ namespace Helix {
 	 * Makes sure to track any destruction of it as this would break the MObject reference it has though
 	 */
 
-	class ToggleShowSuggestedConnections : public MPxCommand {
+	class VHELIXAPI ToggleShowSuggestedConnections : public MPxCommand {
 		friend void MNodeMessage_locatorNode_nodePreRemovalCallback(MObject& node,void *clientData);
 	public:
 		ToggleShowSuggestedConnections();

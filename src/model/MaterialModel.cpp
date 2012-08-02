@@ -98,7 +98,8 @@
 
 namespace Helix {
 	namespace Model {
-		std::vector<Material> Material::s_materials;
+
+		std::vector<Material> s_materials;
 		//std::vector<std::pair<MString, bool> > Material::s_materialFiles;
 
 		class PaintStrandWithMaterialFunctor {
@@ -125,6 +126,11 @@ namespace Helix {
 			Material *material;
 			MString *tokenize;
 		};
+
+		
+		Material::Iterator Material::AllMaterials_end() {
+			return &s_materials[0] + s_materials.size();
+		}
 
 		Material::Iterator Material::AllMaterials_begin(MStatus & status, Material::Container::size_type & numMaterials) {
 			Iterator begin = AllMaterials_begin(status);

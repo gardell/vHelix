@@ -21,6 +21,7 @@
 #include <ToggleCylinderBaseView.h>
 
 #include <algorithm>
+#include <functional>
 
 #define CYLINDERREPRESENTATION_NAME "cylinderRepresentation"
 
@@ -1127,6 +1128,102 @@ namespace Helix {
 			}
 
 			return helix_dagNode.childCount(&status);
+		}
+
+		/*
+		 * Helper for min_element below
+		 */
+
+		template<typename PairT>
+		class less_select2nd {
+		public:
+			inline bool operator() (const PairT & p1, const PairT & p2) const {
+				return p1.second < p2.second;
+			}
+		};
+
+		/*
+		 * Helper for search
+		 */
+		template<Base::Type Type, typename ContainerT>
+		MStatus GetBaseAndZCoordinateOfBaseType(Helix::BaseIterator begin, Helix::BaseIterator end, ContainerT & bases) {
+			MStatus status;
+
+			for(Helix::BaseIterator it = begin; it != end; ++it) {
+				if (it->type(status) == Type) {
+					MVector translation;
+
+					if (!(status = it->getTranslation(translation, MSpace::kTransform))) {
+						status.perror("Base::getTranslation");
+						return status;
+					}
+
+					bases.push_back(std::make_pair(*it, translation.z));
+				}
+
+				if (!status) {
+					status.perror("Base::type");
+					return status;
+				}
+			}
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Helix::getForwardThreePrime(Model::Base & base) {
+			MStatus status;
+			std::list< std::pair<Base, double> > bases;
+
+			if (!(status = GetBaseAndZCoordinateOfBaseType<Base::THREE_PRIME_END>(begin(), end(), bases))) {
+				status.perror("GetBaseAndZCoordinateOfBaseType");
+				return status;
+			}
+
+			base = std::max_element(bases.begin(), bases.end(), less_select2nd< std::pair<Base, double> > ())->first;
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Helix::getForwardFivePrime(Model::Base & base) {
+			MStatus status;
+			std::list< std::pair<Base, double> > bases;
+
+			if (!(status = GetBaseAndZCoordinateOfBaseType<Base::FIVE_PRIME_END>(begin(), end(), bases))) {
+				status.perror("GetBaseAndZCoordinateOfBaseType");
+				return status;
+			}
+
+			base = std::min_element(bases.begin(), bases.end(), less_select2nd< std::pair<Base, double> > ())->first;
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Helix::getBackwardThreePrime(Model::Base & base) {
+			MStatus status;
+			std::list< std::pair<Base, double> > bases;
+
+			if (!(status = GetBaseAndZCoordinateOfBaseType<Base::THREE_PRIME_END>(begin(), end(), bases))) {
+				status.perror("GetBaseAndZCoordinateOfBaseType");
+				return status;
+			}
+
+			base = std::min_element(bases.begin(), bases.end(), less_select2nd< std::pair<Base, double> > ())->first;
+
+			return MStatus::kSuccess;
+		}
+
+		MStatus Helix::getBackwardFivePrime(Model::Base & base) {
+			MStatus status;
+			std::list< std::pair<Base, double> > bases;
+
+			if (!(status = GetBaseAndZCoordinateOfBaseType<Base::FIVE_PRIME_END>(begin(), end(), bases))) {
+				status.perror("GetBaseAndZCoordinateOfBaseType");
+				return status;
+			}
+
+			base = std::max_element(bases.begin(), bases.end(), less_select2nd< std::pair<Base, double> > ())->first;
+
+			return MStatus::kSuccess;
 		}
 	}
 }

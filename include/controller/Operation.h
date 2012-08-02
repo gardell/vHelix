@@ -25,7 +25,7 @@ namespace Helix {
 		class Empty { };
 
 		template<typename ElementT, typename UndoDataT = Empty, typename RedoDataT = Empty>
-		class Operation {
+		class VHELIXAPI Operation {
 		public:
 			class Do {
 				friend class Operation;

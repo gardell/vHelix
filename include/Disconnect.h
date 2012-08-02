@@ -26,7 +26,7 @@
 #define MEL_DISCONNECTBASE_COMMAND "disconnectBase"
 
 namespace Helix {
-	class Disconnect : public MPxCommand {
+	class VHELIXAPI Disconnect : public MPxCommand {
 	public:
 		Disconnect();
 		virtual ~Disconnect();

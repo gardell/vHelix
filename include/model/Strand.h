@@ -18,7 +18,7 @@ namespace Helix {
 		 * I designed the Strand interface to enable iterating and give as much possibility to use of the C++ STL as possible
 		 */
 
-		class Strand {
+		class VHELIXAPI Strand {
 		public:
 			inline Strand(const Base & base) : m_base(base) {
 
@@ -40,7 +40,11 @@ namespace Helix {
 			 * The iterator interfaces
 			 */
 
-			static const int FORWARD = 1, BACKWARD = 2;
+			//static const int FORWARD = 1, BACKWARD = 2;
+			enum {
+				FORWARD = 1,
+				BACKWARD = 2
+			};
 
 			template<int Direction>
 			class Iterator : public std::iterator<std::forward_iterator_tag, Base> {

@@ -24,7 +24,7 @@
 #define MEL_RETARGETBASE_COMMAND "retargetBase"
 
 namespace Helix {
-	class RetargetBase : public MPxCommand {
+	class VHELIXAPI RetargetBase : public MPxCommand {
 	public:
 		RetargetBase();
 		virtual ~RetargetBase();

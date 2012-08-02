@@ -26,7 +26,7 @@
 #define MEL_CREATEHELIX_COMMAND "createHelix"
 
 namespace Helix {
-	class Creator : public MPxCommand {
+	class VHELIXAPI Creator : public MPxCommand {
 	public:
 		Creator();
 		virtual ~Creator();
@@ -41,6 +41,14 @@ namespace Helix {
 		static void *creator();
 
 		static int default_bases; // If no argument is given, uses this. It is initialized to DNA::CREATE_DEFAULT_NUM_BASES on startup
+
+		/*
+		 * Direct access interfaces, used by other C++ libraries
+		 */
+
+		MStatus create(int bases, Model::Helix & helix);
+		MStatus create(const MVector & origo, int bases, double rotation, Model::Helix & helix);
+		MStatus create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix);
 
 	private:
 		/*

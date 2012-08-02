@@ -8,7 +8,6 @@
 #ifndef _MODEL_OBJECT_H_
 #define _MODEL_OBJECT_H_
 
-#include <iostream>
 #include <Definition.h>
 
 #include <maya/MDagPath.h>
@@ -49,7 +48,7 @@
 
 namespace Helix {
 	namespace Model {
-		class Object {
+		class VHELIXAPI Object {
 		public:
 
 			/*

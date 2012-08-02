@@ -26,7 +26,7 @@
 #define RENDER_MODES	"halo", "pair_line", "sequence", "directional_arrow"
 
 namespace Helix {
-	class ToggleLocatorRender : public MPxCommand {
+	class VHELIXAPI ToggleLocatorRender : public MPxCommand {
 	public:
 		ToggleLocatorRender();
 		virtual ~ToggleLocatorRender();

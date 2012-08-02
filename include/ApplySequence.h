@@ -25,7 +25,7 @@
 #define MEL_APPLYSEQUENCE_COMMAND "applySequence"
 
 namespace Helix {
-	class ApplySequence : public MPxCommand {
+	class VHELIXAPI ApplySequence : public MPxCommand {
 	public:
 		ApplySequence();
 		virtual ~ApplySequence();

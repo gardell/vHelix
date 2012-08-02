@@ -22,7 +22,7 @@
 namespace Helix {
 	namespace Controller {
 		// The ElementT (first argument) stores the source base in a connection (i.e. it's forward attribute will be connected), the UndoT stores the original destination, if any, to be restored if an undo is requested. No data needs to be save for the redo process (just disconnect the ElementT
-		class Disconnect : public Operation<Model::Base, Model::Base, Empty> {
+		class VHELIXAPI Disconnect : public Operation<Model::Base, Model::Base, Empty> {
 		protected:
 			MStatus doExecute(Model::Base & element);
 			MStatus doUndo(Model::Base & element, Model::Base & undoData);

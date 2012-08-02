@@ -22,7 +22,7 @@
 #define MEL_FINDFIVEPRIMEENDS_COMMAND "findFivePrimeEnds"
 
 namespace Helix {
-	class FindFivePrimeEnds : public MPxCommand {
+	class VHELIXAPI FindFivePrimeEnds : public MPxCommand {
 	public:
 		FindFivePrimeEnds();
 		virtual ~FindFivePrimeEnds();

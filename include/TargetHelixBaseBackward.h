@@ -16,7 +16,7 @@ namespace Helix {
 	 * It's a long shot but it works
 	 */
 
-	class TargetHelixBaseBackward : public MPxCommand {
+	class VHELIXAPI TargetHelixBaseBackward : public MPxCommand {
 	public:
 		TargetHelixBaseBackward();
 		virtual ~TargetHelixBaseBackward();

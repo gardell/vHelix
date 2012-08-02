@@ -8,7 +8,7 @@
 
 namespace Helix {
 	namespace Controller {
-		class ApplySequence : public Operation<Model::Base, DNA::Name, DNA::Name> {
+		class VHELIXAPI ApplySequence : public Operation<Model::Base, DNA::Name, DNA::Name> {
 		public:
 			inline void setSequence(const MString & sequence) {
 				m_sequence = sequence;

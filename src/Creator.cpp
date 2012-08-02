@@ -234,7 +234,7 @@ namespace Helix {
 	MStatus Creator::createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
 		MVector distance = end - origo, direction = distance.normal(), end_origo = origo + distance / 2.0;
 
-		return createHelix(end_origo, direction, (int) floor(distance.length() / DNA::STEP + 0.5), rotation, control); // There's no round() in the C++ STD!
+		return createHelix(end_origo, direction, (int) floor(distance.length() / DNA::STEP + 0.5), rotation, helix, control); // There's no round() in the C++ STD!
 	}
 
 	MStatus Creator::createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
@@ -749,5 +749,70 @@ namespace Helix {
 
 	void *Creator::creator() {
 		return new Creator();
+	}
+
+	/*
+	 * Direct access interfaces used by other libraries
+	 */
+
+	MStatus Creator::create(int bases, Model::Helix & helix) {
+		MStatus status;
+		
+		m_redoMode = CREATE_NORMAL;
+		m_redoData.bases = bases;
+		m_redoData.origo = MVector(0.0, 0.0, 0.0);
+		m_redoData.rotation = 0.0;
+
+		if (!(status = randomizeMaterials())) {
+			status.perror("randomizeMaterials");
+			return status;
+		}
+
+		return createHelix(bases, helix);
+	}
+
+	MStatus Creator::create(const MVector & origo, int bases, double rotation, Model::Helix & helix) {
+		MStatus status;
+
+		m_redoMode = CREATE_NORMAL;
+		m_redoData.bases = bases;
+		m_redoData.origo = origo;
+		m_redoData.rotation = rotation;
+
+		if (!(status = randomizeMaterials())) {
+			status.perror("randomizeMaterials");
+			return status;
+		}
+
+		MTransformationMatrix matrix;
+		double rotation_vector[] = { 0.0, 0.0, rotation };
+			
+		if (!(status = matrix.setRotation(rotation_vector, MTransformationMatrix::kXYZ))) {
+			status.perror("MTransformationMatrix::setRotation");
+			return status;
+		}
+
+		if (!(status = matrix.addTranslation(origo, MSpace::kTransform))) {
+			status.perror("MTransformationMatrix::addTranslation");
+			return status;
+		}
+
+		return createHelix(bases, helix, matrix.asMatrix());
+	}
+
+	MStatus Creator::create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix) {
+		MStatus status;
+
+		m_redoMode = CREATE_BETWEEN;
+		m_redoData.end = end;
+		m_redoData.origo = origo;
+		m_redoData.rotation = rotation;
+
+		if (!(status = randomizeMaterials())) {
+			status.perror("randomizeMaterials");
+			return status;
+		}
+
+		return createHelix(origo, end, rotation, helix);
 	}
 }

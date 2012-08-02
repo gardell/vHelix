@@ -19,7 +19,7 @@ namespace Helix {
 		 * The caDNAno JSON importer rewritten to use the cleaner API and be less buggy
 		 */
 
-		class JSONImporter {
+		class VHELIXAPI JSONImporter {
 		public:
 			/*
 			 * Parse the json file

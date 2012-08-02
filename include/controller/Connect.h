@@ -10,7 +10,7 @@
 
 namespace Helix {
 	namespace Controller {
-		class Connect {
+		class VHELIXAPI Connect {
 		public:
 			MStatus connect(Model::Base source, Model::Base target);
 			MStatus undo();

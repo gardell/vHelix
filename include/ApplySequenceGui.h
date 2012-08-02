@@ -21,7 +21,7 @@
 #define MEL_APPLYSEQUENCE_GUI_COMMAND "applySequence_gui"
 
 namespace Helix {
-	class ApplySequenceGui : public MPxCommand {
+	class VHELIXAPI ApplySequenceGui : public MPxCommand {
 	public:
 		ApplySequenceGui();
 		virtual ~ApplySequenceGui();

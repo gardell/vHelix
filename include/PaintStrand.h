@@ -25,7 +25,7 @@
 #define MEL_PAINTSTRAND_COMMAND "paintStrand"
 
 namespace Helix {
-	class PaintStrand : public MPxCommand {
+	class VHELIXAPI PaintStrand : public MPxCommand {
 	public:
 		PaintStrand();
 		virtual ~PaintStrand();

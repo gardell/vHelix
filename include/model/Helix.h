@@ -23,7 +23,7 @@
 
 namespace Helix {
 	namespace Model {
-		class Helix : public Object {
+		class VHELIXAPI Helix : public Object {
 		public:
 			/*
 			 * Create: Creates a new helix node, attach a locator node and transforms it to the given position
@@ -158,6 +158,15 @@ namespace Helix {
 			inline bool isAnyShapeVisible(MStatus & status) {
 				return Object::isAnyShapeVisible(View::HelixShape::id, status);
 			}
+
+			/*
+			 * Convenience methods. Notice that it just finds the base of the type, and picks the one with the most extreme Z coordinate
+			 */
+
+			MStatus getForwardThreePrime(Model::Base & base);
+			MStatus getForwardFivePrime(Model::Base & base);
+			MStatus getBackwardThreePrime(Model::Base & base);
+			MStatus getBackwardFivePrime(Model::Base & base);
 
 		private:
 			bool hasCylinder(MStatus & status);

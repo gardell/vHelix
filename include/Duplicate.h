@@ -26,7 +26,7 @@
 #define MEL_DUPLICATEHELICES_COMMAND "duplicateHelices"
 
 namespace Helix {
-	class Duplicate : public MPxCommand {
+	class VHELIXAPI Duplicate : public MPxCommand {
 	public:
 		Duplicate();
 		virtual ~Duplicate();

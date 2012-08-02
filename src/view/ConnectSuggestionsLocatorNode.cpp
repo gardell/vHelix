@@ -909,7 +909,7 @@ namespace Helix {
 							 * Now remove this suggestion. repainting will be done below
 							 */
 
-							s_closeBasesTable.erase(std::remove(s_closeBasesTable.begin(), s_closeBasesTable.end(), s_selectedElement.bases));
+							s_closeBasesTable.erase(std::remove(s_closeBasesTable.begin(), s_closeBasesTable.end(), s_selectedElement.bases), s_closeBasesTable.end());
 						}
 					}
 					else {
@@ -922,7 +922,7 @@ namespace Helix {
 							 * Now remove this suggestion. repainting will be done below
 							 */
 
-							s_closeBasesTable.erase(std::remove(s_closeBasesTable.begin(), s_closeBasesTable.end(), s_selectedElement.bases));
+							s_closeBasesTable.erase(std::remove(s_closeBasesTable.begin(), s_closeBasesTable.end(), s_selectedElement.bases), s_closeBasesTable.end());
 						}
 					}
 				}
