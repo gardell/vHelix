@@ -84,7 +84,7 @@ namespace Helix {
 		}
 
 		static Matrix4x4T<T> Rotate(VectorT<T>  r) {
-			return RotateX(r.x) * RotateY(r.y) * RotateZ(r.z);
+			return RotateZ(r.z) * RotateY(r.y) * RotateX(r.x);
 		}
 
 		Matrix4x4T() {

@@ -132,7 +132,7 @@ namespace Helix {
 					/*
 					 * Match all setAttr (.t|.translate|.r|.rotate) -type "<type>" <x> <y> <z>
 					 */
-					Regex_setAttr_t_r("setAttr[[:blank:]]+\"\\.(t|(?:translate)|r|(?:rotate))\".+-type[[:blank:]]+\"([\\w_|]+)\"(?:[[:blank:]]+([\\-\\d\\.]+))(?:[[:blank:]]+([\\-\\d\\.]+))(?:[[:blank:]]+([\\-\\d\\.]+))"), // Incomplete, does not allow other arguments than type and data
+					Regex_setAttr_t_r("setAttr[[:blank:]]+\"\\.(t|(?:translate)|r|(?:rotate))\".+-type[[:blank:]]+\"([\\w_|]+)\"(?:[[:blank:]]+([\\-\\d\\.e]+))(?:[[:blank:]]+([\\-\\d\\.e]+))(?:[[:blank:]]+([\\-\\d\\.e]+))"), // Incomplete, does not allow other arguments than type and data
 					/*
 					 * Match all setAttr .lb <label>
 					 */
