@@ -278,6 +278,8 @@
 /* Begin PBXProject section */
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 8A7F05F1086863A70064D097 /* Build configuration list for PBXProject "vHelix" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
@@ -359,7 +361,41 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		8A7F05EE086863A70064D097 /* Maya 2011 Debug */ = {
+		044C4CF618901308000FA9EA /* Maya 2014 Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2014/Debug";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_PLUGIN,
+					_BOOL,
+					REQUIRE_IOSTREAM,
+				);
+				HEADER_SEARCH_PATHS = (
+					include,
+					"$(MAYA_DIRECTORY)/devkit/include/",
+				);
+				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
+				LIBRARY_STYLE = BUNDLE;
+				MAYA_DIRECTORY = /Applications/Autodesk/maya2014;
+				OTHER_LDFLAGS = (
+					"-lOpenMayaUI",
+					"-framework",
+					OpenGL,
+					"-lOpenMaya",
+					"-lFoundation",
+					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
+					"-lOpenMaya",
+					"-lFoundation",
+				);
+				SDKROOT = macosx10.8;
+				SYMROOT = .;
+			};
+			name = "Maya 2014 Debug";
+		};
+		044C4CF718901308000FA9EA /* Maya 2014 Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
@@ -381,9 +417,43 @@
 				PRODUCT_NAME = vHelix;
 				ZERO_LINK = YES;
 			};
-			name = "Maya 2011 Debug";
+			name = "Maya 2014 Debug";
 		};
-		8A7F05EF086863A70064D097 /* Maya 2011 Release */ = {
+		044C4CF818901319000FA9EA /* Maya 2014 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2014/Release";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					MAC_PLUGIN,
+					_BOOL,
+					REQUIRE_IOSTREAM,
+				);
+				HEADER_SEARCH_PATHS = (
+					include,
+					"$(MAYA_DIRECTORY)/devkit/include/",
+				);
+				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
+				LIBRARY_STYLE = BUNDLE;
+				MAYA_DIRECTORY = /Applications/Autodesk/maya2014;
+				OTHER_LDFLAGS = (
+					"-framework",
+					OpenGL,
+					"-lOpenMayaUI",
+					"-lOpenMaya",
+					"-lFoundation",
+					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
+					"-lOpenMaya",
+					"-lFoundation",
+				);
+				SDKROOT = macosx10.8;
+				SYMROOT = .;
+			};
+			name = "Maya 2014 Release";
+		};
+		044C4CF918901319000FA9EA /* Maya 2014 Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -403,126 +473,12 @@
 				PRODUCT_NAME = vHelix;
 				ZERO_LINK = NO;
 			};
-			name = "Maya 2011 Release";
-		};
-		8A7F05F0086863A70064D097 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
-				EXECUTABLE_EXTENSION = bundle;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INSTALL_PATH = /usr/local/lib;
-				LIBRARY_STYLE = BUNDLE;
-				MACH_O_TYPE = mh_bundle;
-				PREBINDING = NO;
-				PRODUCT_NAME = vHelix;
-			};
-			name = Default;
-		};
-		8A7F05F2086863A70064D097 /* Maya 2011 Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2011/Debug";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					MAC_PLUGIN,
-					_BOOL,
-					REQUIRE_IOSTREAM,
-				);
-				HEADER_SEARCH_PATHS = (
-					include,
-					"$(MAYA_DIRECTORY)/devkit/include/",
-				);
-				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
-				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = "";
-				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
-				OTHER_LDFLAGS = (
-					"-lOpenMayaUI",
-					"-framework",
-					OpenGL,
-					"-lOpenMaya",
-					"-lFoundation",
-					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
-					"-lOpenMaya",
-					"-lFoundation",
-				);
-				SDKROOT = "";
-				SYMROOT = .;
-			};
-			name = "Maya 2011 Debug";
-		};
-		8A7F05F3086863A70064D097 /* Maya 2011 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2011/Release";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					MAC_PLUGIN,
-					_BOOL,
-					REQUIRE_IOSTREAM,
-				);
-				HEADER_SEARCH_PATHS = (
-					include,
-					"$(MAYA_DIRECTORY)/devkit/include/",
-				);
-				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
-				LIBRARY_STYLE = BUNDLE;
-				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
-				OTHER_LDFLAGS = (
-					"-lOpenMayaUI",
-					"-framework",
-					OpenGL,
-					"-lOpenMaya",
-					"-lFoundation",
-					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
-					"-lOpenMaya",
-					"-lFoundation",
-				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-				SYMROOT = .;
-			};
-			name = "Maya 2011 Release";
-		};
-		8A7F05F4086863A70064D097 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					MAC_PLUGIN,
-					_BOOL,
-					REQUIRE_IOSTREAM,
-				);
-				HEADER_SEARCH_PATHS = "$(MAYA_DIRECTORY)/devkit/include/";
-				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
-				MAYA_DIRECTORY = /Applications/Autodesk/maya2011;
-				OTHER_LDFLAGS = (
-					"-lOpenMaya",
-					"-lFoundation",
-					"-Wl,-executable_path,$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS",
-					"-lOpenMaya",
-					"-lFoundation",
-				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
-			};
-			name = Default;
+			name = "Maya 2014 Release";
 		};
 		AAA9C58415C29C7600A165A1 /* Maya 2012 Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2012/Debug";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
@@ -537,7 +493,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
 				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = "";
 				MAYA_DIRECTORY = /Applications/Autodesk/maya2012;
 				OTHER_LDFLAGS = (
 					"-lOpenMayaUI",
@@ -549,7 +504,7 @@
 					"-lOpenMaya",
 					"-lFoundation",
 				);
-				SDKROOT = "";
+				SDKROOT = macosx10.8;
 				SYMROOT = .;
 			};
 			name = "Maya 2012 Debug";
@@ -557,8 +512,7 @@
 		AAA9C58515C29C7600A165A1 /* Maya 2012 Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2012/Release";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
@@ -584,7 +538,7 @@
 					"-lOpenMaya",
 					"-lFoundation",
 				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx10.8;
 				SYMROOT = .;
 			};
 			name = "Maya 2012 Release";
@@ -638,8 +592,7 @@
 		AAA9C58815C29C9F00A165A1 /* Maya 2013 Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2013/Debug";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
@@ -654,7 +607,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(MAYA_DIRECTORY)/Maya.app/Contents/MacOS";
 				LIBRARY_STYLE = BUNDLE;
-				MACOSX_DEPLOYMENT_TARGET = "";
 				MAYA_DIRECTORY = /Applications/Autodesk/maya2013;
 				OTHER_LDFLAGS = (
 					"-lOpenMayaUI",
@@ -666,7 +618,7 @@
 					"-lOpenMaya",
 					"-lFoundation",
 				);
-				SDKROOT = "";
+				SDKROOT = macosx10.8;
 				SYMROOT = .;
 			};
 			name = "Maya 2013 Debug";
@@ -674,8 +626,7 @@
 		AAA9C58915C29C9F00A165A1 /* Maya 2013 Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1)";
-				ARCHS_STANDARD_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/maya2013/Release";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(MAYA_DIRECTORY)/devkit/include/maya/OpenMayaMac.h";
@@ -701,7 +652,7 @@
 					"-lOpenMaya",
 					"-lFoundation",
 				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx10.8;
 				SYMROOT = .;
 			};
 			name = "Maya 2013 Release";
@@ -758,30 +709,28 @@
 		8A7F05ED086863A70064D097 /* Build configuration list for PBXNativeTarget "vHelix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8A7F05EE086863A70064D097 /* Maya 2011 Debug */,
 				AAA9C58A15C29C9F00A165A1 /* Maya 2013 Debug */,
-				8A7F05EF086863A70064D097 /* Maya 2011 Release */,
+				044C4CF718901308000FA9EA /* Maya 2014 Debug */,
 				AAA9C58B15C29C9F00A165A1 /* Maya 2013 Release */,
+				044C4CF918901319000FA9EA /* Maya 2014 Release */,
 				AAA9C58615C29C7600A165A1 /* Maya 2012 Debug */,
 				AAA9C58715C29C7600A165A1 /* Maya 2012 Release */,
-				8A7F05F0086863A70064D097 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = "Maya 2014 Release";
 		};
 		8A7F05F1086863A70064D097 /* Build configuration list for PBXProject "vHelix" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8A7F05F2086863A70064D097 /* Maya 2011 Debug */,
 				AAA9C58815C29C9F00A165A1 /* Maya 2013 Debug */,
-				8A7F05F3086863A70064D097 /* Maya 2011 Release */,
+				044C4CF618901308000FA9EA /* Maya 2014 Debug */,
 				AAA9C58915C29C9F00A165A1 /* Maya 2013 Release */,
+				044C4CF818901319000FA9EA /* Maya 2014 Release */,
 				AAA9C58415C29C7600A165A1 /* Maya 2012 Debug */,
 				AAA9C58515C29C7600A165A1 /* Maya 2012 Release */,
-				8A7F05F4086863A70064D097 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = "Maya 2014 Release";
 		};
 /* End XCConfigurationList section */
 	};
