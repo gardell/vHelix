@@ -22,7 +22,7 @@
  */
 
 /*
- * Because it has many constructors and operators. These macros helps
+ * Because it has many constructors and operators. These macros help
  */
 
 #define DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(ClassName)																				\

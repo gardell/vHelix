@@ -29,6 +29,7 @@
 
 #include <iostream>
 
+//TODO: Remove and use std::min/max instead.
 #ifndef MIN
 #define MIN(a, b)		((a) < (b) ? (a) : (b))
 #endif /* N MIN */

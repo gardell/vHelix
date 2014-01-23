@@ -15,6 +15,7 @@
 #include <Utility.h>
 
 #include <cmath>
+#include <functional>
 
 #include <maya/MSyntax.h>
 #include <maya/MArgDatabase.h>

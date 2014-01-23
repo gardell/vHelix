@@ -4,6 +4,8 @@
 #include <maya/MFnDagNode.h>
 #include <Utility.h>
 
+#include <functional>
+
 namespace Helix {
 	namespace Controller {
 		MStatus ExtendStrand::doExecute(Model::Base & element) {

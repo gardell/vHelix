@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <list>
+#include <functional>
 
 #include <maya/MFnTransform.h>
 
@@ -39,7 +40,8 @@ namespace Helix {
 		MStatus Duplicate::redo() {
 			MStatus status;
 			
-#ifdef MAC_PLUGIN
+#if 1 /*MAC_PLUGIN*/
+			// TODO: Clean this up and replace with some std::map instead that doesn't require a hash. We can't hash MObjects.
 			/*
 			 * The implementation of std::tr1::unordered_map is broken in GCC 4.2, which is the version we're using under Mac OS X
 			 */

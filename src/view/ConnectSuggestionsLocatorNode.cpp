@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include <functional>
 
 #define CONNECT_SUGGESTIONS_MAX_DISTANCE DNA::STEP * 2.0
 
