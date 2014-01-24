@@ -41,11 +41,12 @@ namespace Helix {
 		}
 
 		return MGlobal::executeCommandOnIdle(
+				"{\n"
 				"string $text;\n"
 				"string $result = `promptDialog -title \"Apply sequence...\" -message \"Enter the DNA sequence to apply:\" -button \"OK\" -button \"Cancel\" -defaultButton \"OK\" -cancelButton \"Cancel\" -dismissString \"Cancel\"`;\n"
 				"if ($result == \"OK\") {\n"
 				MEL_APPLYSEQUENCE_COMMAND " -sequence `promptDialog -query -text`" + (target.length() > 0 ? (MString(" -target ") + target) : MString("")) + ";\n"
-				"}\n");
+				"}\n}\n");
 	}
 
 	MStatus ApplySequenceGui::undoIt () {

@@ -29,6 +29,8 @@
 
 namespace Helix {
 	namespace Model {
+		Base Base::null;
+
 		MStatus Base::Create(Helix & helix, const MString & name, const MVector & translation, Base & base) {
 			MStatus status;
 
@@ -575,7 +577,7 @@ namespace Helix {
 					status.perror("MGlobal::executeCommand");
 			}
 			else {
-				if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+				if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0;\n{\n$backwards = `listConnections " + this_fullPathName + ".backward`;\nfor($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";\n}\n", false)))
 					status.perror("MGlobal::executeCommand");
 			}
 
@@ -617,7 +619,7 @@ namespace Helix {
 						status.perror("MGlobal::executeCommand");
 				}
 				else {
-					if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+					if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0;\n{\n$backwards = `listConnections " + this_fullPathName + ".backward`;\nfor($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";\n}\n", false)))
 						status.perror("MGlobal::executeCommand");
 				}
 			}

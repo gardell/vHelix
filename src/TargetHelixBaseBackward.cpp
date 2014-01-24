@@ -30,7 +30,7 @@ namespace Helix {
 
 			std::cerr << "TargetHelixBaseBackward on " << this_fullPathName.asChar() << std::endl;
 
-			if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0; $backwards = `listConnections " + this_fullPathName + ".backward`; for($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";", false)))
+			if (!(status = MGlobal::executeCommand(MString("delete -cn ") + this_fullPathName + "; setAttr " + this_fullPathName + ".rotate 0 0 0;\n{\n$backwards = `listConnections " + this_fullPathName + ".backward`;\nfor($backward in $backwards) aimConstraint -aimVector 1.0 0 0 $backward " + this_fullPathName + ";\n}", false)))
 				status.perror("MGlobal::executeCommand");
 		}
 

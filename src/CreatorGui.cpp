@@ -22,12 +22,13 @@ namespace Helix {
 
 	MStatus CreatorGui::doIt(const MArgList & args) {
 		return MGlobal::executeCommandOnIdle(MString(
+				"{\n"
 				"string $text;\n"
 				"string $result = `promptDialog -title \"Create helix...\" -message \"Enter the number of bases to generate:\" -button \"OK\" -button \"Cancel\" -defaultButton \"OK\" -cancelButton \"Cancel\" -dismissString \"Cancel\" -style \"integer\" -text ") + Creator::default_bases + "`;\n"
 				"if ($result == \"OK\") {\n"
 				"int $bases = `promptDialog -query -text`;\n"
 				"createHelix -base $bases;\n"
-				"}\n");
+				"}\n}\n");
 	}
 
 	MStatus CreatorGui::undoIt () {

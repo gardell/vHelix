@@ -42,12 +42,13 @@ namespace Helix {
 		}
 
 		return MGlobal::executeCommandOnIdle(MString(
+				"{\n"
 				"string $text;\n"
 				"string $result = `promptDialog -title \"Extend bases...\" -message \"Enter the number of bases to generate:\" -button \"OK\" -button \"Cancel\" -defaultButton \"OK\" -cancelButton \"Cancel\" -dismissString \"Cancel\" -style \"integer\" -text ") + (double) ExtendStrand::default_length + "`;\n"
 				"if ($result == \"OK\") {\n"
 				"int $bases = `promptDialog -query -text`;\n"
 				MEL_EXTENDSTRAND_COMMAND " -base $bases" + (target.length() > 0 ? (MString(" -target ") + target) : MString("")) + ";\n"
-				"}\n");
+				"}\n}\n");
 	}
 
 	MStatus ExtendGui::undoIt () {

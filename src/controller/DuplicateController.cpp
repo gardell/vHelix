@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <list>
 #include <functional>
+#include <stdexcept>
 
 #include <maya/MFnTransform.h>
 
@@ -40,26 +41,26 @@ namespace Helix {
 		MStatus Duplicate::redo() {
 			MStatus status;
 			
-#if 1 /*MAC_PLUGIN*/
+#if 1
 			// TODO: Clean this up and replace with some std::map instead that doesn't require a hash. We can't hash MObjects.
-			/*
-			 * The implementation of std::tr1::unordered_map is broken in GCC 4.2, which is the version we're using under Mac OS X
-			 */
 
-			class : public std::list< std::pair<Model::Base, Model::Base> > {
+			class {
 			public:
-				Model::Base operator[](Model::Base & model) {
-					for(std::list< std::pair<Model::Base, Model::Base> >::iterator it = begin(); it != end(); ++it) {
+				Model::Base & operator[](Model::Base & model) {
+					for(std::list< std::pair<Model::Base, Model::Base> >::iterator it = bases.begin(); it != bases.end(); ++it) {
 						if (it->first == model)
 							return it->second;
 					}
 
-					return Model::Base();
+					bases.push_back(std::make_pair(model, Model::Base()));
+					return (--bases.end())->second;
 				}
+			private:
+				std::list< std::pair<Model::Base, Model::Base> > bases;
 			} base_translation;
 #else
 			std::tr1::unordered_map<Model::Base, Model::Base> base_translation;
-#endif /* N MAC_PLUGIN */
+#endif
 			
 			std::cerr << "Got " << m_helices.length() << " helices to copy" << std::endl;
 
@@ -171,7 +172,7 @@ namespace Helix {
 						return status;
 					}
 
-					std::cerr << "Done creating the base" << std::endl;
+					std::cerr << "Done creating the base: " << new_base.getDagPath(status).fullPathName().asChar() << std::endl;
 
 					/*
 					 * Color the new base using the same material as the old one
@@ -194,6 +195,8 @@ namespace Helix {
 
 					base_translation[base] = new_base;
 
+					std::cerr << "new_base in translation: " << base_translation[base].getDagPath(status).fullPathName().asChar() << std::endl;
+
 					onProgressStep();
 				}
 
@@ -211,11 +214,13 @@ namespace Helix {
 			onProgressStart(1, totalNumBases);
 
 			for(unsigned int i = 0; i < m_helices.length(); ++i) {
+				std::cerr << "Helix it index " << i << std::endl;
 				Model::Helix helix(m_helices[i]);
 
 				for(Model::Helix::BaseIterator it = helix.begin(); it != helix.end(); ++it) {
+					std::cerr << "Base it" << std::endl;
 					Model::Base base(*it);
-					Model::Base new_base = base_translation[base];
+					Model::Base & new_base(base_translation[base]);
 
 					std::cerr << "base: " << base.getDagPath(status).fullPathName().asChar() << ", new_base: " << new_base.getDagPath(status).fullPathName().asChar() << std::endl;
 
@@ -231,7 +236,7 @@ namespace Helix {
 						 * This base has a forward connection
 						 */
 
-						Model::Base new_forward_base = base_translation[forward_base];
+						Model::Base & new_forward_base(base_translation[forward_base]);
 
 						if (new_forward_base) {
 
@@ -241,6 +246,10 @@ namespace Helix {
 								status.perror("Base::connect_forward");
 								return status;
 							}
+						}
+						else {
+							std::cerr << "new_forward_base false" << std::endl;
+							std::cerr << "new_forward_base: " << new_forward_base.getDagPath(status).fullPathName().asChar() << std::endl;
 						}
 					}
 
@@ -269,7 +278,9 @@ namespace Helix {
 
 						std::cerr << "isDestination: " << (isDestination ? "true" : "false") << std::endl;
 
-						Model::Base new_opposite_base = base_translation[opposite_base];
+						Model::Base & new_opposite_base(base_translation[opposite_base]);
+
+						std::cerr << "Copied new_opposite_base" << std::endl;
 
 						if (new_opposite_base) {
 							/*
@@ -334,20 +345,20 @@ namespace Helix {
 			onProgressDone();
 
 			/*
-			 * Refresh cylinder/base view
-			 */
-
-			if (!(status = Model::Helix::RefreshCylinderOrBases()))
-				status.perror("Helix::RefreshCylinderOrBases");
-
-			/*
-			 * Select all the newly created helices
-			 */
+			* Select all the newly created helices
+			*/
 
 			if (!(status = Model::Object::Select(m_new_helices.begin(), m_new_helices.end()))) {
 				status.perror("Object::Select");
 				return status;
 			}
+
+			/*
+			 * Refresh cylinder/base view
+			 */
+
+			if (!(status = Model::Helix::RefreshCylinderOrBases()))
+				status.perror("Helix::RefreshCylinderOrBases");
 
 			return MStatus::kSuccess;
 		}

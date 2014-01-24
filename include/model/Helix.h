@@ -25,6 +25,12 @@ namespace Helix {
 	namespace Model {
 		class VHELIXAPI Helix : public Object {
 		public:
+
+			/*
+			 * Alias for an invalid Helix.
+			 */
+			static Helix null;
+
 			/*
 			 * Create: Creates a new helix node, attach a locator node and transforms it to the given position
 			 */

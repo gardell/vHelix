@@ -253,7 +253,7 @@ namespace Helix {
 		ArrayT objects;
 
 		if (!(status = GetElementsFunc(args, syntax, flag, objects))) {
-			status.perror("GetElementsFunc");
+			status.perror("GetElementsFunc. This error is expected if no -b arguments were given.");
 			return status;
 		}
 

@@ -27,6 +27,8 @@
 
 namespace Helix {
 	namespace Model {
+		Helix Helix::null;
+
 		MStatus Helix::Create(const MString & name, const MMatrix & transform, Helix & helix) {
 			MStatus status;
 
@@ -38,7 +40,7 @@ namespace Helix {
 				return status;
 			}
 
-			helix.setObject(helix_object);
+			helix = helix_object;
 
 			/*
 			 * Do a `setAttr m_helix.displayHandle true` to enable the displayHandle view
@@ -861,6 +863,8 @@ namespace Helix {
 
 			void operator() (Helix helix) {
 				if (find_nonconst(&m_relatives[0], &m_relatives[0] + m_relatives.length(), helix) == &m_relatives[0] + m_relatives.length()) {
+					// Haven't already added this helix.
+
 					MObject object = helix.getObject(m_status);
 				
 					if (!m_status) {
@@ -874,7 +878,7 @@ namespace Helix {
 					}
 
 					/*
-					 * Now recursively do the same for this helix relative
+					 * Now recursively do the same for this helix relatives
 					 */
 
 					MObjectArray helix_relatives;
@@ -1014,50 +1018,32 @@ namespace Helix {
 		MStatus Helix::getRelatives(MObjectArray & helices) {
 			MStatus status;
 
+			std::cerr << "Looking for relatives for Helix " << getDagPath(status).fullPathName().asChar() << std::endl;
+
 			for(BaseIterator it = begin(); it != end(); ++it) {
-				Model::Base backward;
+				Model::Base neighbours[] = { it->backward(status), it->forward(status) };
 
-				backward = it->backward(status);
-
-				if (!status && status != MStatus::kNotFound) {
-					status.perror("Base::backward");
-					return status;
-				}
-
-				if (status) {
-					Model::Helix parent = backward.getParent(status);
-
-					if (!status) {
-						status.perror("Base::getParent");
-						return status;
-					}
-
-					if (!status) {
-						status.perror("Helix::getObject");
-						return status;
-					}
-
-					if (parent != *this) {
-						MObject parent_object = parent.getObject(status);
+				for (unsigned int i = 0; i < 2; ++i) {
+					if (neighbours[i]) {
+						Model::Helix parent(neighbours[i].getParent(status));
 
 						if (!status) {
-							status.perror("Helix::getObject");
+							status.perror("Base::getParent");
 							return status;
 						}
 
-						if (std::find(&helices[0], &helices[0] + helices.length(), parent_object) == &helices[0] + helices.length()) {
-							helices.append(parent_object);
-						
-							MObjectArray parent_relatives;
-							parent.getRelatives(parent_relatives);
+						if (parent != *this) {
+							std::cerr << "Found potential relative Helix!!" << std::endl;
+							MObject parent_object = parent.getObject(status);
 
-							/*
-							 * Copy the ones that arent in 'helices'
-							 */
+							if (!status) {
+								status.perror("Helix::getObject");
+								return status;
+							}
 
-							for(unsigned int i = 0; i < parent_relatives.length(); ++i) {
-								if (std::find(&helices[0], &helices[0] + helices.length(), parent_relatives[i]) == &helices[0] + helices.length())
-									helices.append(parent_relatives[i]);
+							if (std::find(&helices[0], &helices[0] + helices.length(), parent_object) == &helices[0] + helices.length()) {
+								helices.append(parent_object);
+								parent.getRelatives(helices);
 							}
 						}
 					}

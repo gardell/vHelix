@@ -107,6 +107,11 @@ namespace Helix {
 				return status;
 			}*/
 
+			{
+				MTransformationMatrix transf = MTransformationMatrix(transform);
+				MVector vec = transf.getTranslation(MSpace::kTransform);
+				std::cerr << "Setting transform on helix: " << helix_transform.fullPathName().asChar() << ", " << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
+			}
 			if (!(status = helix_transform.set(MTransformationMatrix(transform)))) {
 				status.perror("MFnTransform::set");
 				return status;
@@ -235,6 +240,7 @@ namespace Helix {
 	MStatus Creator::createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
 		MVector distance = end - origo, direction = distance.normal(), end_origo = origo + distance / 2.0;
 
+		std::cerr << "Distance: " << distance.length() << std::endl;
 		return createHelix(end_origo, direction, (int) floor(distance.length() / DNA::STEP + 0.5), rotation, helix, control); // There's no round() in the C++ STD!
 	}
 
@@ -288,6 +294,10 @@ namespace Helix {
 			return status;
 		}
 
+		{
+			MVector vec = MTransformationMatrix(matrix.asMatrix()).getTranslation(MSpace::kTransform);
+			std::cerr << "createHelix matrix: " << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
+		}
 		if (!(status = createHelix(bases, helix, matrix.asMatrix(), control))) {
 			status.perror("createHelix(bases, helix)");
 			return status;
@@ -386,6 +396,7 @@ namespace Helix {
 				std::cerr << "Next plane: normal: " << normal.x << ", " << normal.y << ", " << normal.z << std::endl;
 			}*/
 
+			std::cerr << "Start: " << origo.x << ", " << origo.y << ", " << origo.z << "End: " << end.x << ", " << end.y << ", " << end.z << std::endl;
 
 			if (!(status = createHelix(origo, end, current_rotation, helix/*, control*/))) {
 				status.perror(MString("createHelix at index: ") + i);

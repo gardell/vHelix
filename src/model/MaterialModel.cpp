@@ -20,82 +20,6 @@
 #include <algorithm>
 #include <iterator>
 
-/*
- * New code for managing materials, using this code, duplication of material nodes should never occur
- * We're also no longer dependent on the DNAshaders.ma file, which makes it so much easier for users to install the plugin
- *
- */
-
-#define MEL_SETUP_MATERIALS_COMMAND																							\
-	"$materials = `ls -mat \"DNA*\"`;\n"																					\
-	"string $material_sets[];\n"																							\
-	"clear($material_sets);\n"																								\
-																															\
-	"if (size($materials) == 0) {\n"																						\
-	"	matrix $colors[10][3] = <<\n"																						\
-	"		0, 1, 0.45666122 ;\n"																							\
-	"		1, 0.18333334, 0 ;\n"																							\
-	"		1, 1, 1 ;\n"																									\
-	"		0.75, 0.75, 0.75 ;\n"																							\
-	"		0, 0, 1 ;\n"																									\
-	"		1, 1, 0 ;\n"																									\
-	"		1, 0, 1 ;\n"																									\
-	"		0.20863661, 0.20863661, 0.20863661 ;\n"																			\
-	"		0, 1, 1 ;\n"																									\
-	"		1, 0.12300003, 0.29839987\n"																					\
-	"	>>;\n"																												\
-																															\
-	"	for($i = 0; $i < 10; ++$i) {\n"																						\
-	"		$node = `createNode lambert -ss -n (\"DNA\" + $i)`;\n"															\
-	"		setAttr ($node + \".dc\") 1;\n"																					\
-	"		setAttr ($node + \".c\") -type \"float3\" $colors[$i][0] $colors[$i][1] $colors[$i][2];\n"						\
-	"		connectAttr ($node + \".msg\") \":defaultShaderList1.s\" -na;\n"												\
-																															\
-	"		$materials[size($materials)] = $node;\n"																		\
-	"	}\n"																												\
-	"}\n"																													\
-																															\
-	"for ($material in $materials) {\n"																						\
-	"	$sets = `listSets -as -t 1`;\n"																						\
-																															\
-	"	$exists = false;\n"																									\
-																															\
-	"	for ($set in $sets) {\n"																							\
-	"		if ($set == \"SurfaceShader_\" + $material) {\n"																\
-	"			$exists = true;\n"																							\
-	"			break;\n"																									\
-	"		}\n"																											\
-	"	}\n"																												\
-																															\
-	"	string $current_set;\n"																								\
-																															\
-	"	if (!$exists) {\n"																									\
-																															\
-	"		$current_set = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $material)`;\n"	\
-	"		connectAttr ($material + \".outColor\") ($current_set + \".surfaceShader\");\n"									\
-	"	}\n"																												\
-	"	else\n"																												\
-	"		$current_set = \"SurfaceShader_\" + $material;\n"																\
-																															\
-	"	$material_sets[size($material_sets)] = $current_set;\n"																\
-	"}\n"																													\
-																															\
-	"ls $material_sets;\n"
-
-/*
- * The caDNAno importer creates new materials with the colors extracted from the JSON file. This script creates the material
- * Note that before this command, you *must* define the array $color that sets the color of the material and the $name that sets the name of the material
- */
-
-#define MEL_CREATE_MATERIAL_COMMAND																							\
-	"$materialNode = `createNode lambert -ss -n $materialName`;\n"															\
-	"setAttr ($materialNode + \".dc\") 1;\n"																				\
-	"setAttr ($materialNode + \".c\") -type \"float3\" $materialColor[0] $materialColor[1] $materialColor[2];\n"			\
-	"connectAttr ($materialNode + \".msg\") \":defaultShaderList1.s\" -na;\n"												\
-	"$materialSet = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $materialNode)`;\n"		\
-	"connectAttr ($materialNode + \".outColor\") ($materialSet + \".surfaceShader\");\n"									\
-	"ls $materialSet;\n"
-
 namespace Helix {
 	namespace Model {
 
@@ -224,7 +148,7 @@ namespace Helix {
 			MStringArray materialName;
 			MStatus status;
 
-			if (!(status = MGlobal::executeCommand(MString("float $materialColor[] = { (float) ") + color[0] + ", (float) " + color[1] + ", (float) " + color[2] + " };\nstring $materialName = \"" + name + "\";\n" + MEL_CREATE_MATERIAL_COMMAND, result))) {
+			if (!(status = MGlobal::executeCommand(MString("{ float $materialColor[] = { (float) ") + color[0] + ", (float) " + color[1] + ", (float) " + color[2] + " };\nstring $materialName = \"" + name + "\";\n" + MEL_CREATE_MATERIAL_COMMAND + " }", result))) {
 				status.perror("MGlobal::executeCommand");
 				return status;
 			}

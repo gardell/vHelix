@@ -37,8 +37,12 @@ namespace Helix {
 
 	}
 
+	// TODO: Candidate for cleanup, perhaps a templated version to eliminate all if-clauses
+
 	MStatus ToggleCylinderBaseView::toggle(bool _toggle, bool refresh, std::list<MObject> & targets) {
 		MStatus status;
+
+		std::cerr << "Toggle 1" << std::endl;
 
 		if (targets.empty()) {
 			if (_toggle) {
@@ -51,6 +55,7 @@ namespace Helix {
 			 */
 
 			if (_toggle || refresh) {
+				std::cerr << "_toggle: " << _toggle << ", " << " refresh: " << refresh << "?" << std::endl;
 				// Switch to the new view or refresh the current, using MEL
 
 				/*if (!(status = MGlobal::executeCommand(
@@ -88,6 +93,27 @@ namespace Helix {
 							status.perror("Base::setShapesVisibility");
 							return status;
 						}
+					}
+				}
+			}
+		}
+		else if (refresh) {
+			/*
+			* Iterate over targets and refresh their HelixShape and HelixBaseShape visibility
+			*/
+
+			for (std::list<MObject>::iterator it = targets.begin(); it != targets.end(); ++it) {
+				Model::Helix helix(*it);
+
+				if (!(status = helix.setShapesVisibility(CurrentView == 1))) {
+					status.perror("Helix::toggleShapesVisibility");
+					return status;
+				}
+
+				for (Model::Helix::BaseIterator bit = helix.begin(); bit != helix.end(); ++bit) {
+					if (!(status = bit->setShapesVisibility(CurrentView == 0))) {
+						status.perror("Base::toggleShapesVisibility");
+						return status;
 					}
 				}
 			}
@@ -148,6 +174,7 @@ namespace Helix {
 
 		m_toggleTargets.clear();
 
+		std::cerr << "GetModelObjects by -b argument" << std::endl;
 		if (!(status = ArgList_GetModelObjects(args, syntax(), "-b", m_toggleTargets))) {
 			if (status != MStatus::kNotFound) {
 				status.perror("ArgList_GetModelObjects");
@@ -156,6 +183,7 @@ namespace Helix {
 		}
 
 		if (m_toggleTargets.empty()) {
+			std::cerr << "Get objects by select: " << std::endl;
 			/*
 			 * Get targets by selected
 			 */
@@ -169,6 +197,7 @@ namespace Helix {
 
 			std::copy(&targets[0], &targets[0] + targets.length(), std::back_insert_iterator<std::list<MObject> >(m_toggleTargets));
 		}
+		std::cerr << "Go toggle" << std::endl;
 
 		/*
 		 * If there's no target, toggle all

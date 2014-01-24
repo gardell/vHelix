@@ -15,7 +15,7 @@ namespace Helix {
 		/*
 		 * Strand: Defines a strand. Uses a base and enables you to iterate forward or backward from it.
 		 * Avoids loops by remembering the start base.
-		 * I designed the Strand interface to enable iterating and give as much possibility to use of the C++ STL as possible
+		 * The Strand interface enables iterating over bases and give as much possibility to use of the C++ STL as possible.
 		 */
 
 		class VHELIXAPI Strand {

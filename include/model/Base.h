@@ -38,6 +38,11 @@ namespace Helix {
 				END = 3
 			};
 
+			/*
+			 * Null base is similar to the MObject::kNullObj and can be used as an invalid node.
+			 */
+			static Base null;
+
 			static MStatus Create(Helix & helix, const MString & name, const MVector & translation, Base & base);
 
 			DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(Base)
