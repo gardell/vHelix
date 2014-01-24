@@ -795,7 +795,7 @@ namespace Helix {
 		GLint status;
 
 		{
-			GLint shaders[] = { vertex_shader, fragment_shader };
+			GLuint shaders[] = { vertex_shader, fragment_shader };
 
 			for(int i = 0; i < 2; ++i) {
 				glGetShaderiv(shaders[i], GL_COMPILE_STATUS, &status);

@@ -13,7 +13,7 @@ namespace Helix {
 	}
 
 	MObject ToggleShowSuggestedConnections::s_locatorNode(MObject::kNullObj);
-	MCallbackId ToggleShowSuggestedConnections::s_locatorNode_preRemovalCallbackId = NULL;
+	MCallbackId ToggleShowSuggestedConnections::s_locatorNode_preRemovalCallbackId = 0;
 
 	ToggleShowSuggestedConnections::ToggleShowSuggestedConnections() {
 

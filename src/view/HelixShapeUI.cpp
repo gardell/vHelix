@@ -111,6 +111,9 @@ namespace Helix {
             case M3dView::kHilite :
                 borderColor = view.colorAtIndex( HILITE_COLOR);
                 break;
+            default:
+            	std::cerr << "Unknown displayStatus for helix. Probably nothing to worry about." << std::endl;
+            	break;
             }
 
 			/*

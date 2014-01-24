@@ -41,8 +41,8 @@ namespace Helix {
 				BasePair(Model::Base & first_, Model::Base & second_);
 
 				inline BasePair() {
-					preRemovalCallbackId[0] = NULL;
-					preRemovalCallbackId[1] = NULL;
+					preRemovalCallbackId[0] = 0;
+					preRemovalCallbackId[1] = 0;
 				}
 
 				/*
@@ -99,7 +99,16 @@ namespace Helix {
 
 				bool s_gl_initialized, s_gl_failure;
 
-				inline DrawData() : s_gl_initialized(false), s_gl_failure(false) { }
+				inline DrawData() :
+						program(0),
+						vertex_shader(0),
+						fragment_shader(0),
+						texture(0),
+						windowSize_uniform(-1),
+						shift_arrow_strength_direction_attrib(-1),
+						color_attrib(-1),
+						s_gl_initialized(false),
+						s_gl_failure(false) { }
 			} static s_drawData;
 
 			/*

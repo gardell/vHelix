@@ -66,8 +66,8 @@
 
 // vec4(TexCoord, 0.0, 1.0) + 0.01 * 
 // For phong shading
-//	"	float lambertTerm = dot(N, L), specular = pow( max(dot(R, E), 0.0), Shininess);\n",										\
-//	"	gl_FragColor = sign(max(0.0, lambertTerm)) * (Color * lambertTerm + vec4(1.0, 1.0, 1.0, 1.0) * specular);\n",			\
+//	"	float lambertTerm = dot(N, L), specular = pow( max(dot(R, E), 0.0), Shininess);\n",
+//	"	gl_FragColor = sign(max(0.0, lambertTerm)) * (Color * lambertTerm + vec4(1.0, 1.0, 1.0, 1.0) * specular);\n",
 
 #define HELIXSHAPE_GLSL_FRAGMENT_SHADER_COUNT 19
 
@@ -102,7 +102,19 @@ namespace Helix {
 				bool initialized, failure;
 				//GLfloat *last_colors;
 
-				DrawData() : /*texture_height(0), */initialized(false), failure(false)/*, last_colors(NULL)*/ { }
+				DrawData() :
+					program(0),
+					vertex_shader(0),
+					fragment_shader(0),
+					draw_display_list(0),
+					select_display_list(0),
+					/*texture_height(0), */
+					initialized(false),
+					failure(false),
+					/* last_colors(NULL),*/
+					texture_uniform(-1),
+					range_uniform(-1),
+					borderColor_uniform(-1) { }
 
 				/*
 				 * Might slightly improve performance by caching the uniform variable updates
@@ -123,7 +135,7 @@ namespace Helix {
 				bool initialized, failure;
 				GLfloat *last_colors;
 
-				DrawData_Local() : texture_height(0), initialized(false), failure(false), last_colors(NULL) { }
+				DrawData_Local() : texture(0), texture_height(0), initialized(false), failure(false), last_colors(NULL) { }
 				~DrawData_Local() { if (last_colors) delete[] last_colors; }
 			} m_drawData;
 		};

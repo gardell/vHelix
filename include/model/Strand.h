@@ -58,18 +58,15 @@ namespace Helix {
 					return &m_targetBase;
 				}
 
-				Iterator<Direction> operator++(int x) const {
+				Iterator<Direction> operator++(int x) {
 					switch (Direction) {
 						case FORWARD:
 							return Iterator<Direction>(*m_strand, m_targetBase.forward());
-							break;
 						case BACKWARD:
 							return Iterator<Direction>(*m_strand, m_targetBase.backward());
-							break;
 						default:
 							std::cerr << "ERROR BROKEN ITERATOR" << std::endl; // Mostly just because VC++ complains about not returning a value
 							return Iterator<Direction>(*m_strand, m_targetBase.forward());
-							break;
 					}
 				}
 

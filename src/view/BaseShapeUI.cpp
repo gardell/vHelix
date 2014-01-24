@@ -12,6 +12,8 @@
 #include <maya/MMaterial.h>
 #include <maya/MMatrix.h>
 
+#include <limits>
+
 namespace Helix {
 	namespace Data {
 
@@ -122,6 +124,9 @@ namespace Helix {
 				//glUniform3f(s_drawData.borderColor_uniform, borderColor.r, borderColor.g, borderColor.b);
 				s_drawData.updateBorderColorUniform(borderColor.r, borderColor.g, borderColor.b);
                 break;
+            default:
+            	std::cerr << "Unknown displayStatus. Probably nothing to worry about" << std::endl;
+            	break;
             }
 
 			//glUniform3f(s_drawData.color_uniform, color.r, color.g, color.b);
@@ -216,7 +221,7 @@ namespace Helix {
 			GLint status;
 
 			{
-				GLint shaders[] = { s_drawData.vertex_shader, s_drawData.fragment_shader };
+				const GLuint shaders[] = { s_drawData.vertex_shader, s_drawData.fragment_shader };
 				
 				for(int i = 0; i < 2; ++i) {
 					

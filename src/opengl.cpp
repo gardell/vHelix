@@ -1,7 +1,7 @@
 #include <opengl.h>
 
 #ifndef MAC_PLUGIN
-struct {
+struct glTag {
 	bool installed;
 
 	PFNGLCREATEPROGRAMPROC glCreateProgram;

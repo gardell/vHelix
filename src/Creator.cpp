@@ -32,7 +32,7 @@
 #include <maya/MPlane.h>
 
 namespace Helix {
-	Creator::Creator() {
+	Creator::Creator() : m_redoMode(CREATE_NONE) {
 
 	}
 
@@ -696,11 +696,12 @@ namespace Helix {
 			 * Pick out two by random, not the same ones twice!
 			 */
 
-			unsigned int indices[] = { rand() % numMaterials, 0 };
-			do { indices[1] = rand() % numMaterials; } while (indices[0] == indices[1]);
+			int indices[] = { rand() % (int) numMaterials, 0 };
+			do { indices[1] = rand() % (int) numMaterials; } while (indices[0] == indices[1]);
 
-			for(int i = 0; i < 2; ++i)
+			for(int i = 0; i < 2; ++i) {
 				m_materials[i] = *(materials_begin + indices[i]);
+			}
 		}
 
 		return MStatus::kSuccess;
@@ -729,8 +730,12 @@ namespace Helix {
 		case CREATE_BETWEEN:
 			return createHelix(m_redoData.origo, m_redoData.end, m_redoData.rotation);
 		case CREATE_ALONG_CURVE:
+			// TODO: Is this correct?
 			for(std::vector<MPointArray>::iterator it = m_redoData.points.begin(); it != m_redoData.points.end(); ++it)
 				createHelix(*it, m_redoData.rotation);
+			break;
+		case CREATE_NONE:
+			break;
 		}
 
 		return MStatus::kSuccess;

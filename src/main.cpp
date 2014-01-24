@@ -150,6 +150,8 @@ public:
 	virtual bool isValid() const {
 		return true;
 	}
+
+	virtual ~Register() {}
 };
 
 class NullRegister : public Register {

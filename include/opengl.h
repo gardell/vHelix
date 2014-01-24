@@ -20,7 +20,7 @@
 #else
 
 #define GL_GLEXT_PROTOTYPES
-#define GLAPI
+//#define GLAPI // Shouldn't be needed anymore.
 
 #include <GL/gl.h>
 #include <GL/glext.h>

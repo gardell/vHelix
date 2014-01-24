@@ -22,7 +22,7 @@
 
 // FIXME: Can we mark some varying not to be interpolated? I think there's a feature for that in some GLSL environments (pointSize)
 
-// "	Coord2 = ((pVertex32.xy - gl_Position.xy) * windowSize / pointSize + 1.0) / 2.0;\n",							\
+// "	Coord2 = ((pVertex32.xy - gl_Position.xy) * windowSize / pointSize + 1.0) / 2.0;\n",
 
 #define CONNECT_SUGGESTIONS_LOCATOR_GLSL_VERTEX_SHADER																		\
 		"#version 120\n",																									\
@@ -52,7 +52,7 @@
 		"	Texcoord = vec2(gl_Vertex.x, scale_texcoord_y * length(delta) * (gl_Vertex.y * 2.0 - 1.0 - shift_arrow_strength_direction.x) / 2.0);\n",	\
 		"}\n"
 
-// 		"	Texcoord = vec2(gl_Vertex.x, scale_texcoord_y * length(delta) * (gl_Vertex.y * 2.0 - 1.0 - shift_arrow_strength_direction.x) / 2.0);\n",	\
+// 		"	Texcoord = vec2(gl_Vertex.x, scale_texcoord_y * length(delta) * (gl_Vertex.y * 2.0 - 1.0 - shift_arrow_strength_direction.x) / 2.0);\n",
 
 #define CONNECT_SUGGESTIONS_LOCATOR_GLSL_FRAGMENT_SHADER																	\
 		"#version 120\n",																									\
@@ -339,6 +339,8 @@ namespace Helix {
 							MNodeMessage_Transform_AttributeChangedProc(MNodeMessage::kAttributeSet, translatePlug, otherPlug, NULL);
 						}
 					}
+					break;
+				default:
 					break;
 				}
 			}
@@ -790,7 +792,7 @@ namespace Helix {
 			double scale, distance;
 			std::list< ConnectSuggestionsLocatorNode::BasePair >::iterator it;
 			
-			inline Hit(std::list< ConnectSuggestionsLocatorNode::BasePair >::iterator it_, double scale_, double distance_) : it(it_), scale(scale_), distance(distance_) {
+			inline Hit(std::list< ConnectSuggestionsLocatorNode::BasePair >::iterator it_, double scale_, double distance_) : scale(scale_), distance(distance_), it(it_) {
 				
 			}
 			
@@ -1002,14 +1004,14 @@ namespace Helix {
 				if (!(status = MNodeMessage::removeCallback(preRemovalCallbackId[0])))
 					status.perror("MNodeMessage::removeCallback 1");
 
-				preRemovalCallbackId[0] = NULL;
+				preRemovalCallbackId[0] = 0;
 			}
 
 			if (preRemovalCallbackId[1]) {
 				if (!(status = MNodeMessage::removeCallback(preRemovalCallbackId[1])))
 					status.perror("MNodeMessage::removeCallback 2");
 
-				preRemovalCallbackId[1] = NULL;
+				preRemovalCallbackId[1] = 0;
 			}
 		}
 	}
