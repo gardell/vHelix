@@ -19,6 +19,7 @@
 #define _CRT_SECURE_NO_WARNINGS /* Visual Studios annoying warnings */
 #define _SCL_SECURE_NO_WARNINGS
 #define _USE_MATH_DEFINES
+#define NOMINMAX /* Windows defines min, max that messes up std::min, std::max */
 
 #ifdef _MSC_VER
 /*
