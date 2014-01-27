@@ -27,8 +27,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|Win32.ActiveCfg = Maya 2011 Debug|Win32
 		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|Win32.Build.0 = Maya 2011 Debug|Win32
-		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|x64.ActiveCfg = Maya 2011 Release|x64
-		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|x64.Build.0 = Maya 2011 Release|x64
+		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|x64.ActiveCfg = Maya 2011 Debug|x64
+		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Debug|x64.Build.0 = Maya 2011 Debug|x64
 		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Release|Win32.ActiveCfg = Maya 2011 Release|Win32
 		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Release|Win32.Build.0 = Maya 2011 Release|Win32
 		{5C8028F0-F097-417C-A031-767A3B2C50D6}.Maya 2011 Release|x64.ActiveCfg = Maya 2011 Release|x64
