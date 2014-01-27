@@ -21,7 +21,10 @@
 #include <iostream>
 #include <vector>
 #include <iterator>
+#include <cstdarg>
+#include <cstdio>
 
+#include <maya/MStatus.h>
 #include <maya/MObjectArray.h>
 #include <maya/MPlug.h>
 #include <maya/MDagPath.h>
@@ -284,7 +287,29 @@ namespace Helix {
 	 */
 
 	MStatus SetupOpenGLShaders(const char **vertex_shader_source, const char **fragment_shader_source, const char **uniform_names, GLint *uniform_locations, GLsizei uniform_count, const char **attrib_names, GLint *attrib_locations, GLsizei attrib_count, GLuint & program, GLuint & vertex_shader, GLuint & fragment_shader);
-}
 
+	/*
+	 * Maya specific debug tools.
+	 */
+
+	namespace Debug {
+		void printf(const char *file, const char *function, size_t line, const char *expr, ...);
+
+		void evaluate(const char *file, const char *function, size_t line, const char *expr, MStatus & status);
+	}
+
+#define HPRINT(fmt, ...) Helix::Debug::printf(__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+
+	/*
+	* Execute expr and then if an error occur, print debug information.
+	*/
+#define HMEVALUATE(expr, status) { expr; Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); }
+
+	/*
+	* Execute expr and then if an error occur, return from current function.
+	*/
+#define HMEVALUATE_RETURN(expr, status) { expr; if (status) { Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); return status; } }
+
+}
 
 #endif /* UTILITY_H_ */

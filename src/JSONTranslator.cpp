@@ -38,14 +38,6 @@
 //#include <limits>
 //#include <algorithm>
 
-#ifndef MIN
-#define MIN(a, b)	((a) < (b) ? (a) : (b))
-#endif /* MIN */
-
-#ifndef MAX
-#define MAX(a, b)	((a) > (b) ? (a) : (b))
-#endif /* MAX */
-
 namespace Helix {
 	MStatus JSONTranslator::writer (const MFileObject& file, const MString& optionsString, MPxFileTranslator::FileAccessMode mode) {
 		std::cerr << "Can't write JSON files yet" << std::endl;

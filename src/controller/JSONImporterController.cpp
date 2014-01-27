@@ -72,7 +72,7 @@ namespace Helix {
 				int size = (*it) ["loop"].size();
 				total_num_operations += size;
 
-				longest_strand = MAX(longest_strand, size);
+				longest_strand = std::max(longest_strand, size);
 			}
 
 			average_col /= vstrands.size();
@@ -352,8 +352,8 @@ namespace Helix {
 						 */
 
 						if (scaf_base.isValid() || stap_base.isValid()) {
-							lowest_valid_base_index = MIN(lowest_valid_base_index, translation_index);
-							highest_valid_base_index = MAX(highest_valid_base_index, translation_index);
+							lowest_valid_base_index = std::min(lowest_valid_base_index, translation_index);
+							highest_valid_base_index = std::max(highest_valid_base_index, translation_index);
 						}
 					}
 

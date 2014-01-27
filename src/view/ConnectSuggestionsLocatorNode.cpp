@@ -456,7 +456,7 @@ namespace Helix {
 					/* Strength */
 					double dist = (coord2 - coord1).length() / DNA::STEP - 1.0;
 
-					shift_arrow_strength_directions[i * 4 * 4 + j * 4 + 1] =  float(MIN(1.0, MAX(0.0, 1.0 - dist * dist)));
+					shift_arrow_strength_directions[i * 4 * 4 + j * 4 + 1] =  float(std::min(1.0, std::max(0.0, 1.0 - dist * dist)));
 
 					/* Arrow */
 					shift_arrow_strength_directions[i * 4 * 4 + j * 4 + 2] = base1_type == base2_type ? 0.0f : 1.0f;

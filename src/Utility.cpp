@@ -850,4 +850,26 @@ namespace Helix {
 
 		return MStatus::kSuccess;
 	}
+
+	namespace Debug {
+		void printf(const char *file, const char *function, size_t line, const char *expr, ...) {
+			va_list vl;
+			va_start(vl, expr);
+
+			fprintf(stderr, "%s(%u): in %s: ", file, line, function);
+			vfprintf(stderr, expr, vl);
+			fprintf(stderr, "\n");
+
+			va_end(vl);
+		}
+
+		MStatus evaluate(const char *file, const char *function, size_t line, const char *expr, const MStatus & status) {
+			if (!status) {
+				MString error(status.errorString());
+				printf(file, function, line, "Error: expression \"%s\" failed with: \"%s\".", expr, error.asChar());
+			}
+
+			return status;
+		}
+	}
 }
