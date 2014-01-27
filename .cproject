@@ -152,5 +152,6 @@
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/vHelix"/>
 		</configuration>
+		<configuration configurationName="maya2014"/>
 	</storageModule>
 </cproject>

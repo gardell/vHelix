@@ -27,8 +27,4 @@ src/view \
 src \
 src/model \
 src/controller \
-Debug/src/view \
-Debug/src \
-Debug/src/model \
-Debug/src/controller \
 

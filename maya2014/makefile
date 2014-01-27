@@ -12,10 +12,6 @@ RM := rm -rf
 -include src/model/subdir.mk
 -include src/controller/subdir.mk
 -include src/subdir.mk
--include Debug/src/view/subdir.mk
--include Debug/src/model/subdir.mk
--include Debug/src/controller/subdir.mk
--include Debug/src/subdir.mk
 -include subdir.mk
 -include objects.mk
 
