@@ -13,6 +13,7 @@
 #include <maya/MQuaternion.h>
 #include <maya/MTransformationMatrix.h>
 #include <maya/MFnSingleIndexedComponent.h>
+#include <maya/MSelectionMask.h>
 
 #include <memory>
 #include <list>
@@ -454,7 +455,7 @@ namespace Helix {
 			GLint status;
 
 			{
-				GLint shaders[] = { s_drawData.vertex_shader, s_drawData.fragment_shader };
+				GLuint shaders[] = { s_drawData.vertex_shader, s_drawData.fragment_shader };
 				
 				for(int i = 0; i < 2; ++i) {
 					

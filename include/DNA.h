@@ -79,6 +79,25 @@ namespace DNA {
 		Invalid = 4
 	};
 
+	inline Values Value_fromChar(char ch) {
+		switch(ch) {
+		case 'A':
+		case 'a':
+			return A;
+		case 'T':
+		case 't':
+			return T;
+		case 'G':
+		case 'g':
+			return G;
+		case 'C':
+		case 'c':
+			return C;
+		default:
+			return Invalid;
+		}
+	}
+
 	class Name {
 	public:
 		inline Name() : m_value(Invalid) {
@@ -93,8 +112,7 @@ namespace DNA {
 
 		}
 
-		inline Name(char c) {
-			this->operator=(c);
+		inline Name(char ch) : m_value(Value_fromChar(ch)) {
 		}
 
 		inline bool operator==(const Name & n) const {
@@ -125,28 +143,8 @@ namespace DNA {
 			return *this;
 		}
 
-		inline Name & operator=(char c) {
-			switch(c) {
-			case 'A':
-			case 'a':
-				m_value = A;
-				break;
-			case 'T':
-			case 't':
-				m_value = T;
-				break;
-			case 'G':
-			case 'g':
-				m_value = G;
-				break;
-			case 'C':
-			case 'c':
-				m_value = C;
-				break;
-			default:
-				m_value = Invalid;
-				break;
-			}
+		inline Name & operator=(char ch) {
+			m_value = Value_fromChar(ch);
 
 			return *this;
 		}

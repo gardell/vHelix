@@ -13,6 +13,7 @@
 #include <maya/MFnDependencyNode.h>
 #include <maya/MGlobal.h>
 #include <maya/MPlugArray.h>
+#include <maya/MItDag.h>
 
 #include <Helix.h>
 #include <HelixBase.h>
@@ -849,6 +850,31 @@ namespace Helix {
 
 		MStatus Helix::AllSelected(MObjectArray & selectedHelices) {
 			return GetSelectedObjectsOfType(selectedHelices, ::Helix::Helix::id);
+		}
+
+		MStatus Helix::All(MObjectArray & helices) {
+			MStatus status;
+			MItDag dagIt(MItDag::kBreadthFirst, MFn::kTransform, &status);
+			HMEVALUATE_RETURN_DESCRIPTION("MItDag::#ctor", status);
+
+			if (!status) {
+				status.perror("MItDag::#ctor");
+				return status;
+			}
+
+			for(; !dagIt.isDone(); dagIt.next()) {
+				MObject obj;
+				HMEVALUATE_RETURN(obj = dagIt.currentItem(&status), status);
+
+
+				MFnDagNode dagNode(obj);
+
+				if (dagNode.typeId(&status) == ::Helix::Helix::id) {
+					HMEVALUATE_RETURN(status = helices.append(obj), status);
+				}
+			}
+
+			return MStatus::kSuccess;
 		}
 
 		/*

@@ -100,6 +100,7 @@ namespace Helix {
 
 			if (selectedBases.length() == 0) {
 				// Export ALL bases, this might be a bit slow..
+				// TODO: Use Model::Base::All instead.
 
 				MItDag dagIt(MItDag::kBreadthFirst, MFn::kTransform, &status);
 

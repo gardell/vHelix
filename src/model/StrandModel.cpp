@@ -26,5 +26,14 @@ namespace Helix {
 			MStatus status;
 			return contains_base(strand.getDefiningBase(), status);
 		}
+
+		void Strand::rewind() {
+			BackwardIterator it = reverse_begin();
+			BackwardIterator last_it(it);
+			for (; it != reverse_end(); ++it) {
+				last_it = it;
+			}
+			m_base = *last_it;
+		}
 	}
 }

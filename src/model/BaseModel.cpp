@@ -999,5 +999,29 @@ namespace Helix {
 			status = MStatus::kNotFound;
 			return Helix();
 		}
+
+		int Base::sign_along_axis(const MVector & axis, MSpace::Space space, MStatus & status) {
+			MVector translation;
+			HMEVALUATE(status = getTranslation(translation, space), status);
+
+			Base forward_base(forward(status));
+
+			if (status && forward_base) {
+				MVector forward_translation;
+				HMEVALUATE(status = forward_base.getTranslation(forward_translation, space), status);
+				return int(sgn((forward_translation - translation) * axis));
+			} else {
+				Base backward_base(backward(status));
+				if (status && backward_base) {
+					MVector backward_translation;
+					HMEVALUATE(status = backward_base.getTranslation(backward_translation, space), status);
+					return int(sgn((translation - backward_translation) * axis));
+				} else {
+					HPRINT("Failure to obtain any basis. Can't decide on a direction along the axis.");
+					status = MStatus::kFailure;
+					return 0;
+				}
+			}
+		}
 	}
 }

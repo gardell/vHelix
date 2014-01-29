@@ -105,6 +105,16 @@ namespace Helix {
 			bool opposite_isDestination(MStatus & status);
 
 			/*
+			 * Returns the direction of the strand relative to a given axis.
+			 * Uses forward or backward connections to figure out in what direction
+			 * the strand is going and returns the sign of the dot product between this
+			 * vector and the axis given.
+			 *
+			 * space: In what space is this calculated? Usually relative to the Helix, that is kTransform.
+			 */
+			int sign_along_axis(const MVector & axis, MSpace::Space space, MStatus & status);
+
+			/*
 			 * Helix
 			 */
 

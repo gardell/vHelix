@@ -27,7 +27,8 @@ namespace Helix {
 		public:
 
 			/*
-			 * Alias for an invalid Helix.
+			 * Alias for an invalid Helix. Note that it is readable but should *not* be modified!
+			 * TODO: Put exceptions on modification?
 			 */
 			static Helix null;
 
@@ -50,6 +51,13 @@ namespace Helix {
 			 */
 
 			static MStatus AllSelected(MObjectArray & selectedHelices);
+
+			/*
+			 * Used to obtain a list of all Helices in the scene.
+			 *
+			 * TODO: Make a general GetAllObjectsOfType to use for both helices and bases in a scene.
+			 */
+			static MStatus All(MObjectArray & helices);
 
 			/*
 			 * This is an expansion of the getRelatives below, but for multiple helices. The difference is that it makes sure that all returned helices are unique

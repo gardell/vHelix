@@ -60,8 +60,7 @@ namespace Helix {
 			 * we use member pointers
 			 */
 
-			Model::Base (Model::Base::* target_forward) (MStatus &),
-						(Model::Base::* target_backward) (MStatus &);
+			Model::Base (Model::Base::* target_backward) (MStatus &);
 
 			bool hasForward, hasBackward, extendForward, extendPositiveZ;
 			double direction;
@@ -92,7 +91,7 @@ namespace Helix {
 			if (!hasForward && hasBackward) {
 				// We have no forward, extend forward
 
-				target_forward = &Model::Base::forward;
+				//target_forward = &Model::Base::forward;
 				target_backward = &Model::Base::backward;
 				extendForward = true;
 
@@ -113,7 +112,7 @@ namespace Helix {
 			}
 			else if (hasForward && !hasBackward) {
 				// We already have a forward connection but no backward, extend backward
-				target_forward = &Model::Base::backward;
+				//target_forward = &Model::Base::backward;
 				target_backward = &Model::Base::forward;
 				extendForward = false;
 

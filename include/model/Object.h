@@ -267,6 +267,7 @@ namespace Helix {
 			MStatus getTransform(MTransformationMatrix & matrix);
 			MStatus getTranslation(MVector & vector, MSpace::Space space);
 			MStatus getRotation(MEulerRotation & rotation);
+			MStatus getRotation(MQuaternion & rotation);
 
 			/*
 			 * Note that the class invalidates itself after this

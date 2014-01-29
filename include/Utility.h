@@ -295,21 +295,28 @@ namespace Helix {
 	namespace Debug {
 		void printf(const char *file, const char *function, size_t line, const char *expr, ...);
 
-		void evaluate(const char *file, const char *function, size_t line, const char *expr, MStatus & status);
+		MStatus evaluate(const char *file, const char *function, size_t line, const char *expr, const MStatus & status);
 	}
 
-#define HPRINT(fmt, ...) Helix::Debug::printf(__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+#define HPRINT(fmt, ...) ::Helix::Debug::printf(__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
 
 	/*
 	* Execute expr and then if an error occur, print debug information.
 	*/
-#define HMEVALUATE(expr, status) { expr; Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); }
+#define HMEVALUATE(expr, status) { expr; ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, (status)); }
+	/*
+	 * If status is not successful print debug information.
+	 */
+#define HMEVALUATE_DESCRIPTION(description, status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); }
 
 	/*
 	* Execute expr and then if an error occur, return from current function.
 	*/
-#define HMEVALUATE_RETURN(expr, status) { expr; if (status) { Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); return status; } }
-
+#define HMEVALUATE_RETURN(expr, status) { expr; if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); return status; } }
+	/*
+	 * If status is not successful print debug information.
+	 */
+#define HMEVALUATE_RETURN_DESCRIPTION(description, status) if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); return status; }
 }
 
 #endif /* UTILITY_H_ */

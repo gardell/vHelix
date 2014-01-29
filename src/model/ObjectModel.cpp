@@ -163,6 +163,24 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
+		MStatus Object::getRotation(MQuaternion & rotation) {
+			MStatus status;
+
+			MFnTransform transform(getDagPath(status));
+
+			if (!status) {
+				status.perror("Base::getDagPath");
+				return status;
+			}
+
+			if (!(status = transform.getRotation(rotation))) {
+				status.perror("MFnTransform::getRotation");
+				return status;
+			}
+
+			return MStatus::kSuccess;
+		}
+
 		MStatus Object::setShapesVisibility(bool visible, MTypeId & typeId) {
 			MStatus status;
 			MDagPath dagPath = getDagPath(status);

@@ -176,6 +176,14 @@ namespace Helix {
 				return BackwardIterator(*this, true);
 			}
 
+			/*
+			 * rewind: Iterates backwards until a base without a backward connection is found.
+			 * Or, if the strand is circular, just iterates one complete lap.
+			 *
+			 * The base defining the strand is updated if an end base is found.
+			 */
+			void rewind();
+
 			Base & getDefiningBase() {
 				return m_base;
 			}

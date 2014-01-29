@@ -109,12 +109,12 @@ namespace Helix {
 					draw_display_list(0),
 					select_display_list(0),
 					/*texture_height(0), */
-					initialized(false),
-					failure(false),
 					/* last_colors(NULL),*/
 					texture_uniform(-1),
 					range_uniform(-1),
-					borderColor_uniform(-1) { }
+					borderColor_uniform(-1),
+					initialized(false),
+					failure(false) {}
 
 				/*
 				 * Might slightly improve performance by caching the uniform variable updates
