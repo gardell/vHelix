@@ -112,7 +112,7 @@ namespace Helix {
 				return MStatus::kFailure;
 			}
 
-			unsigned int numBases = 0;
+			size_t numBases = 0;
 			for (std::list<Strand>::const_iterator it = m_strands.begin(); it != m_strands.end(); ++it) {
 				numBases += it->strand.size();
 			}
@@ -123,7 +123,7 @@ namespace Helix {
 			int j = 0;
 
 			for (std::list<Strand>::const_iterator it = m_strands.begin(); it != m_strands.end(); ++it, ++i) {
-				const int firstIndex = it->circular ? it->strand.size() - 1 : -1;
+				const int firstIndex = it->circular ? int(it->strand.size()) - 1 : -1;
 				const int lastIndex = it->circular ? 0 : -1;
 
 				top_file << "# " << it->name.asChar() << std::endl;
@@ -155,13 +155,14 @@ namespace Helix {
 
 			conf_file.close();
 
+			const std::string date(Date());
 			vhelix_file << "# vHelix glue file for oxDNA export \"" << topology_filename << "\" and \"" << configuration_filename << "\"." << std::endl <<
-					"# " << Date() << std::endl << std::endl;
+					"# " << date.c_str() << std::endl << std::endl;
 
 			for (std::tr1::unordered_map<std::string, Helix>::const_iterator it = m_helices.begin(); it != m_helices.end(); ++it) {
 				const MVector translation(it->second.translation/* - minTranslation*/);
 
-				vhelix_file << "helix " << it->first << " " <<
+				vhelix_file << "helix " << it->first.c_str() << " " <<
 						translation.x << " " << translation.y << " " << translation.z << " " <<
 						it->second.normal.x << " " << it->second.normal.y << " " << it->second.normal.z << std::endl;
 			}
