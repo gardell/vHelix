@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042522B218A8D06F00501A87 /* OxDnaTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B118A8D06F00501A87 /* OxDnaTranslator.cpp */; };
+		042522B418A8D07E00501A87 /* RoutedMeshTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B318A8D07E00501A87 /* RoutedMeshTranslator.cpp */; };
+		042522B818A8D08F00501A87 /* OxDnaExporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B518A8D08F00501A87 /* OxDnaExporterController.cpp */; };
+		042522B918A8D08F00501A87 /* OxDnaImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */; };
+		042522BA18A8D08F00501A87 /* RoutedMeshImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */; };
+		042522BC18A8D0A700501A87 /* ColorModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522BB18A8D0A700501A87 /* ColorModel.cpp */; };
 		AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */; };
 		AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */; };
 		AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */; };
@@ -61,6 +67,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		042522B118A8D06F00501A87 /* OxDnaTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OxDnaTranslator.cpp; path = src/OxDnaTranslator.cpp; sourceTree = "<group>"; };
+		042522B318A8D07E00501A87 /* RoutedMeshTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RoutedMeshTranslator.cpp; path = src/RoutedMeshTranslator.cpp; sourceTree = "<group>"; };
+		042522B518A8D08F00501A87 /* OxDnaExporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OxDnaExporterController.cpp; sourceTree = "<group>"; };
+		042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OxDnaImporterController.cpp; sourceTree = "<group>"; };
+		042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RoutedMeshImporterController.cpp; sourceTree = "<group>"; };
+		042522BB18A8D0A700501A87 /* ColorModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorModel.cpp; sourceTree = "<group>"; };
 		AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplySequenceController.cpp; sourceTree = "<group>"; };
 		AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExportStrandsController.cpp; sourceTree = "<group>"; };
 		AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendStrandController.cpp; sourceTree = "<group>"; };
@@ -140,6 +152,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				042522B318A8D07E00501A87 /* RoutedMeshTranslator.cpp */,
+				042522B118A8D06F00501A87 /* OxDnaTranslator.cpp */,
 				AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */,
 				AAA9C56115BD866700A165A1 /* opengl.cpp */,
 				AAA9C56215BD866700A165A1 /* TargetHelixBaseBackward.cpp */,
@@ -216,6 +230,7 @@
 		AAA285C415823F4000F30976 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				042522BB18A8D0A700501A87 /* ColorModel.cpp */,
 				AAA285C515823F4000F30976 /* BaseModel.cpp */,
 				AAA285C615823F4000F30976 /* HelixModel.cpp */,
 				AAA285C715823F4000F30976 /* MaterialModel.cpp */,
@@ -229,6 +244,9 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				042522B518A8D08F00501A87 /* OxDnaExporterController.cpp */,
+				042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */,
+				042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */,
 				AAA9C57D15C2914C00A165A1 /* CreateCurvesController.cpp */,
 				AA5A581D15AD74FB00604421 /* JSONImporterController.cpp */,
 				AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */,
@@ -327,6 +345,7 @@
 				AAF468EA15820E0800EC064F /* ToggleLocatorRender.cpp in Sources */,
 				AAF468EB15820E0800EC064F /* Tracker.cpp in Sources */,
 				AAF468EC15820E0800EC064F /* Utility.cpp in Sources */,
+				042522B918A8D08F00501A87 /* OxDnaImporterController.cpp in Sources */,
 				AAA285CA15823F4000F30976 /* BaseModel.cpp in Sources */,
 				AAA285CB15823F4000F30976 /* HelixModel.cpp in Sources */,
 				AAA285CC15823F4000F30976 /* MaterialModel.cpp in Sources */,
@@ -344,16 +363,21 @@
 				AA5A581815AD72DE00604421 /* BaseShapeUI.cpp in Sources */,
 				AA5A581B15AD72DE00604421 /* HelixShape.cpp in Sources */,
 				AA5A581C15AD72DE00604421 /* HelixShapeUI.cpp in Sources */,
+				042522B218A8D06F00501A87 /* OxDnaTranslator.cpp in Sources */,
+				042522BC18A8D0A700501A87 /* ColorModel.cpp in Sources */,
+				042522B818A8D08F00501A87 /* OxDnaExporterController.cpp in Sources */,
 				AA5A581E15AD74FB00604421 /* JSONImporterController.cpp in Sources */,
 				AAA9C55B15BD831100A165A1 /* ConnectSuggestionsContext.cpp in Sources */,
 				AAA9C55C15BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp in Sources */,
 				AAA9C55D15BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp in Sources */,
+				042522B418A8D07E00501A87 /* RoutedMeshTranslator.cpp in Sources */,
 				AAA9C55E15BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp in Sources */,
 				AAA9C55F15BD831100A165A1 /* double_arrow.cpp in Sources */,
 				AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */,
 				AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */,
 				AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */,
 				AAA9C57E15C2914C00A165A1 /* CreateCurvesController.cpp in Sources */,
+				042522BA18A8D08F00501A87 /* RoutedMeshImporterController.cpp in Sources */,
 				AAA9C58015C2915900A165A1 /* CreateCurves.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
