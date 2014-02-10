@@ -43,7 +43,7 @@ namespace Helix {
 			 */
 			static Base null;
 
-			static MStatus Create(Helix & helix, const MString & name, const MVector & translation, Base & base);
+			static MStatus Create(Helix & helix, const MString & name, const MVector & translation, Base & base, MSpace::Space space = MSpace::kTransform);
 
 			DEFINE_DEFAULT_INHERITED_OBJECT_CONSTRUCTORS(Base)
 

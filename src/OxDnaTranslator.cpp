@@ -50,6 +50,27 @@ namespace Helix {
 		}
 	};
 
+	class OxDnaImportWithAdvanceProgress : public Controller::OxDnaImporter {
+	protected:
+		void onProcessStart(int count) {
+			if (!MProgressWindow::reserve())
+				MGlobal::displayWarning("Failed to reserve the progress window");
+
+			MProgressWindow::setTitle("oxDNA Exporter");
+			MProgressWindow::setProgressStatus("Writing strands...");
+			MProgressWindow::setProgressRange(0, count);
+			MProgressWindow::startProgress();
+		}
+
+		void onProcessStep() {
+			MProgressWindow::advanceProgress(1);
+		}
+
+		void onProcessEnd() {
+			MProgressWindow::endProgress();
+		}
+	};
+
 	MStatus OxDnaTranslator::writer (const MFileObject& file, const MString& optionsString, MPxFileTranslator::FileAccessMode mode) {
 		MStatus status;
 		MObjectArray helices;
@@ -134,15 +155,7 @@ namespace Helix {
 		MString top_filename, conf_filename, vhelix_filename;
 		get_filenames(file, top_filename, conf_filename, vhelix_filename);
 
-		if (!MProgressWindow::reserve())
-			MGlobal::displayWarning("Failed to reserve the progress window");
-
-		MProgressWindow::setTitle("oxDNA Exporter");
-		MProgressWindow::setProgressStatus("Writing strands...");
-		//MProgressWindow::setProgressRange(0, helices.length());
-		MProgressWindow::startProgress();
-
-		Controller::OxDnaImporter importer; // Add version with progress bar.
+		OxDnaImportWithAdvanceProgress importer;
 
 		HMEVALUATE(status = importer.read(top_filename.asChar(), conf_filename.asChar(), vhelix_filename.asChar()), status);
 

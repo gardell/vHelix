@@ -37,7 +37,7 @@ namespace Helix {
 			 */
 
 			//static MStatus Create(const MMatrix & transform, Helix & helix);
-			static MStatus Create(const MString & name, const MMatrix & transform, Helix & helix);
+			static MStatus Create(const MString & name, const MTransformationMatrix & transform, Helix & helix);
 
 			/*
 			 * Select: Give any object that either identifies a helix or it's children and get a handle to the helix manipulator

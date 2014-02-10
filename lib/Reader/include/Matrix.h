@@ -13,10 +13,6 @@
 #include <cmath>
 #include <ostream>
 
-#ifndef DEG2RAD
-#define	DEG2RAD(deg) ((deg) / 180 * M_PI)
-#endif /* DEG2RAD */
-
 namespace Helix {
 	template<typename T>
 	class VectorT;
@@ -55,7 +51,7 @@ namespace Helix {
 		 */
 
 		static Matrix4x4T<T> RotateX(T degree) {
-			T sin_theta = T(sin(DEG2RAD(degree))), cos_theta = T(cos(DEG2RAD(degree)));
+			T sin_theta = T(sin(toRadians(degree))), cos_theta = T(cos(toRadians(degree)));
 
 			return Matrix4x4T<T>(T(1.0), T(0.0), T(0.0), T(0.0),
 								 T(0.0), cos_theta, -sin_theta, T(0.0),
@@ -64,7 +60,7 @@ namespace Helix {
 		}
 
 		static Matrix4x4T<T> RotateY(T degree) {
-			T sin_theta = T(sin(DEG2RAD(degree))), cos_theta = T(cos(DEG2RAD(degree)));
+			T sin_theta = T(sin(toRadians(degree))), cos_theta = T(cos(toRadians(degree)));
 
 			return Matrix4x4T<T>(cos_theta, T(0.0), sin_theta, T(0.0),
 								 T(0.0), T(1.0), T(0.0), T(0.0),
@@ -74,7 +70,7 @@ namespace Helix {
 		}
 
 		static Matrix4x4T<T> RotateZ(T degree) {
-			T sin_theta = T(sin(DEG2RAD(degree))), cos_theta = T(cos(DEG2RAD(degree)));
+			T sin_theta = T(sin(toRadians(degree))), cos_theta = T(cos(toRadians(degree)));
 
 			return Matrix4x4T<T>(cos_theta, -sin_theta, T(0.0), T(0.0),
 								 sin_theta, cos_theta, T(0.0), T(0.0),

@@ -5,6 +5,8 @@
  *      Author: johan
  */
 
+#include <Utility.h>
+
 #include <model/Material.h>
 #include <model/Base.h>
 #include <model/Strand.h>
@@ -148,21 +150,27 @@ namespace Helix {
 			MStringArray materialName;
 			MStatus status;
 
-			if (!(status = MGlobal::executeCommand(MString("{ float $materialColor[] = { (float) ") + color[0] + ", (float) " + color[1] + ", (float) " + color[2] + " };\nstring $materialName = \"" + name + "\";\n" + MEL_CREATE_MATERIAL_COMMAND + " }", result))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
-			}
-
-			if (!(status = result.getResult(materialName))) {
-				status.perror("MCommandResult::getResult");
-				return status;
-			}
-
-			std::cerr << "Created new material named: " << materialName[0].asChar() << std::endl;
+			HMEVALUATE_RETURN(status = MGlobal::executeCommand(MString(" float $materialColor[] = { (float) ") + color[0] + ", (float) " + color[1] + ", (float) " + color[2] + " };\nstring $materialName = \"" + name + "\";\n" + MEL_CREATE_MATERIAL_COMMAND + " ", result), status);
+			HMEVALUATE_RETURN(status = result.getResult(materialName), status);
 
 			material.m_material = materialName[0];
 
 			return MStatus::kSuccess;
+		}
+
+		MStatus Material::Find(const MString & name, Material & material) {
+			MStatus status;
+			Material::Iterator it;
+			HMEVALUATE_RETURN(it = AllMaterials_begin(status), status);
+
+			for (; it != AllMaterials_end(); ++it) {
+				if (*it == name) {
+					material = *it;
+					return MStatus::kSuccess;
+				}
+			}
+
+			return MStatus::kNotFound;
 		}
 
 		MStatus Material::ApplyMaterialToBases::add(Base & base) {
@@ -175,12 +183,7 @@ namespace Helix {
 
 		MStatus Material::ApplyMaterialToBases::apply() const {
 			MStatus status;
-
-			if (!(status = MGlobal::executeCommand(MString("sets -noWarnings -forceElement ") + m_material.getMaterial() + m_concat))) {
-				status.perror("MGlobal::executeCommand");
-				return status;
-			}
-
+			HMEVALUATE_RETURN(status = MGlobal::executeCommand(MString("sets -noWarnings -forceElement ") + m_material.getMaterial() + m_concat), status);
 			return MStatus::kSuccess;
 		}
 	}

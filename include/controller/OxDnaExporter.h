@@ -51,7 +51,7 @@ namespace Helix {
 			struct Base {
 				DNA::Name label;
 				MVector translation, normal, tangent; // Tangent is the normalized vector between the helix axis and the base.
-				MString name, helixName;
+				MString name, helixName, material;
 			};
 
 			struct Strand {

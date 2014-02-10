@@ -116,10 +116,8 @@ namespace Helix {
 					status.perror("Helix::getTransform");
 					return status;
 				}
-
-				MMatrix matrix = transformation_matrix.asMatrix();
 				
-				if (!(status = Model::Helix::Create(helix_name, matrix, new_helix))) {
+				if (!(status = Model::Helix::Create(helix_name, transformation_matrix, new_helix))) {
 					status.perror("Helix::Create");
 					return status;
 				}

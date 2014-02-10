@@ -31,7 +31,7 @@ namespace Helix {
 	namespace Model {
 		Base Base::null;
 
-		MStatus Base::Create(Helix & helix, const MString & name, const MVector & translation, Base & base) {
+		MStatus Base::Create(Helix & helix, const MString & name, const MVector & translation, Base & base, MSpace::Space space) {
 			MStatus status;
 
 			MObject helix_object = helix.getObject(status);
@@ -54,12 +54,20 @@ namespace Helix {
 			}
 
 			/*
+			 * If space is anything but MSpace::kTransform we must provide MFnTransform with a MDagPath instead of an MObject.
+			 * Try to locate a MDagPath to the new base.
+			 */
+			MDagPath base_path;
+			HMEVALUATE_RETURN(base_path = helix.getDagPath(status), status);
+			HMEVALUATE_RETURN(status = base_path.push(base_object), status);
+
+			/*
 			 * Translate the base
 			 */
 
-			MFnTransform base_transform(base_object);
+			MFnTransform base_transform(base_path);
 
-			if (!(status = base_transform.setTranslation(translation, MSpace::kTransform))) {
+			if (!(status = base_transform.setTranslation(translation, space))) {
 				status.perror("MFnTransform::setTranslation");
 				return status;
 			}

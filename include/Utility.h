@@ -23,6 +23,7 @@
 #include <iterator>
 #include <cstdarg>
 #include <cstdio>
+#include <ctime>
 
 #include <maya/MStatus.h>
 #include <maya/MObjectArray.h>
@@ -163,16 +164,34 @@ namespace Helix {
 	void MSceneMessage_AfterImportOpen_CallbackFunc(void *callbackData);
 
 	/*
-	 * The std lacks this so found a nice template way to do it
+	 * Missing useful math methods.
 	 */
 
-	template <typename T> int sgn(T val) {
+	template<typename T>
+	int sgn(T val) {
 		return (T(0) < val) - (val < T(0));
 	}
 
-	template <typename T> int sgn_nozero(T val) {
+	template<typename T>
+	int sgn_nozero(T val) {
 		return (T(0) <= val) - (val < T(0));
 	}
+
+	template<typename T>
+	T toRadians(T degrees) {
+		return T(degrees * M_PI / 180);
+	}
+
+	template<typename T>
+	T toDegrees(T radians) {
+		return T(radians * 180 / M_PI);
+	}
+
+	/*
+	 * In comparison to MVector::angle this also considers the sign when doing a rotation
+	 * along the given normal axis.
+	 */
+	double signedAngle(const MVector & from, const MVector & to, const MVector & normal);
 
 	/*
 	 * For commands: find all the nodes identified by the names given as arguments to parameters
@@ -287,6 +306,11 @@ namespace Helix {
 	 */
 
 	MStatus SetupOpenGLShaders(const char **vertex_shader_source, const char **fragment_shader_source, const char **uniform_names, GLint *uniform_locations, GLsizei uniform_count, const char **attrib_names, GLint *attrib_locations, GLsizei attrib_count, GLuint & program, GLuint & vertex_shader, GLuint & fragment_shader);
+
+	/*
+	 * Returns the current date and time in a standard format. Used in certain file formats.
+	 */
+	std::string Date();
 
 	/*
 	 * Maya specific debug tools.

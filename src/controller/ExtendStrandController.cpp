@@ -224,8 +224,8 @@ namespace Helix {
 				 * Create the new base and position it
 				 */
 
-				MVector new_translation(DNA::ONE_MINUS_SPHERE_RADIUS * cos(angle - direction * (i + 1) * DEG2RAD(-DNA::PITCH)),
-						DNA::ONE_MINUS_SPHERE_RADIUS * sin(angle - direction * (i + 1) * DEG2RAD(-DNA::PITCH)),
+				MVector new_translation(DNA::ONE_MINUS_SPHERE_RADIUS * cos(angle - direction * (i + 1) * toRadians(-DNA::PITCH)),
+						DNA::ONE_MINUS_SPHERE_RADIUS * sin(angle - direction * (i + 1) * toRadians(-DNA::PITCH)),
 						translation.z + direction * (i + 1) * DNA::STEP);
 
 				Model::Base base;

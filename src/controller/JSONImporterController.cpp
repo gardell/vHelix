@@ -181,7 +181,7 @@ namespace Helix {
 					DNA::HONEYCOMB_Y_STRIDE * (double(helix.row) - average_row) + DNA::HONEYCOMB_Y_OFFSET * shuffle
 				);
 
-				double honeycomb_rotation_offset = M_PI + 2.0 * DEG2RAD(DNA::PITCH);
+				double honeycomb_rotation_offset = M_PI + 2.0 * toRadians(DNA::PITCH);
 
 				/*
 				 * Transformation of the helix. Note that we flip every odd helix by 180 degrees.
@@ -207,9 +207,7 @@ namespace Helix {
 				 * Create the helix
 				 */
 
-				MMatrix helix_transform_matrix = helix_transform.asMatrix();
-
-				if (!(status = Model::Helix::Create("helix1", helix_transform_matrix, helix.helix))) {
+				if (!(status = Model::Helix::Create("helix1", helix_transform, helix.helix))) {
 					status.perror("Helix::Create");
 					return status;
 				}
@@ -506,95 +504,20 @@ namespace Helix {
 			MProgressWindow::startProgress();
 
 			/*
-			 * Iterate over all scaffold bases tracking the strands we have, a lot of them are probably circular
-			 */
-
-			/*{
-				 *
-				 * Every strand has a number of bases identified by helix num and base index
-				 *
-
-				class BaseID {
-				public:
-					int helix, base;
-
-					inline bool operator==(const BaseID & id) const {
-						return helix == id.helix && base == id.base;
-					}
-
-					inline BaseID(int helix_, int base_) : helix(helix_), base(base_) {
-
-					}
-				};
-
-				std::list< std::vector< BaseID > > strands;
-
-				for(std::map<int, Helix>::iterator it = m_file.helices.begin(); it != m_file.helices.end(); ++it) {
-					for(size_t i = 0; i < it->second.scaf.size(); ++i) {
-						 *
-						 * Find this base in the list of already saved bases
-						 *
-
-						BaseID base(it->first, (int) i);
-
-						bool found = false;
-
-						for(std::list< std::vector< BaseID > >::iterator it = strands.begin(); it != strands.end(); ++it) {
-							std::vector<BaseID>::iterator base_it = std::find(it->begin(), it->end(), base);
-
-							if (base_it != it->end()) {
-								std::cerr << "Found" << std::endl;
-								found = true;
-								break;
-							}
-						}
-
-						if (!found) {
-							 *
-							 * This base is part of a new strand that didn't exist before, create a new strand
-							 *
-
-							std::vector<BaseID> strand;
-							strand.push_back(base);
-
-							strands.push_back(strand);
-						}
-					}
-				}
-
-				 *
-				 * Ok, we should have a list of all the unique scaffold strands
-				 *
-
-				std::cerr << "Got " << strands.size() << " scaffold strands to paint" << std::endl;
-
-				for(std::list< std::vector< BaseID > >::iterator it = strands.begin(); it != strands.end(); ++it) {
-					if (!it->empty())
-						paintBases.push_back(std::make_pair(m_file.helices[it->begin()->helix].scaf[it->begin()->base].bases[0], scaf_material));
-				}
-			}*/
-
-			/*
 			 * Now paint the collected 5' ends
 			 */
 
 			PaintMultipleStrandsWithProgressBar functor;
-
-			//for_each_ref(paintBases.begin(), paintBases.end(), functor);
 			for(std::list< std::pair<Model::Base, Model::Material> >::iterator it = paintBases.begin(); it != paintBases.end(); ++it)
 				functor(it->first, it->second);
 
-			if (!(status = functor.status())) {
-				status.perror("PaintMultipleStrandsFunctor");
-				return status;
-			}
+			HMEVALUATE(status = functor.status(), status);
 
 			/*
 			 * Refresh cylinder/base view
 			 */
 
-			if (!(status = Model::Helix::RefreshCylinderOrBases()))
-				status.perror("Helix::RefreshCylinderOrBases");
+			HMEVALUATE(status = Model::Helix::RefreshCylinderOrBases(), status);
 
 			/*
 			 * Select the newly created helices
@@ -611,7 +534,6 @@ namespace Helix {
 
 			if (!(status = Model::Object::Select(m_file.helices.begin(), m_file.helices.end(), select_functor))) {
 				status.perror("Object::Select");
-				return status;
 			}
 #else
 			std::list<Model::Helix> helices;
@@ -620,7 +542,6 @@ namespace Helix {
 			
 			if (!(status = Model::Object::Select(helices.begin(), helices.end()))) {
 				status.perror("Object::Select");
-				return status;
 			}
 #endif /* MAC_PLUGIN */
 

@@ -82,7 +82,7 @@
 */
 
 #define MEL_CREATE_MATERIAL_COMMAND																							\
-	"{\n"																													\
+	"\n"																													\
 	"$materialNode = `createNode lambert -ss -n $materialName`;\n"															\
 	"setAttr ($materialNode + \".dc\") 1;\n"																				\
 	"setAttr ($materialNode + \".c\") -type \"float3\" $materialColor[0] $materialColor[1] $materialColor[2];\n"			\
@@ -90,7 +90,7 @@
 	"$materialSet = `sets -renderable true -noSurfaceShader true -empty -name (\"SurfaceShader_\" + $materialNode)`;\n"		\
 	"connectAttr ($materialNode + \".outColor\") ($materialSet + \".surfaceShader\");\n"									\
 	"ls $materialSet;\n"																									\
-	"}\n"
+	"\n"
 
 /*
  * This is a class for managing the color materials attached to bases
@@ -158,7 +158,9 @@ namespace Helix {
 			 */
 
 			static MStatus Create(const MString & name, float color[3], Material & material);
-			
+
+			static MStatus Find(const MString & name, Material & material);
+
 			typedef std::vector<Material> Container;
 			typedef const Material * Iterator;
 

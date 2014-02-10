@@ -9,6 +9,7 @@
 #define DNA_H_
 
 #include <Definition.h>
+#include <Utility.h>
 
 #include <cmath>
 #include <iostream>
@@ -18,14 +19,6 @@
 #include <maya/MStringArray.h>
 #include <maya/MObjectArray.h>
 #include <maya/MVector.h>
-
-#ifndef DEG2RAD
-#define DEG2RAD(deg)	((deg) / 180.0 * M_PI)
-#endif /* N DEG2RAD */
-
-#ifndef RAD2DEG
-#define RAD2DEG(rad)	((rad) / M_PI * 180.0)
-#endif /* N RAD2DEG */
 
 #define STRAND_NAMES	"forw", "backw"
 
@@ -50,9 +43,9 @@ namespace DNA {
 				 Z_SHIFT = 0.165,															// Don't know what to call it, just got it from earlier source code
 				 ONE_MINUS_SPHERE_RADIUS = (1.0 - SPHERE_RADIUS),
 				 SEQUENCE_RENDERING_Y_OFFSET = 0.22,										// Multiplied by RADIUS
-				 HONEYCOMB_X_STRIDE = 2.0 * DNA::HELIX_RADIUS * cos(DEG2RAD(30)),			// Constants for the honeycomb lattice
-				 HONEYCOMB_Y_STRIDE = 2.0 * DNA::HELIX_RADIUS * (1.0 + sin(DEG2RAD(30))),
-				 HONEYCOMB_Y_OFFSET = 1.0 * DNA::HELIX_RADIUS * sin(DEG2RAD(30));
+				 HONEYCOMB_X_STRIDE = 2.0 * DNA::HELIX_RADIUS * cos(Helix::toRadians(30)),	// Constants for the honeycomb lattice
+				 HONEYCOMB_Y_STRIDE = 2.0 * DNA::HELIX_RADIUS * (1.0 + sin(Helix::toRadians(30))),
+				 HONEYCOMB_Y_OFFSET = 1.0 * DNA::HELIX_RADIUS * sin(Helix::toRadians(30));
 
 	/*
 	 * The create base gui allows the user to specify the number of bases per strand and remembers your choice. The default on startup is defined here
@@ -200,6 +193,29 @@ namespace DNA {
 	 */
 
 	MStatus GetMoleculeAndArrowShapes(MDagPathArray & shapes);
+
+	/*
+	 * Returns the rounded number of bases required to occupy the given distance.
+	 */
+	template<typename T>
+	int DistanceToBaseCount(T distance) {
+		return int(floor(distance / T(STEP) + T(0.5)));
+	}
+	/*
+	 * Returns the actual length a helix created to match the distance will actually have.
+	 */
+	template<typename T>
+	T HelixLength(T distance) {
+		return T(DistanceToBaseCount(distance) * STEP);
+	}
+
+	/*
+	 * Returns the total rotation done by a with the target length.
+	 */
+	template<typename T>
+	T HelixRotation(T distance) {
+		return T(DistanceToBaseCount(distance) * PITCH);
+	}
 }
 
 #endif /* DNA_H_ */

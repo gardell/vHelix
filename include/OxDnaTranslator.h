@@ -6,6 +6,8 @@
 #include <maya/MDagPath.h>
 #include <maya/MPxFileTranslator.h>
 
+#include <controller/OxDnaExporter.h>
+
 #define HELIX_OXDNA_FILE_TYPE	"oxDNA " HELIX_OXDNA_TOP_FILE_TYPE ", " HELIX_OXDNA_CONF_FILE_TYPE
 
 namespace Helix {

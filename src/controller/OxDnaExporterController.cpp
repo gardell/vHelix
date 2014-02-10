@@ -21,8 +21,8 @@ namespace Helix {
 			element.rewind();
 			Model::Base & base(element.getDefiningBase());
 			MDagPath baseDagPath;
-			HMEVALUATE(baseDagPath = base.getDagPath(status), status);
-			HMEVALUATE(outstrand.name = baseDagPath.fullPathName(&status), status);
+			HMEVALUATE_RETURN(baseDagPath = base.getDagPath(status), status);
+			HMEVALUATE_RETURN(outstrand.name = baseDagPath.fullPathName(&status), status);
 
 			Model::Helix parent(base.getParent(status));
 			MEulerRotation parentRotation;
@@ -44,7 +44,10 @@ namespace Helix {
 				HMEVALUATE_RETURN(status = it->getRotation(rotation), status);
 
 				if (base.label == DNA::Invalid) {
-					MGlobal::displayError(MString("The base ") + it->getDagPath(status).fullPathName() + " does not have an assigned label.");
+					const MString errorString(MString("The base ") + it->getDagPath(status).fullPathName() + " does not have an assigned label.");
+					MGlobal::displayError(errorString);
+					HPRINT("%s", errorString.asChar());
+
 					return MStatus::kInvalidParameter;
 				}
 
@@ -54,9 +57,12 @@ namespace Helix {
 				HMEVALUATE_RETURN(direction = it->sign_along_axis(MVector::zAxis, MSpace::kTransform, status), status);
 
 				base.normal = normal * direction;
-				outstrand.strand.push_back(base);
 				HMEVALUATE_RETURN(base.helixName = parent.getDagPath(status).fullPathName(), status);
-				HMEVALUATE_RETURN(base.name = it->getDagPath(status).fullPathName(), status);
+				HMEVALUATE_RETURN(base.name = it->getDagPath(status).partialPathName(), status);
+				Model::Material material;
+				HMEVALUATE_RETURN(status = it->getMaterial(material), status);
+				base.material = material.getMaterial();
+				outstrand.strand.push_back(base);
 
 				if (m_helices.find(base.helixName.asChar()) == m_helices.end()) {
 					Helix helix;
@@ -73,6 +79,7 @@ namespace Helix {
 
 			outstrand.circular = it.loop();
 			m_strands.push_back(outstrand);
+
 			return MStatus::kSuccess;
 		}
 
@@ -110,20 +117,22 @@ namespace Helix {
 				numBases += it->strand.size();
 			}
 
-			top_file << m_strands.size() << " " << numBases << std::endl;
+			top_file << numBases << " " << m_strands.size() << std::endl << std::endl;
 
 			unsigned int i = 1;
+			int j = 0;
+
 			for (std::list<Strand>::const_iterator it = m_strands.begin(); it != m_strands.end(); ++it, ++i) {
 				const int firstIndex = it->circular ? it->strand.size() - 1 : -1;
 				const int lastIndex = it->circular ? 0 : -1;
 
 				top_file << "# " << it->name.asChar() << std::endl;
 
-				int j = 0;
-				for (std::vector<Base>::const_iterator lit = it->strand.begin(); lit != it->strand.end(); ++lit, ++j)
+				int k = 0;
+				for (std::vector<Base>::const_iterator lit = it->strand.begin(); lit != it->strand.end(); ++lit, ++j, ++k)
 					top_file << i << " " << lit->label.toChar() << " " <<
-								(j == 0 ? firstIndex : j - 1) << " " <<
-								(j == int(it->strand.size()) - 1 ? lastIndex : j + 1) << std::endl;
+								(k == int(it->strand.size()) - 1 ? lastIndex : j + 1) << " " <<
+								(k == 0 ? firstIndex : j - 1) << std::endl;
 
 				top_file << std::endl;
 			}
@@ -134,25 +143,38 @@ namespace Helix {
 			conf_file << "t = 0" << std::endl << "b = " << dimensions.x << " " << dimensions.y << " " << dimensions.z << std::endl << "E = 0. 0. 0." << std::endl;
 
 			for (std::list<Strand>::const_iterator it = m_strands.begin(); it != m_strands.end(); ++it, ++i) {
-				conf_file << "# " << it->name.asChar() << std::endl;
-
 				for (std::vector<Base>::const_iterator sit = it->strand.begin(); sit != it->strand.end(); ++sit) {
-					const MVector translation(sit->translation - minTranslation);
+					const MVector translation(sit->translation/* - minTranslation*/);
 
 					conf_file << translation.x << " " << translation.y << " " << translation.z << " " <<
 							sit->tangent.x << " " << sit->tangent.y << " " << sit->tangent.z << " " <<
 							sit->normal.x << " " << sit->normal.y << " " << sit->normal.z <<
 							" 0.0 0.0 0.0 0.0 0.0 0.0" << std::endl;
 				}
-
-				conf_file << std::endl;
 			}
 
 			conf_file.close();
 
-			// Export helices...
+			vhelix_file << "# vHelix glue file for oxDNA export \"" << topology_filename << "\" and \"" << configuration_filename << "\"." << std::endl <<
+					"# " << Date() << std::endl << std::endl;
 
-			// Export bases...
+			for (std::tr1::unordered_map<std::string, Helix>::const_iterator it = m_helices.begin(); it != m_helices.end(); ++it) {
+				const MVector translation(it->second.translation/* - minTranslation*/);
+
+				vhelix_file << "helix " << it->first << " " <<
+						translation.x << " " << translation.y << " " << translation.z << " " <<
+						it->second.normal.x << " " << it->second.normal.y << " " << it->second.normal.z << std::endl;
+			}
+
+			vhelix_file << std::endl;
+
+			unsigned int index = 0;
+			for (std::list<Strand>::const_iterator it = m_strands.begin(); it != m_strands.end(); ++it, ++i) {
+				for (std::vector<Base>::const_iterator bit = it->strand.begin(); bit != it->strand.end(); ++bit) {
+					vhelix_file << "base " << index++ << " " << bit->name << " " << bit->helixName << " " << bit->material.asChar() << std::endl;
+				}
+			}
+
 
 			vhelix_file.close();
 

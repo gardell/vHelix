@@ -206,7 +206,7 @@ namespace Helix {
 				for_each_ref_itref(it, strand.forward_end(), functor);
 
 				if (!(m_status = functor.status())) {
-					m_status.perror("SetMaterialFunctor::status 1");
+					HMEVALUATE_DESCRIPTION("SetMaterialFunctor", m_status);
 					return;
 				}
 
@@ -217,15 +217,12 @@ namespace Helix {
 					for_each_ref(strand.reverse_begin(), strand.reverse_end(), functor);
 
 					if (!(m_status = functor.status())) {
-						m_status.perror("SetMaterialFunctor::status 2");
+						HMEVALUATE_DESCRIPTION("SetMaterialFunctor", m_status);
 						return;
 					}
 				}
 
-				if (!(m_status = functor.getApply().apply())) {
-					m_status.perror("Material::ApplyMaterialToBases");
-					return;
-				}
+				m_status = functor.getApply().apply();
 			}
 
 			inline const MStatus & status() const {

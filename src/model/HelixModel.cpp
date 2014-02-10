@@ -30,7 +30,7 @@ namespace Helix {
 	namespace Model {
 		Helix Helix::null;
 
-		MStatus Helix::Create(const MString & name, const MMatrix & transform, Helix & helix) {
+		MStatus Helix::Create(const MString & name, const MTransformationMatrix & transform, Helix & helix) {
 			MStatus status;
 
 			MFnDagNode helix_dagNode;
@@ -105,9 +105,8 @@ namespace Helix {
 			}
 
 			MFnTransform helix_transform(helix_dagPath);
-			MTransformationMatrix transformationMatrix(transform);
 
-			if (!(status = helix_transform.set(transformationMatrix))) {
+			if (!(status = helix_transform.set(transform))) {
 				status.perror("MFnTransform::set");
 				return status;
 			}

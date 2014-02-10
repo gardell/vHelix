@@ -851,6 +851,24 @@ namespace Helix {
 		return MStatus::kSuccess;
 	}
 
+	double signedAngle(const MVector & from, const MVector & to, const MVector & normal) {
+		MQuaternion rotation(from, to);
+		MVector axis;
+		double angle;
+		rotation.getAxisAngle(axis, angle);
+		double sign = sgn(axis * normal);
+		HPRINT("arccos(from * to): %f", toDegrees(acos(from * to)));
+		HPRINT("Sign: %f, angle: %f, result: %f", sign, toDegrees(angle), toDegrees(sign * angle));
+		return angle * sign;
+	}
+
+	std::string Date() {
+		char buffer[80];
+		std::time_t current_time = std::time(NULL);
+		strftime(buffer, sizeof(buffer), "%c", std::localtime(&current_time));
+		return buffer;
+	}
+
 	namespace Debug {
 		void printf(const char *file, const char *function, size_t line, const char *expr, ...) {
 			va_list vl;

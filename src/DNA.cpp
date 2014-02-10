@@ -46,13 +46,13 @@ y=ystart-self.STEP*numBases/2.0+i*self.STEP+0.165
 
 		 */
 
-		double rad = DEG2RAD(offset) + index * DEG2RAD(-PITCH);
+		double rad = Helix::toRadians(offset) + index * Helix::toRadians(-PITCH);
 
 		forward.x = ONE_MINUS_SPHERE_RADIUS * sin(rad);
 		forward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);
 		forward.z = index * STEP + Z_SHIFT - totalNumBases * STEP / 2;
 
-		rad += DEG2RAD(OPPOSITE_ROTATION);
+		rad += Helix::toRadians(OPPOSITE_ROTATION);
 
 		backward.x = ONE_MINUS_SPHERE_RADIUS * sin(rad);
 		backward.y = ONE_MINUS_SPHERE_RADIUS * cos(rad);

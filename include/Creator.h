@@ -50,6 +50,8 @@ namespace Helix {
 		MStatus create(const MVector & origo, int bases, double rotation, Model::Helix & helix);
 		MStatus create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix);
 
+		MStatus create(int bases, const MTransformationMatrix & transform, Model::Helix & helix);
+
 	private:
 		/*
 		 * The createHelix along CV curve puts requirements on the generated bases
@@ -79,34 +81,23 @@ namespace Helix {
 		 * Before calling, the m_materials must be set
 		 */
 
-		//MStatus createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
-
-		MStatus createHelix(int bases, Model::Helix & helix, const MMatrix & transform = MMatrix::identity, const CreateBaseControl & control = CreateBaseControl());
-
-		inline MStatus createHelix(int bases, const MMatrix & transform = MMatrix::identity, const CreateBaseControl & control = CreateBaseControl()) {
-			Model::Helix helix;
-
-			return createHelix(bases, helix, transform, control);
-		}
+		MStatus createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform = MTransformationMatrix::identity, const CreateBaseControl & control = CreateBaseControl());
 
 		/*
 		 * Create a helix along the line between the two given points
 		 * either calculate the number of bases to generate and round to the nearest integer
 		 * or give them explicitly.
 		 * If no rotation is given, the helix will be oriented with the first base along the Y-axis.
-		 * Notice that the rotation is given in degrees
+		 * Notice that the rotation is given in degrees.
+		 *
+		 * TODO: Eliminate usage of these, use the method above instead.
 		 */
 
-		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation = 0.0, const CreateBaseControl & control = CreateBaseControl()) {
-			Model::Helix helix;
-			return createHelix(origo, end, rotation, helix, control);
-		}
-
-		MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
-
-		inline MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation = 0.0, const CreateBaseControl & control = CreateBaseControl()) {
-			Model::Helix helix;
-			return createHelix(origo, direction, bases, rotation, helix, control);
+		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl()) {
+			const MVector delta(end - origo), center(origo + delta / 2);
+			return createHelix(
+					center, delta.normal(), DNA::DistanceToBaseCount(delta.length()),
+					rotation, helix, control);
 		}
 
 		MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
@@ -116,7 +107,7 @@ namespace Helix {
 		 * The rotation is applied to the first helix, the following helices will be rotated to match the end rotation of the previous one
 		 */
 
-		MStatus createHelix(const MPointArray & points, double rotation = 0.0);
+		MStatus createHelices(const MPointArray & points, double rotation = 0.0);
 
 		/*
 		 * These are for the redo/undo functionality
@@ -127,7 +118,8 @@ namespace Helix {
 			CREATE_NORMAL = 1,
 			CREATE_BETWEEN = 2,
 			CREATE_ORIENTED = 3,
-			CREATE_ALONG_CURVE = 4
+			CREATE_ALONG_CURVE = 4,
+			CREATE_TRANSFORMED = 5
 		} m_redoMode;
 
 		struct {
@@ -135,6 +127,7 @@ namespace Helix {
 			MVector origo, end, direction;
 			double rotation;
 			std::vector<MPointArray> points;
+			MTransformationMatrix transform;
 		} m_redoData;
 
 		std::list<Model::Helix> m_helices;

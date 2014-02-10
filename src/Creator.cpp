@@ -51,7 +51,7 @@ namespace Helix {
 	int Creator::default_bases = DNA::CREATE_DEFAULT_NUM_BASES;
 
 	//MStatus Creator::createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix, const CreateBaseControl & control) {
-	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MMatrix & transform, const CreateBaseControl & control) {
+	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform, const CreateBaseControl & control) {
 		default_bases = bases;
 
 		MStatus status;
@@ -71,7 +71,7 @@ namespace Helix {
 		 * Create the helix
 		 */
 
-		if (!(status = Model::Helix::Create("helix1", MMatrix::identity, helix))) {
+		if (!(status = Model::Helix::Create("helix1", MTransformationMatrix::identity, helix))) {
 			status.perror("Helix::Create");
 			return status;
 		}
@@ -95,24 +95,7 @@ namespace Helix {
 				return status;
 			}
 
-			/*if (!(status = helix_transform.setTranslation(origo, MSpace::kTransform))) {
-				status.perror("MFnTransform::setTranslation");
-				return status;
-			}
-
-			static double rotation_xyz[] = { 0.0, 0.0, DEG2RAD(rotation) };
-
-			if (!(status = helix_transform.setRotation(rotation_xyz, MTransformationMatrix::kXYZ, MSpace::kTransform))) {
-				status.perror("MFnTransform::setRotation");
-				return status;
-			}*/
-
-			{
-				MTransformationMatrix transf = MTransformationMatrix(transform);
-				MVector vec = transf.getTranslation(MSpace::kTransform);
-				std::cerr << "Setting transform on helix: " << helix_transform.fullPathName().asChar() << ", " << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
-			}
-			if (!(status = helix_transform.set(MTransformationMatrix(transform)))) {
+			if (!(status = helix_transform.set(transform))) {
 				status.perror("MFnTransform::set");
 				return status;
 			}
@@ -237,14 +220,7 @@ namespace Helix {
 		return MStatus::kSuccess;
 	}
 
-	MStatus Creator::createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
-		MVector distance = end - origo, direction = distance.normal(), end_origo = origo + distance / 2.0;
-
-		std::cerr << "Distance: " << distance.length() << std::endl;
-		return createHelix(end_origo, direction, (int) floor(distance.length() / DNA::STEP + 0.5), rotation, helix, control); // There's no round() in the C++ STD!
-	}
-
-	MStatus Creator::createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
+	MStatus Creator::createHelix(const MVector & center, const MVector & normal, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
 		MStatus status;
 
 		if (bases <= 0) {
@@ -253,52 +229,25 @@ namespace Helix {
 		}
 
 		/*
-		 * The quaternion will create a rotation between the first given axis to the second along their mutually perpendicular axis.
-		 * this is not really what we want, thus, i'll do it in two steps, first rotate to a vector that is on the x-y plane, then rotate
-		 * again to obtain the correct z value. This way, our helix will keep the y-axis as zero.
+		 * When rotating the helix, in order to keep the initial rotation of the helix relative to the global xz-plane,
+		 * we have to first rotate the cylinder around the Y-axis (azimuthal/yaw) then along the local X-axis (altitude/pitch)
+		 * and finally along the normal itself (roll).
 		 */
-
-		MVector direction_xy(direction.x, direction.y);
-
-		MQuaternion quaternion1(MVector::zAxis, direction_xy), quaternion2(direction_xy, direction);
-
-		/*if (!(status = createHelix(bases, rotation, origo, helix, control))) {
-			status.perror("createHelix(bases, helix)");
-			return status;
-		}
-
-		MFnTransform helix_transform(helix.getDagPath(status));
-
-		if (!status) {
-			status.perror("Helix::getDagPath");
-			return status;
-		}*/
-
-		/*
-		 * Now rotate along the Z-axis with the given rotation
-		 */
-
-		double rotation_vector[] = { 0.0, 0.0, DEG2RAD(rotation) };
+		const MVector normal_xz(MVector(normal.x, 0, normal.z).normal());
 		MTransformationMatrix matrix;
 
-		if (!(status = matrix.setRotation(rotation_vector, MTransformationMatrix::kXYZ))) {
-			status.perror("MTransformationMatrix::setRotation");
-			return status;
-		}
+		// Translation to the center of the cylinder.
+		HMEVALUATE_RETURN(status = matrix.setTranslation(center, MSpace::kTransform), status);
 
-		matrix.rotateBy(quaternion1, MSpace::kTransform);
-		matrix.rotateBy(quaternion2, MSpace::kTransform);
+		// Rotations are specified in "global space", not relative to the current transform.
+		// Yaw (azimuth, rotation on the xz-plane).
+		HMEVALUATE_RETURN(matrix.rotateBy(MQuaternion(MVector::zAxis, normal_xz), MSpace::kTransform, &status), status);
+		// Pitch (altitude, rotation between the normal projection in the xz-plane and the normal vector).
+		HMEVALUATE_RETURN(matrix.rotateBy(MQuaternion(normal_xz, normal), MSpace::kTransform, &status), status);
+		// Roll (rotation around the cylinder axis).
+		HMEVALUATE_RETURN(matrix.rotateBy(MQuaternion(toRadians(rotation), normal), MSpace::kTransform, &status), status);
 
-		if (!(status = matrix.addTranslation(origo, MSpace::kTransform))) {
-			status.perror("MTransformationMatrix::addTranslation");
-			return status;
-		}
-
-		{
-			MVector vec = MTransformationMatrix(matrix.asMatrix()).getTranslation(MSpace::kTransform);
-			std::cerr << "createHelix matrix: " << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
-		}
-		if (!(status = createHelix(bases, helix, matrix.asMatrix(), control))) {
+		if (!(status = createHelix(bases, helix, matrix, control))) {
 			status.perror("createHelix(bases, helix)");
 			return status;
 		}
@@ -306,7 +255,7 @@ namespace Helix {
 		return MStatus::kSuccess;
 	}
 
-	MStatus Creator::createHelix(const MPointArray & points, double rotation) {
+	MStatus Creator::createHelices(const MPointArray & points, double rotation) {
 		MStatus status;
 
 		double current_rotation = rotation;
@@ -396,7 +345,7 @@ namespace Helix {
 				std::cerr << "Next plane: normal: " << normal.x << ", " << normal.y << ", " << normal.z << std::endl;
 			}*/
 
-			std::cerr << "Start: " << origo.x << ", " << origo.y << ", " << origo.z << "End: " << end.x << ", " << end.y << ", " << end.z << std::endl;
+			std::cerr << "Start: " << origo.x << ", " << origo.y << ", " << origo.z << " End: " << end.x << ", " << end.y << ", " << end.z << std::endl;
 
 			if (!(status = createHelix(origo, end, current_rotation, helix/*, control*/))) {
 				status.perror(MString("createHelix at index: ") + i);
@@ -409,7 +358,8 @@ namespace Helix {
 
 			// FIXME
 
-			current_rotation += floor((end - origo).length() / DNA::STEP + 0.5) * DNA::PITCH;
+			//current_rotation += floor((end - origo).length() / DNA::STEP + 0.5) * DNA::PITCH;
+			current_rotation += DNA::HelixRotation((end - origo).length());
 
 			/*
 			 * A new color for the upcoming helix
@@ -562,7 +512,7 @@ namespace Helix {
 
 				m_redoData.points.push_back(pointArray);
 
-				if (!(status = createHelix(pointArray, rotation))) {
+				if (!(status = createHelices(pointArray, rotation))) {
 					status.perror("createHelix(pointArray, rotation)");
 					return status;
 				}
@@ -579,7 +529,8 @@ namespace Helix {
 			m_redoData.end = end;
 			m_redoData.origo = origo;
 
-			return createHelix(origo, end, rotation);
+			Model::Helix helix;
+			return createHelix(origo, end, rotation, helix);
 		}
 		else if (hasDirection) {
 			/*
@@ -590,7 +541,8 @@ namespace Helix {
 			m_redoData.direction = direction;
 			m_redoData.origo = origo;
 
-			return createHelix(origo, direction, bases, rotation);
+			Model::Helix helix;
+			return createHelix(origo, direction, bases, rotation, helix);
 		}
 		else {
 			/*
@@ -633,7 +585,7 @@ namespace Helix {
 
 						m_redoData.points.push_back(pointArray);
 
-						if (!(status = createHelix(pointArray, rotation))) {
+						if (!(status = createHelices(pointArray, rotation))) {
 							status.perror("createHelix(pointArray, rotation)");
 							return status;
 						}
@@ -666,7 +618,9 @@ namespace Helix {
 				return status;
 			}
 
-			return createHelix(bases, matrix.asMatrix());
+			Model::Helix helix;
+			HMEVALUATE_RETURN(status = createHelix(bases, helix, matrix), status);
+			//m_helices.push_back(helix);
 		}
 
 		return MStatus::kSuccess;
@@ -724,15 +678,34 @@ namespace Helix {
 	MStatus Creator::redoIt () {
 		switch (m_redoMode) {
 		case CREATE_NORMAL:
-			return createHelix(m_redoData.bases);
+		HPRINT("Redo normal: bases: %u", m_redoData.bases);
+		{
+			Model::Helix helix;
+			return createHelix(m_redoData.bases, helix);
+		}
 		case CREATE_ORIENTED:
-			return createHelix(m_redoData.origo, m_redoData.direction, m_redoData.bases, m_redoData.rotation);
+		{
+			Model::Helix helix;
+			return createHelix(m_redoData.origo, m_redoData.direction, m_redoData.bases, m_redoData.rotation, helix);
+		}
 		case CREATE_BETWEEN:
-			return createHelix(m_redoData.origo, m_redoData.end, m_redoData.rotation);
+		{
+			Model::Helix helix;
+			return createHelix(m_redoData.origo, m_redoData.end, m_redoData.rotation, helix);
+		}
 		case CREATE_ALONG_CURVE:
 			// TODO: Is this correct?
 			for(std::vector<MPointArray>::iterator it = m_redoData.points.begin(); it != m_redoData.points.end(); ++it)
-				createHelix(*it, m_redoData.rotation);
+				createHelices(*it, m_redoData.rotation);
+			break;
+		case CREATE_TRANSFORMED:
+		{
+			HPRINT("Redo transformed");
+			MStatus status;
+			Model::Helix helix;
+			HMEVALUATE_RETURN(status = createHelix(m_redoData.bases, helix, m_redoData.transform), status);
+			m_helices.push_back(helix);
+		}
 			break;
 		case CREATE_NONE:
 			break;
@@ -814,7 +787,7 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(bases, helix, matrix.asMatrix());
+		return createHelix(bases, helix, matrix);
 	}
 
 	MStatus Creator::create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix) {
@@ -831,5 +804,20 @@ namespace Helix {
 		}
 
 		return createHelix(origo, end, rotation, helix);
+	}
+
+	MStatus Creator::create(int bases, const MTransformationMatrix & transform, Model::Helix & helix) {
+		MStatus status;
+
+		m_redoMode = CREATE_TRANSFORMED;
+		m_redoData.bases = bases;
+		m_redoData.transform = transform;
+
+		if (!(status = randomizeMaterials())) {
+			status.perror("randomizeMaterials");
+			return status;
+		}
+
+		return createHelix(bases, helix, transform);
 	}
 }

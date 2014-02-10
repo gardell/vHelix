@@ -24,6 +24,11 @@ namespace Helix {
 		public:
 			MStatus read(const char *topology_filename, const char *configuration_filename, const char *vhelix_filename);
 
+		protected:
+			virtual void onProcessStart(int count) = 0;
+			virtual void onProcessStep() = 0;
+			virtual void onProcessEnd() = 0;
+
 		private:
 			struct Base {
 				unsigned int strand;
@@ -31,7 +36,7 @@ namespace Helix {
 
 				DNA::Name label;
 				MVector translation;
-				MString name, helixName;
+				MString name, helixName, material;
 				Model::Base base;
 			};
 

@@ -151,7 +151,7 @@ namespace Helix {
 				 */
 
 				int y = (int) ((base_translation.z + height / 2.0 - origo) / DNA::STEP + DNA::Z_SHIFT),
-					x = (int) ceil(sin(atan2(base_translation.y, base_translation.x) - y * DEG2RAD(DNA::PITCH)));
+					x = (int) ceil(sin(atan2(base_translation.y, base_translation.x) - y * toRadians(DNA::PITCH)));
 
 				/*
 				 * If the base has been moved outside of the boundaries, ignore it
