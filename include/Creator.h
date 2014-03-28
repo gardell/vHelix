@@ -46,11 +46,11 @@ namespace Helix {
 		 * Direct access interfaces, used by other C++ libraries
 		 */
 
-		MStatus create(int bases, Model::Helix & helix);
-		MStatus create(const MVector & origo, int bases, double rotation, Model::Helix & helix);
-		MStatus create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix);
+		MStatus create(int bases, Model::Helix & helix, const MString & name = "helix1");
+		MStatus create(const MVector & origo, int bases, double rotation, Model::Helix & helix, const MString & name = "helix1");
+		MStatus create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const MString & name = "helix1");
 
-		MStatus create(int bases, const MTransformationMatrix & transform, Model::Helix & helix);
+		MStatus create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name = "helix1");
 
 	private:
 		/*
@@ -81,7 +81,7 @@ namespace Helix {
 		 * Before calling, the m_materials must be set
 		 */
 
-		MStatus createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform = MTransformationMatrix::identity, const CreateBaseControl & control = CreateBaseControl());
+		MStatus createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform = MTransformationMatrix::identity, const CreateBaseControl & control = CreateBaseControl(), const MString & name = "helix1");
 
 		/*
 		 * Create a helix along the line between the two given points
@@ -93,14 +93,14 @@ namespace Helix {
 		 * TODO: Eliminate usage of these, use the method above instead.
 		 */
 
-		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl()) {
+		inline MStatus createHelix(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl(), const MString & name = "helix1") {
 			const MVector delta(end - origo), center(origo + delta / 2);
 			return createHelix(
 					center, delta.normal(), DNA::DistanceToBaseCount(delta.length()),
-					rotation, helix, control);
+					rotation, helix, control, name);
 		}
 
-		MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl());
+		MStatus createHelix(const MVector & origo, const MVector & direction, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control = CreateBaseControl(), const MString & name = "helix1");
 
 		/*
 		 * Create a number of helices along a CV curve. Notice that the curve's bending properties (bezier etc) are not taken into account

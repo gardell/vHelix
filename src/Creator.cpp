@@ -51,7 +51,7 @@ namespace Helix {
 	int Creator::default_bases = DNA::CREATE_DEFAULT_NUM_BASES;
 
 	//MStatus Creator::createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix, const CreateBaseControl & control) {
-	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform, const CreateBaseControl & control) {
+	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform, const CreateBaseControl & control, const MString & name) {
 		default_bases = bases;
 
 		MStatus status;
@@ -71,7 +71,7 @@ namespace Helix {
 		 * Create the helix
 		 */
 
-		if (!(status = Model::Helix::Create("helix1", MTransformationMatrix::identity, helix))) {
+		if (!(status = Model::Helix::Create(name, MTransformationMatrix::identity, helix))) {
 			status.perror("Helix::Create");
 			return status;
 		}
@@ -220,7 +220,7 @@ namespace Helix {
 		return MStatus::kSuccess;
 	}
 
-	MStatus Creator::createHelix(const MVector & center, const MVector & normal, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control) {
+	MStatus Creator::createHelix(const MVector & center, const MVector & normal, int bases, double rotation, Model::Helix & helix, const CreateBaseControl & control, const MString & name) {
 		MStatus status;
 
 		if (bases <= 0) {
@@ -247,7 +247,7 @@ namespace Helix {
 		// Roll (rotation around the cylinder axis).
 		HMEVALUATE_RETURN(matrix.rotateBy(MQuaternion(toRadians(rotation), normal), MSpace::kTransform, &status), status);
 
-		if (!(status = createHelix(bases, helix, matrix, control))) {
+		if (!(status = createHelix(bases, helix, matrix, control, name))) {
 			status.perror("createHelix(bases, helix)");
 			return status;
 		}
@@ -745,7 +745,7 @@ namespace Helix {
 	 * Direct access interfaces used by other libraries
 	 */
 
-	MStatus Creator::create(int bases, Model::Helix & helix) {
+	MStatus Creator::create(int bases, Model::Helix & helix, const MString & name) {
 		MStatus status;
 		
 		m_redoMode = CREATE_NORMAL;
@@ -758,10 +758,10 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(bases, helix);
+		return createHelix(bases, helix, MTransformationMatrix::identity, CreateBaseControl(), name);
 	}
 
-	MStatus Creator::create(const MVector & origo, int bases, double rotation, Model::Helix & helix) {
+	MStatus Creator::create(const MVector & origo, int bases, double rotation, Model::Helix & helix, const MString & name) {
 		MStatus status;
 
 		m_redoMode = CREATE_NORMAL;
@@ -787,10 +787,10 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(bases, helix, matrix);
+		return createHelix(bases, helix, matrix, CreateBaseControl(), name);
 	}
 
-	MStatus Creator::create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix) {
+	MStatus Creator::create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const MString & name) {
 		MStatus status;
 
 		m_redoMode = CREATE_BETWEEN;
@@ -803,10 +803,10 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(origo, end, rotation, helix);
+		return createHelix(origo, end, rotation, helix, CreateBaseControl(), name);
 	}
 
-	MStatus Creator::create(int bases, const MTransformationMatrix & transform, Model::Helix & helix) {
+	MStatus Creator::create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name) {
 		MStatus status;
 
 		m_redoMode = CREATE_TRANSFORMED;
@@ -818,6 +818,6 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(bases, helix, transform);
+		return createHelix(bases, helix, transform, CreateBaseControl(), name);
 	}
 }

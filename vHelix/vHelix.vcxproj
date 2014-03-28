@@ -599,6 +599,8 @@
     <ClInclude Include="..\include\controller\JSONImporter.h" />
     <ClInclude Include="..\include\controller\Operation.h" />
     <ClInclude Include="..\include\controller\PaintStrand.h" />
+    <ClInclude Include="..\include\controller\RoutedMeshImporter.h" />
+    <ClInclude Include="..\include\controller\TextBasedImporter.h" />
     <ClInclude Include="..\include\CreateCurves.h" />
     <ClInclude Include="..\include\Creator.h" />
     <ClInclude Include="..\include\CreatorGui.h" />
@@ -624,7 +626,9 @@
     <ClInclude Include="..\include\opengl.h" />
     <ClInclude Include="..\include\PaintStrand.h" />
     <ClInclude Include="..\include\RetargetBase.h" />
+    <ClInclude Include="..\include\RoutedMeshTranslator.h" />
     <ClInclude Include="..\include\TargetHelixBaseBackward.h" />
+    <ClInclude Include="..\include\TextBasedTranslator.h" />
     <ClInclude Include="..\include\ToggleCylinderBaseView.h" />
     <ClInclude Include="..\include\ToggleLocatorRender.h" />
     <ClInclude Include="..\include\ToggleShowSuggestedConnections.h" />
@@ -655,6 +659,7 @@
     <ClCompile Include="..\src\controller\OxDnaImporterController.cpp" />
     <ClCompile Include="..\src\controller\PaintStrandController.cpp" />
     <ClCompile Include="..\src\controller\RoutedMeshImporterController.cpp" />
+    <ClCompile Include="..\src\controller\TextBasedImporterController.cpp" />
     <ClCompile Include="..\src\CreateCurves.cpp" />
     <ClCompile Include="..\src\Creator.cpp" />
     <ClCompile Include="..\src\CreatorGui.cpp" />
@@ -682,6 +687,7 @@
     <ClCompile Include="..\src\RetargetBase.cpp" />
     <ClCompile Include="..\src\RoutedMeshTranslator.cpp" />
     <ClCompile Include="..\src\TargetHelixBaseBackward.cpp" />
+    <ClCompile Include="..\src\TextBasedTranslator.cpp" />
     <ClCompile Include="..\src\ToggleCylinderBaseView.cpp" />
     <ClCompile Include="..\src\ToggleLocatorRender.cpp" />
     <ClCompile Include="..\src\ToggleShowSuggestedConnections.cpp" />

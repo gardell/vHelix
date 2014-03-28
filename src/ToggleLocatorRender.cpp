@@ -12,6 +12,7 @@
 #include <maya/MGlobal.h>
 
 namespace Helix {
+	const unsigned int ToggleLocatorRender::MaxBases(10);
 #ifndef MAC_PLUGIN
 	unsigned int ToggleLocatorRender::CurrentRender = kRenderAll;
 #else

@@ -395,12 +395,12 @@ namespace Helix {
 			return;
 		}
 
-		MFnTransform helix_transform(helix.getDagPath(stat));
+		/*MFnTransform helix_transform(helix.getDagPath(stat));
 
 		if (!stat) {
 			stat.perror("Helix::getDagPath");
 			return;
-		}
+		}*/
 
 		/*if (!(stat = helix.getSelectedChildBases(selectedChildBases))) {
 			stat.perror("Helix::getSelectedChildBases");
@@ -411,6 +411,12 @@ namespace Helix {
 			stat.perror("Base::AllSelected");
 			return;
 		}
+
+		/*
+		 * Do not render if the user is selecting a lot of bases.
+		 */
+		if (selectedBases.length() > ToggleLocatorRender::MaxBases)
+			return;
 
 		/*
 		 * Setup OpenGL rendering state

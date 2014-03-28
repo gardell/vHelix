@@ -52,6 +52,7 @@ namespace Helix {
 		};
 
 		static unsigned int CurrentRender;
+		static const unsigned int MaxBases;
 
 	private:
 		int m_lastRender; // For undo

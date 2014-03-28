@@ -195,6 +195,18 @@
     <ClInclude Include="..\include\CreateCurves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\controller\RoutedMeshImporter.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\controller\TextBasedImporter.h">
+      <Filter>Header Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\RoutedMeshTranslator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TextBasedTranslator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ApplySequence.cpp">
@@ -363,6 +375,12 @@
       <Filter>Source Files\controller</Filter>
     </ClCompile>
     <ClCompile Include="..\src\OxDnaTranslator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\TextBasedImporterController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TextBasedTranslator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

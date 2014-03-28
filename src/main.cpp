@@ -34,6 +34,7 @@
 #include <JSONTranslator.h>
 #include <OxDnaTranslator.h>
 #include <RoutedMeshTranslator.h>
+#include <TextBasedTranslator.h>
 #include <RetargetBase.h>
 #include <TargetHelixBaseBackward.h>
 #include <CreateCurves.h>
@@ -86,7 +87,8 @@
 	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),										\
 	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),																																					\
 	new RegisterFileTranslator(HELIX_OXDNA_FILE_TYPE, Helix::OxDnaTranslator::creator),																																							\
-	new RegisterFileTranslator(HELIX_ROUTED_MESH_FILE_TYPE, Helix::RoutedMeshTranslator::creator),																																							\
+	new RegisterFileTranslator(HELIX_ROUTED_MESH_FILE_TYPE, Helix::RoutedMeshTranslator::creator),																																				\
+	new RegisterFileTranslator(HELIX_TEXT_BASED_FILE_DESCRIPTION, Helix::TextBasedTranslator::creator),																																			\
 	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),																		\
 	new RegisterShape(HELIX_SHAPE_NAME, Helix::View::HelixShape::id, Helix::View::HelixShape::creator, Helix::View::HelixShape::initialize, Helix::View::HelixShapeUI::creator)
 
