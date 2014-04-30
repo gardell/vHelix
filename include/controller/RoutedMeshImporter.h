@@ -25,6 +25,8 @@ namespace Helix {
 				unsigned int vertex;
 				bool hasCylinder;
 				double cylinder[2]; // start and end offsets.
+				bool hasAngle;
+				double angle;
 			};
 
 			std::vector<Edge> m_edges;

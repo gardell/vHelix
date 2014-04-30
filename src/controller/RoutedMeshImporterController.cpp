@@ -40,14 +40,21 @@ namespace Helix {
 				case 'e':
 				{
 					Edge edge;
-					switch (sscanf(line.c_str(), "e %u %lf %lf", &edge.vertex, &edge.cylinder[0], &edge.cylinder[1])) {
+					switch (sscanf(line.c_str(), "e %u %lf %lf %lf", &edge.vertex, &edge.cylinder[0], &edge.cylinder[1], &edge.angle)) {
+					case 4:
+						HPRINT("Parsed \"%s\" as e %u %f %f %f", line.c_str(), edge.vertex, edge.cylinder[0], edge.cylinder[1], edge.angle);
+						edge.hasCylinder = true;
+						edge.hasAngle = true;
+						break;
 					case 3:
 						HPRINT("Parsed \"%s\" as e %u %f %f", line.c_str(), edge.vertex, edge.cylinder[0], edge.cylinder[1]);
 						edge.hasCylinder = true;
+						edge.hasAngle = false;
 						break;
 					case 1:
 						HPRINT("Parsed \"%s\" as e %u", line.c_str(), edge.vertex);
 						edge.hasCylinder = false;
+						edge.hasAngle = false;
 						break;
 					default:
 						HPRINT("Unformatted edge line: %s", line.c_str());
@@ -149,8 +156,14 @@ namespace Helix {
 						MVector error_vector(normal * ((length - DNA::HelixLength(length)) / 2));
 						start_cylinder += error_vector;
 						end_cylinder -= error_vector;
-						const MVector delta(end_base - start_cylinder);
-						tangent = (normal ^ (delta ^ normal)).normal();
+
+						// TODO: In case we have an angle, cleanup the code above
+						if (next_it->hasAngle)
+							tangent = MVector((normal ^ MVector::yAxis ^ normal).normal().rotateBy(MQuaternion(toRadians(next_it->angle), normal)));
+						else {
+							const MVector delta(end_base - start_cylinder);
+							tangent = (normal ^ (delta ^ normal)).normal();
+						}
 					}
 				}
 			}
