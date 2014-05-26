@@ -9,7 +9,6 @@
 #include <cstdio>
 #include <fstream>
 #include <string>
-#include <unordered_map>
 
 #include <maya/MQuaternion.h>
 
@@ -94,7 +93,13 @@ namespace Helix {
 
 			// Now create the helices, bases and make the connections.
 			Creator creator;
-			std::unordered_map<std::string, Model::Helix> helixStructures;
+#if defined(WIN32) || defined(WIN64)
+			typedef std::unordered_map<std::string, Model::Helix> string_helix_map_t;
+#else
+			typedef std::tr1::unordered_map<std::string, Model::Helix> string_helix_map_t;
+#endif /* N Windows */
+
+			string_helix_map_t helixStructures;
 			for (std::vector<Helix>::iterator it(helices.begin()); it != helices.end(); ++it) {
 				Model::Helix helix;
 				MTransformationMatrix transform;
@@ -118,14 +123,20 @@ namespace Helix {
 			HMEVALUATE_RETURN(status = functor.loadMaterials(), status);
 
 			// Create explicit bases
-			std::unordered_map<std::string, Model::Base> baseStructures;
+#if defined(WIN32) || defined(WIN64)
+			typedef std::unordered_map<std::string, Model::Base> string_base_map_t;
+#else
+			typedef std::tr1::unordered_map<std::string, Model::Base> string_base_map_t;
+#endif /* N Windows */
+
+			string_base_map_t baseStructures;
 			for (std::vector<Base>::iterator it(explicitBases.begin()); it != explicitBases.end(); ++it) {
 				if (helixStructures.find(it->helixName) == helixStructures.end()) {
 					HPRINT("Unable to find Helix structure \"%s\"", it->helixName.c_str());
 					return MStatus::kFailure;
 				}
 				Model::Base base;
-				Model::Helix & helix(helixStructures.at(it->helixName));
+				Model::Helix & helix(helixStructures[it->helixName]);
 				HMEVALUATE_RETURN(status = Model::Base::Create(helix, it->name.c_str(), it->position, base), status);
 				base.setLabel(it->label);
 				
@@ -136,18 +147,18 @@ namespace Helix {
 			}
 
 			// Set explicit labels
-			for (std::unordered_map<std::string, DNA::Name>::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
+			for (typename explicit_base_labels_t::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
 				if (baseStructures.find(it->first) == baseStructures.end()) {
-					HPRINT("Unable to find Base structure \"%s\"", it->first);
+					HPRINT("Unable to find Base structure \"%s\"", it->first.c_str());
 					return MStatus::kFailure;
 				}
 
-				Model::Base & base(baseStructures.at(it->first));
+				Model::Base & base(baseStructures[it->first]);
 				HMEVALUATE_RETURN(status = base.setLabel(it->second), status);
 			}
 
 			for (std::vector< std::pair<std::string, std::string> >::const_iterator it(paintStrands.begin()); it != paintStrands.end(); ++it) {
-				std::unordered_map<std::string, Model::Helix>::iterator helixIt(helixStructures.find(it->first));
+				typename string_helix_map_t::iterator helixIt(helixStructures.find(it->first));
 
 				if (helixIt == helixStructures.end()) {
 					HPRINT("Failed to find helix named \"%s\"", it->first.c_str());
@@ -159,7 +170,7 @@ namespace Helix {
 				switch (type) {
 				case Connection::kNamed:
 				{
-					std::unordered_map<std::string, Model::Base>::iterator baseIt(baseStructures.find(it->second));
+					typename string_base_map_t::iterator baseIt(baseStructures.find(it->second));
 
 					if (baseIt == baseStructures.end()) {
 						HPRINT("failed to find base \"%s\"", it->second.c_str());
@@ -190,12 +201,12 @@ namespace Helix {
 					return MStatus::kFailure;
 				}
 
-				Model::Helix & fromHelix(helixStructures.at(it->fromHelixName)), & toHelix(helixStructures.at(it->toHelixName));
+				Model::Helix & fromHelix(helixStructures[it->fromHelixName]), & toHelix(helixStructures[it->toHelixName]);
 
 				Model::Base fromBase, toBase;
 
 				if (it->fromType == Connection::kNamed) {
-					std::unordered_map<std::string, Model::Base>::iterator baseIt(baseStructures.find(it->fromName));
+					typename string_base_map_t::iterator baseIt(baseStructures.find(it->fromName));
 
 					if (baseIt == baseStructures.end()) {
 						HPRINT("failed to find base \"%s\"", it->fromName.c_str());
@@ -207,7 +218,7 @@ namespace Helix {
 					HMEVALUATE_RETURN(status = getBaseFromConnectionType(fromHelix, it->fromType, fromBase), status);
 
 				if (it->toType == Connection::kNamed) {
-					std::unordered_map<std::string, Model::Base>::iterator baseIt(baseStructures.find(it->toName));
+					string_base_map_t::iterator baseIt(baseStructures.find(it->toName));
 
 					if (baseIt == baseStructures.end()) {
 						HPRINT("failed to find base \"%s\"", it->toName.c_str());

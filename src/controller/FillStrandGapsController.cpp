@@ -1,8 +1,8 @@
-#include <Controller/FillStrandGaps.h>
+#include <controller/FillStrandGaps.h>
 
-#include <Model/Base.h>
-#include <Model/Helix.h>
-#include <Model/Strand.h>
+#include <model/Base.h>
+#include <model/Helix.h>
+#include <model/Strand.h>
 
 #include <Helix.h>
 #include <HelixBase.h>

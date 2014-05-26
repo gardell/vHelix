@@ -1,6 +1,6 @@
 #include <StrandLengthCount.h>
 
-#include <Model/Base.h>
+#include <model/Base.h>
 
 #include <maya/MSyntax.h>
 

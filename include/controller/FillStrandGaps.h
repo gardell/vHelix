@@ -3,9 +3,9 @@
 
 #include <Definition.h>
 
-#include <Model/Base.h>
-#include <Model/Helix.h>
-#include <Model/Object.h>
+#include <model/Base.h>
+#include <model/Helix.h>
+#include <model/Object.h>
 
 #include <maya/MStatus.h>
 #include <maya/MObject.h>

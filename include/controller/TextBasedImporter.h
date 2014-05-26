@@ -7,7 +7,12 @@
 #include <model/Base.h>
 #include <model/Helix.h>
 
+#if defined(WIN32) || defined(WIN64)
 #include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif /* N Windows */
+
 #include <vector>
 
 #include <maya/MQuaternion.h>
@@ -24,7 +29,7 @@ namespace Helix {
 				MVector position;
 				DNA::Name label;
 
-				inline Base(const char *name, const MVector & position, const char *materialName, const DNA::Name & label) : name(name), position(position), materialName(materialName), label(label) {}
+				inline Base(const char *name, const MVector & position, const char *materialName, const DNA::Name & label) : name(name), materialName(materialName), position(position), label(label) {}
 				inline Base() {}
 			};
 
@@ -51,15 +56,21 @@ namespace Helix {
 
 				std::string fromHelixName, toHelixName, fromName, toName; // Only used when fromType/toType are kNamed.
 
-				inline Connection(const char *fromHelixName, const char *fromName, const char *toHelixName, const char *toName, Type fromType, Type toType) : fromHelixName(fromHelixName), toHelixName(toHelixName), fromName(fromName), toName(toName), fromType(fromType), toType(toType) {}
+				inline Connection(const char *fromHelixName, const char *fromName, const char *toHelixName, const char *toName, Type fromType, Type toType) : fromType(fromType), toType(toType), fromHelixName(fromHelixName), toHelixName(toHelixName), fromName(fromName), toName(toName) {}
 
 				static Type TypeFromString(const char *type);
 			};
 
+#if defined(WIN32) || defined(WIN64)
+			typedef std::unordered_map<std::string, DNA::Name> explicit_base_labels_t;
+#else
+			typedef std::tr1::unordered_map<std::string, DNA::Name> explicit_base_labels_t;
+#endif /* Not windows */
+
 			std::vector<Helix> helices;
 			std::vector<Connection> connections;
 			std::vector<Base> explicitBases; // Bases explicitly created with the 'b' command.
-			std::unordered_map<std::string, DNA::Name> explicitBaseLabels;
+			explicit_base_labels_t explicitBaseLabels;
 
 			friend MStatus getBaseFromConnectionType(Model::Helix & helix, Connection::Type type, Model::Base & base);
 		};

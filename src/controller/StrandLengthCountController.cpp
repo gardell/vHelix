@@ -1,4 +1,4 @@
-#include <Controller/StrandLengthCount.h>
+#include <controller/StrandLengthCount.h>
 
 namespace Helix {
 	namespace Controller {

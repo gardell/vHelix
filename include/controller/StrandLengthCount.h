@@ -3,7 +3,7 @@
 
 #include <Definition.h>
 
-#include <Model/Strand.h>
+#include <model/Strand.h>
 
 namespace Helix {
 	namespace Controller {
