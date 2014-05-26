@@ -147,7 +147,7 @@ namespace Helix {
 			}
 
 			// Set explicit labels
-			for (typename explicit_base_labels_t::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
+			for (explicit_base_labels_t::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
 				if (baseStructures.find(it->first) == baseStructures.end()) {
 					HPRINT("Unable to find Base structure \"%s\"", it->first.c_str());
 					return MStatus::kFailure;
@@ -158,7 +158,7 @@ namespace Helix {
 			}
 
 			for (std::vector< std::pair<std::string, std::string> >::const_iterator it(paintStrands.begin()); it != paintStrands.end(); ++it) {
-				typename string_helix_map_t::iterator helixIt(helixStructures.find(it->first));
+				string_helix_map_t::iterator helixIt(helixStructures.find(it->first));
 
 				if (helixIt == helixStructures.end()) {
 					HPRINT("Failed to find helix named \"%s\"", it->first.c_str());
@@ -170,7 +170,7 @@ namespace Helix {
 				switch (type) {
 				case Connection::kNamed:
 				{
-					typename string_base_map_t::iterator baseIt(baseStructures.find(it->second));
+					string_base_map_t::iterator baseIt(baseStructures.find(it->second));
 
 					if (baseIt == baseStructures.end()) {
 						HPRINT("failed to find base \"%s\"", it->second.c_str());
@@ -206,7 +206,7 @@ namespace Helix {
 				Model::Base fromBase, toBase;
 
 				if (it->fromType == Connection::kNamed) {
-					typename string_base_map_t::iterator baseIt(baseStructures.find(it->fromName));
+					string_base_map_t::iterator baseIt(baseStructures.find(it->fromName));
 
 					if (baseIt == baseStructures.end()) {
 						HPRINT("failed to find base \"%s\"", it->fromName.c_str());
