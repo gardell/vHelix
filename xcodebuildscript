@@ -1,0 +1,6 @@
+xcodebuild -configuration "Maya 2014 Debug"
+xcodebuild -configuration "Maya 2014 Release"
+xcodebuild -configuration "Maya 2013 Debug"
+xcodebuild -configuration "Maya 2013 Release"
+xcodebuild -configuration "Maya 2012 Debug"
+xcodebuild -configuration "Maya 2012 Release"
