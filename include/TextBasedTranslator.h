@@ -5,7 +5,7 @@
 #include <maya/MPxFileTranslator.h>
 
 #define HELIX_TEXT_BASED_FILE_DESCRIPTION "Text based vhelix"
-#define HELIX_TEXT_BASED_FILE_TYPE "vhelix"
+#define HELIX_TEXT_BASED_FILE_TYPE "rpoly"
 
 // TODO: Implement writer. Currently this is only used to import files from the polygon relaxation simulator.
 

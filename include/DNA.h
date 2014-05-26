@@ -36,6 +36,7 @@ namespace DNA {
 
 	const double PITCH = 720.0 / 21.0,														// degrees
 				 STEP = 0.334,
+				 SINGLE_STRAND_STEP = 0.5,													// NEW, this is for doing linear interpolation, *NOT* when extending a single strand.
 				 RADIUS = 1.0,
 				 SPHERE_RADIUS = 0.13,														// not dna properties, but visual
 				 OPPOSITE_ROTATION = 155.0,

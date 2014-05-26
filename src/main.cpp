@@ -21,12 +21,14 @@
 #include <Connect.h>
 #include <Disconnect.h>
 #include <Duplicate.h>
+#include <FillStrandGaps.h>
 #include <FindFivePrimeEnds.h>
 #include <PaintStrand.h>
 #include <ApplySequence.h>
 #include <ApplySequenceGui.h>
 #include <ExtendStrand.h>
 #include <ExtendGui.h>
+#include <StrandLengthCount.h>
 #include <ToggleCylinderBaseView.h>
 #include <ToggleLocatorRender.h>
 #include <ToggleShowSuggestedConnections.h>
@@ -61,35 +63,37 @@
 
 #include <ctime>
 
-#define REGISTER_OPERATIONS																																																						\
-	new RegisterCommand(MEL_CREATEHELIX_COMMAND, Helix::Creator::creator, Helix::Creator::newSyntax),																																			\
-	new RegisterCommand(MEL_CREATEHELIX_GUI_COMMAND, Helix::CreatorGui::creator),																																								\
-	new RegisterCommand(MEL_CONNECTBASES_COMMAND, Helix::Connect::creator, Helix::Connect::newSyntax),																																			\
-	new RegisterCommand(MEL_DISCONNECTBASE_COMMAND, Helix::Disconnect::creator, Helix::Disconnect::newSyntax),																																	\
-	new RegisterCommand(MEL_DUPLICATEHELICES_COMMAND, Helix::Duplicate::creator, Helix::Duplicate::newSyntax),																																	\
-	new RegisterCommand(MEL_FINDFIVEPRIMEENDS_COMMAND, Helix::FindFivePrimeEnds::creator, Helix::FindFivePrimeEnds::newSyntax),																													\
-	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),																																	\
-	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),																																\
-	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator, Helix::ApplySequenceGui::newSyntax),																													\
-	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),																																\
-	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																																	\
-	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),																									\
-	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),																											\
-	new RegisterCommand(MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, Helix::ToggleShowSuggestedConnections::creator, Helix::ToggleShowSuggestedConnections::newSyntax),																			\
-	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),																																\
-	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),																																\
-	new RegisterCommand(MEL_TARGET_HELIXBASE_BACKWARD, Helix::TargetHelixBaseBackward::creator, Helix::TargetHelixBaseBackward::newSyntax),																										\
-	new RegisterCommand(MEL_CREATE_CURVES_COMMAND, Helix::CreateCurves::creator, Helix::CreateCurves::newSyntax),																																\
+#define REGISTER_OPERATIONS																																																															\
+	new RegisterCommand(MEL_CREATEHELIX_COMMAND, Helix::Creator::creator, Helix::Creator::newSyntax),																																												\
+	new RegisterCommand(MEL_CREATEHELIX_GUI_COMMAND, Helix::CreatorGui::creator),																																																	\
+	new RegisterCommand(MEL_CONNECTBASES_COMMAND, Helix::Connect::creator, Helix::Connect::newSyntax),																																												\
+	new RegisterCommand(MEL_DISCONNECTBASE_COMMAND, Helix::Disconnect::creator, Helix::Disconnect::newSyntax),																																										\
+	new RegisterCommand(MEL_DUPLICATEHELICES_COMMAND, Helix::Duplicate::creator, Helix::Duplicate::newSyntax),																																										\
+	new RegisterCommand(MEL_FINDFIVEPRIMEENDS_COMMAND, Helix::FindFivePrimeEnds::creator, Helix::FindFivePrimeEnds::newSyntax),																																						\
+	new RegisterCommand(MEL_FILLSTRANDGAPS_COMMAND, Helix::FillStrandGaps::creator, Helix::FillStrandGaps::newSyntax),																																								\
+	new RegisterCommand(MEL_PAINTSTRAND_COMMAND, Helix::PaintStrand::creator, Helix::PaintStrand::newSyntax),																																										\
+	new RegisterCommand(MEL_APPLYSEQUENCE_COMMAND, Helix::ApplySequence::creator, Helix::ApplySequence::newSyntax),																																									\
+	new RegisterCommand(MEL_APPLYSEQUENCE_GUI_COMMAND, Helix::ApplySequenceGui::creator, Helix::ApplySequenceGui::newSyntax),																																						\
+	new RegisterCommand(MEL_EXTENDSTRAND_COMMAND, Helix::ExtendStrand::creator, Helix::ExtendStrand::newSyntax),																																									\
+	new RegisterCommand(MEL_EXTENDSTRAND_GUI_COMMAND, Helix::ExtendGui::creator, Helix::ExtendGui::newSyntax),																																										\
+	new RegisterCommand(MEL_TOGGLECYLINDERBASEVIEW_COMMAND, Helix::ToggleCylinderBaseView::creator, Helix::ToggleCylinderBaseView::newSyntax),																																		\
+	new RegisterCommand(MEL_TOGGLELOCATORRENDER_COMMAND, Helix::ToggleLocatorRender::creator, Helix::ToggleLocatorRender::newSyntax),																																				\
+	new RegisterCommand(MEL_TOGGLESHOWSUGGESTEDCONNECTIONS_COMMAND, Helix::ToggleShowSuggestedConnections::creator, Helix::ToggleShowSuggestedConnections::newSyntax),																												\
+	new RegisterCommand(MEL_STRANDLENGTHCOUNT_COMMAND, Helix::StrandLengthCount::creator, Helix::StrandLengthCount::newSyntax),																																						\
+	new RegisterCommand(MEL_EXPORTSTRANDS_COMMAND, Helix::ExportStrands::creator, Helix::ExportStrands::newSyntax),																																									\
+	new RegisterCommand(MEL_RETARGETBASE_COMMAND, Helix::RetargetBase::creator, Helix::RetargetBase::newSyntax),																																									\
+	new RegisterCommand(MEL_TARGET_HELIXBASE_BACKWARD, Helix::TargetHelixBaseBackward::creator, Helix::TargetHelixBaseBackward::newSyntax),																																			\
+	new RegisterCommand(MEL_CREATE_CURVES_COMMAND, Helix::CreateCurves::creator, Helix::CreateCurves::newSyntax),																																									\
 	new RegisterContextCommand(MEL_CONNECT_SUGGESTIONS_CONTEXT_COMMAND, Helix::View::ConnectSuggestionsContextCommand::creator, MEL_CONNECT_SUGGESTIONS_TOOL_COMMAND, Helix::View::ConnectSuggestionsToolCommand::creator, Helix::View::ConnectSuggestionsToolCommand::newSyntax),	\
-	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),																							\
-	new RegisterNode(CONNECT_SUGGESTIONS_LOCATOR_NAME, Helix::View::ConnectSuggestionsLocatorNode::id, &Helix::View::ConnectSuggestionsLocatorNode::creator, &Helix::View::ConnectSuggestionsLocatorNode::initialize, MPxNode::kLocatorNode),	\
-	new RegisterTransform(HELIX_HELIXBASE_NAME, Helix::HelixBase::id, Helix::HelixBase::creator, Helix::HelixBase::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),						\
-	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),										\
-	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),																																					\
-	new RegisterFileTranslator(HELIX_OXDNA_FILE_TYPE, Helix::OxDnaTranslator::creator),																																							\
-	new RegisterFileTranslator(HELIX_ROUTED_MESH_FILE_TYPE, Helix::RoutedMeshTranslator::creator),																																				\
-	new RegisterFileTranslator(HELIX_TEXT_BASED_FILE_DESCRIPTION, Helix::TextBasedTranslator::creator),																																			\
-	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),																		\
+	new RegisterNode("HelixLocator", Helix::HelixLocator::id, &Helix::HelixLocator::creator, &Helix::HelixLocator::initialize, MPxNode::kLocatorNode),																																\
+	new RegisterNode(CONNECT_SUGGESTIONS_LOCATOR_NAME, Helix::View::ConnectSuggestionsLocatorNode::id, &Helix::View::ConnectSuggestionsLocatorNode::creator, &Helix::View::ConnectSuggestionsLocatorNode::initialize, MPxNode::kLocatorNode),										\
+	new RegisterTransform(HELIX_HELIXBASE_NAME, Helix::HelixBase::id, Helix::HelixBase::creator, Helix::HelixBase::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),															\
+	new RegisterTransform(HELIX_HELIX_NAME, Helix::Helix::id, Helix::Helix::creator, Helix::Helix::initialize, MPxTransformationMatrix::creator, MPxTransformationMatrix::baseTransformationMatrixId.id()),																			\
+	new RegisterFileTranslator(HELIX_CADNANO_JSON_FILE_TYPE, Helix::JSONTranslator::creator),																																														\
+	new RegisterFileTranslator(HELIX_OXDNA_FILE_TYPE, Helix::OxDnaTranslator::creator),																																																\
+	new RegisterFileTranslator(HELIX_ROUTED_MESH_FILE_TYPE, Helix::RoutedMeshTranslator::creator),																																													\
+	new RegisterFileTranslator(HELIX_TEXT_BASED_FILE_DESCRIPTION, Helix::TextBasedTranslator::creator),																																												\
+	new RegisterShape(BASE_SHAPE_NAME, Helix::View::BaseShape::id, Helix::View::BaseShape::creator, Helix::View::BaseShape::initialize, Helix::View::BaseShapeUI::creator),																											\
 	new RegisterShape(HELIX_SHAPE_NAME, Helix::View::HelixShape::id, Helix::View::HelixShape::creator, Helix::View::HelixShape::initialize, Helix::View::HelixShapeUI::creator)
 
 #define MEL_REGISTER_MENU_COMMAND															\
@@ -120,6 +124,7 @@
 {	"Connect bases", "Connect the two selected bases", MEL_CONNECTBASES_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'c' },	\
 {	"Disconnect bases", "Disconnect the selected base", MEL_DISCONNECTBASE_COMMAND, "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'v' },	\
 {	"Extend strand", "Extend the selected strands", MEL_EXTENDSTRAND_GUI_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\
+{	"Auto fill strand gaps", "Fills large gaps with bases by linear interpolation between consecutive bases.", MEL_FILLSTRANDGAPS_COMMAND, "", false, false, false, -1, ACCEL_NONE }, \
 {	"Visual base connection tool", "Visually drag potential connections", "setToolTo `connectSuggestionsContext`;", "", false, false, false, -1, ACCEL_CTRL | ACCEL_ALT, 'x' },	\
 {	"-", "", ";", "", true, false, false, -1, ACCEL_NONE },	\
 {	"Find 5' ends", "Find all 5' ends on selected strands", MEL_FINDFIVEPRIMEENDS_COMMAND, "", false, false, false, -1, ACCEL_NONE },	\

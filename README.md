@@ -30,3 +30,5 @@ Linux:
 loadPlugin "/home/<path-to-your-vHelix-plugin-mll-file>/libvHelix.so"
 
 * You can save the command entered into a script for easier loading in the future. Enter the code and then click 'File' > 'Save Script to Shelf...' in the 'Script Editor' window.
+
+* There are many MEL commands available with vHelix not visible in the Helix menu of Maya, visit https://docs.google.com/document/d/19P08qzSYyztWXMV7whR-XninQwg4oBOjDF-qghzpHTo/edit?usp=sharing for a complete documentation.

@@ -48,6 +48,36 @@
 
 namespace Helix {
 	/*
+	* Maya specific debug tools.
+	*/
+
+	namespace Debug {
+		void printf(const char *file, const char *function, size_t line, const char *expr, ...);
+
+		MStatus evaluate(const char *file, const char *function, size_t line, const char *expr, const MStatus & status);
+	}
+
+#define HPRINT(fmt, ...) ::Helix::Debug::printf(__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+
+	/*
+	* Execute expr and then if an error occur, print debug information.
+	*/
+#define HMEVALUATE(expr, status) { expr; ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, (status)); }
+	/*
+	* If status is not successful print debug information.
+	*/
+#define HMEVALUATE_DESCRIPTION(description, status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); }
+
+	/*
+	* Execute expr and then if an error occur, return from current function.
+	*/
+#define HMEVALUATE_RETURN(expr, status) { expr; if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); return status; } }
+	/*
+	* If status is not successful print debug information.
+	*/
+#define HMEVALUATE_RETURN_DESCRIPTION(description, status) if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); return status; }
+
+	/*
 	 * Legacy API: The following methods are part of the old structure and should be removed
 	 * The reason they are still around is because of the JSON importer.
 	 * some of the methods are used by the new API to save code space
@@ -204,56 +234,31 @@ namespace Helix {
 	MStatus ArgList_ArgumentNodes(const MArgList & args, const MSyntax & syntax, const char *flag, ArrayT & array) {
 		MStatus status;
 		MArgDatabase argDatabase(syntax, args, &status);
+		HMEVALUATE_RETURN_DESCRIPTION("MArgDatabase::#ctor", status);
 
-		if (!status) {
-			status.perror("MArgDatabase::#ctor");
-			return status;
-		}
-
-		bool isFlagSet = argDatabase.isFlagSet(flag, &status);
-
-		if (!status) {
-			status.perror("MArgDatabase::isFlagSet");
-			return status;
-		}
+		bool isFlagSet;
+		HMEVALUATE_RETURN(isFlagSet = argDatabase.isFlagSet(flag, &status), status);
 
 		if (!isFlagSet)
 			return MStatus::kNotFound;
 
 		MSelectionList list;
 
-		unsigned int num = argDatabase.numberOfFlagUses(flag);
-
+		const unsigned int num = argDatabase.numberOfFlagUses(flag);
 		for(unsigned int i = 0; i < num; ++i) {
+			MArgList args;
+			HMEVALUATE_RETURN(status = argDatabase.getFlagArgumentList(flag, i, args), status);
 			MString path;
-
-			if (!(status = argDatabase.getFlagArgument(flag, i, path))) {
-				status.perror("MArgDatabase::getFlagArgument");
-				return status;
-			}
-
-			if (!(status = list.add(path))) {
-				status.perror(MString("MSelectionList::add: The object \"") + path + "\" was not found");
-				//return status;
-			}
+			HMEVALUATE_RETURN(path = args.asString(0, &status), status);
+			HMEVALUATE(status = list.add(path), status);
 		}
 
 		/*
 		 * Now extract the dagpaths or objects from the MSelectionList
 		 */
 
-		for(unsigned int i = 0; i < list.length(); ++i) {
-			ElementT element;
-
-			/*
-			if (!(status = (list.*GetElementFunc) (i, element))) {
-				status.perror("MSelectionList::*GetElementFunc");
-				return status;
-			}
-			*/
-
+		for(unsigned int i = 0; i < list.length(); ++i)
 			array.append(GetElementFunc(list, i));
-		}
 
 		return MStatus::kSuccess;
 	}
@@ -274,10 +279,7 @@ namespace Helix {
 		MStatus status;
 		ArrayT objects;
 
-		if (!(status = GetElementsFunc(args, syntax, flag, objects))) {
-			status.perror("GetElementsFunc. This error is expected if no -b arguments were given.");
-			return status;
-		}
+		HMEVALUATE_RETURN(status = GetElementsFunc(args, syntax, flag, objects), status);
 
 		std::copy(&objects[0], &objects[0] + objects.length(), std::back_insert_iterator<ContainerT> (result));
 
@@ -313,34 +315,34 @@ namespace Helix {
 	std::string Date();
 
 	/*
-	 * Maya specific debug tools.
-	 */
+	* Might already exist somewhere.
+	*/
+	inline MStatus StringIdentifiersToObjects(const MStringArray & strings, MObjectArray & objects) {
+		MStatus status;
+		MSelectionList list;
 
-	namespace Debug {
-		void printf(const char *file, const char *function, size_t line, const char *expr, ...);
+		for (unsigned int i = 0; i < strings.length(); ++i)
+			list.add(strings[i], true);
 
-		MStatus evaluate(const char *file, const char *function, size_t line, const char *expr, const MStatus & status);
+		objects.setSizeIncrement(strings.length());
+		for (unsigned int i = 0; i < list.length(); ++i) {
+			MObject object;
+			HMEVALUATE_RETURN(status = list.getDependNode(i, object), status);
+			objects.append(object);
+		}
+
+		return MStatus::kSuccess;
 	}
 
-#define HPRINT(fmt, ...) ::Helix::Debug::printf(__FILE__, __FUNCTION__, __LINE__, fmt, ##__VA_ARGS__)
+	inline MStatus StringIdentifierToObject(const MString & string, MObject & object) {
+		MStatus status;
+		MSelectionList list;
+		list.add(string, true);
 
-	/*
-	* Execute expr and then if an error occur, print debug information.
-	*/
-#define HMEVALUATE(expr, status) { expr; ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, (status)); }
-	/*
-	 * If status is not successful print debug information.
-	 */
-#define HMEVALUATE_DESCRIPTION(description, status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); }
+		HMEVALUATE_RETURN(status = list.getDependNode(0, object), status);
 
-	/*
-	* Execute expr and then if an error occur, return from current function.
-	*/
-#define HMEVALUATE_RETURN(expr, status) { expr; if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, #expr, status); return status; } }
-	/*
-	 * If status is not successful print debug information.
-	 */
-#define HMEVALUATE_RETURN_DESCRIPTION(description, status) if (!status) { ::Helix::Debug::evaluate(__FILE__, __FUNCTION__, __LINE__, description, (status)); return status; }
+		return MStatus::kSuccess;
+	}
 }
 
 #endif /* UTILITY_H_ */

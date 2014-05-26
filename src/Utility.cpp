@@ -874,9 +874,9 @@ namespace Helix {
 			va_list vl;
 			va_start(vl, expr);
 
-			fprintf(stderr, "%s(%lu): in %s: ", file, line, function);
-			vfprintf(stderr, expr, vl);
-			fprintf(stderr, "\n");
+			fprintf(stdout, "%s(%lu): in %s: ", file, line, function);
+			vfprintf(stdout, expr, vl);
+			fprintf(stdout, "\n");
 
 			va_end(vl);
 		}
