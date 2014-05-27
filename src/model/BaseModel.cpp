@@ -139,7 +139,6 @@ namespace Helix {
 			}
 
 			if (!(status = MGlobal::executeCommand(MString("sets -noWarnings -forceElement ") + material.getMaterial() + " " + base_dagPath.fullPathName()))) {
-				status.perror("MGlobal::executeCommand");
 				return status;
 			}
 

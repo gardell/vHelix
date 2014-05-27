@@ -73,7 +73,7 @@ namespace Helix {
 				for_each_itref(it, strand.forward_end(), m_operation.execute());
 
 				if (!(m_status = m_operation.status())) {
-					m_status.perror("PaintStrandOperation::status 1");
+					//m_status.perror("PaintStrandOperation::status 1");
 					return;
 				}
 
@@ -84,7 +84,7 @@ namespace Helix {
 					std::for_each(strand.reverse_begin(), strand.reverse_end(), m_operation.execute());
 
 					if (!(m_status = m_operation.status())) {
-						m_status.perror("PaintStrandOperation::status 1");
+						//m_status.perror("PaintStrandOperation::status 1");
 						return;
 					}
 				}
@@ -144,7 +144,7 @@ namespace Helix {
 
 
 				if (!(m_status = m_operation.status())) {
-					m_status.perror("PaintStrandOperation::status 1");
+					//m_status.perror("PaintStrandOperation::status 1");
 					return;
 				}
 
@@ -156,7 +156,7 @@ namespace Helix {
 					std::for_each(strand.reverse_begin(), strand.reverse_end(), m_operation.execute());
 
 					if (!(m_status = m_operation.status())) {
-						m_status.perror("PaintStrandOperation::status 1");
+						//m_status.perror("PaintStrandOperation::status 1");
 						return;
 					}
 				}

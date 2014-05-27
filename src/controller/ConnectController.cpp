@@ -115,14 +115,10 @@ namespace Helix {
 			 * Connect the source to its new destination
 			 */
 
-			std::cerr << "connect_forward" << std::endl;
-
 			if (!(status = m_previous_connections[0][0].connect_forward(m_previous_connections[1][0]))) {
 				status.perror("Base::connect_forward");
 				return status;
 			}
-
-			std::cerr << "Done" << std::endl;
 
 			return MStatus::kSuccess;
 		}

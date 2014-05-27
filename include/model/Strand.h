@@ -184,7 +184,11 @@ namespace Helix {
 			 */
 			void rewind();
 
-			Base & getDefiningBase() {
+			inline Base & getDefiningBase() {
+				return m_base;
+			}
+
+			inline const Base & getDefiningBase() const {
 				return m_base;
 			}
 
@@ -193,6 +197,7 @@ namespace Helix {
 			}
 
 			bool contains_base(Base & base, MStatus & status);
+			bool contains_base(const Base & base, MStatus & status);
 
 			/*
 			 * Comparison operator for std::find_if
@@ -222,6 +227,7 @@ namespace Helix {
 			};
 
 			bool operator==(Strand & strand);
+			bool operator==(const Strand & strand);
 
 		protected:
 			Base m_base; // The base defining the strand

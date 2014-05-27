@@ -51,7 +51,7 @@ namespace Helix {
 			return MStatus::kSuccess;
 		}
 
-		MStatus TextBasedImporter::read(const char *filename) {
+		MStatus TextBasedImporter::read(const char *filename, int nicking_min_length, int nicking_max_length) {
 			MStatus status;
 			std::ifstream file(filename);
 
@@ -68,6 +68,8 @@ namespace Helix {
 			bool autostaple(false);
 			std::vector< std::pair<std::string, std::string> > paintStrands;
 			std::vector<Model::Base> paintStrandBases, disconnectBackwardBases;
+
+			std::vector<Model::Base> nonNickedBases;
 
 			while (file.good()) {
 				std::string line;
@@ -87,7 +89,7 @@ namespace Helix {
 					explicitBaseLabels.insert(std::make_pair(nameBuffer, label));
 				else if (sscanf(line.c_str(), "ps %s %s", helixNameBuffer, nameBuffer) == 2)
 					paintStrands.push_back(std::make_pair(std::string(helixNameBuffer), std::string(nameBuffer)));
-				else if (line == "autostaple")
+				else if (line == "autostaple" || line == "autonick")
 					autostaple = true;
 			}
 
@@ -109,13 +111,39 @@ namespace Helix {
 				helixStructures.insert(std::make_pair(it->name, helix));
 
 				if (autostaple && it->bases > 1) {
-					// Disconnect base at backward 5' + floor(<num bases> / 2)
 					Model::Base base;
 					HMEVALUATE_RETURN(status = helix.getBackwardFivePrime(base), status);
+					
+					// Disconnect base at backward 5' + floor(<num bases> / 2)
+
 					for (unsigned int i = 0; i < (it->bases - 1) / 2 + 1; ++i)
 						base = base.forward();
-					disconnectBackwardBases.push_back(base);
-					paintStrandBases.push_back(base);
+
+					if (it->bases > unsigned int(nicking_min_length)) {
+						disconnectBackwardBases.push_back(base);
+						paintStrandBases.push_back(base);
+					}
+					else {
+						// Add this edge to non-nicked strands but only add the strand once.
+
+						HPRINT("Not nicking %s because only %u bases", base.getDagPath(status).fullPathName().asChar(), it->bases);
+
+						/*Model::Strand strand(base);
+						bool found = false;
+						for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
+							bool contains_base;
+							HMEVALUATE_RETURN(contains_base = it->strand.contains_base(base, status), status);
+							if (contains_base) {
+								HPRINT("Paired with strand of %s", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar());
+								it->add_base(base);
+								found = true;
+							}
+						}
+
+						if (!found)
+							nonNickedStrands.push_back(non_nicked_strand_t(base));*/
+						nonNickedBases.push_back(base);
+					}
 				}
 			}
 
@@ -142,7 +170,7 @@ namespace Helix {
 				
 				Model::Material material;
 				HMEVALUATE_RETURN(status = Model::Material::Find(it->materialName.c_str(), material), status);
-				HMEVALUATE_RETURN(status = base.setMaterial(material), status);
+				HMEVALUATE(status = base.setMaterial(material), status);
 				baseStructures.insert(std::make_pair(it->name, base));
 			}
 
@@ -237,7 +265,75 @@ namespace Helix {
 				HMEVALUATE_RETURN(status = it->disconnect_backward(), status);
 
 			for (std::vector<Model::Base>::iterator it(paintStrandBases.begin()); it != paintStrandBases.end(); it++)
-				HMEVALUATE(functor(*it), functor.status());
+				functor(*it);
+
+			/*
+			 * Group bases on the same strands.
+			 */
+			struct non_nicked_strand_t {
+				Model::Strand strand;
+				// Bases together with their calculated offset along the strand.
+				std::vector< std::pair<Model::Base, int> > bases;
+
+				inline non_nicked_strand_t(Model::Base & base) : strand(base), bases(1, std::make_pair(base, 0)) {}
+				inline void add_base(Model::Base & base) {
+					bases.push_back(std::make_pair(base, 0));
+				}
+			};
+
+			struct base_offset_comparator_t : public std::binary_function<std::pair<Model::Base, int>, std::pair<Model::Base, int>, bool> {
+				const int offset;
+
+				inline base_offset_comparator_t(int offset) : offset(offset) {}
+
+				inline bool operator() (const std::pair<Model::Base, int> & p1, const std::pair<Model::Base, int> & p2) const {
+					return std::abs(p1.second - offset) < std::abs(p2.second - offset);
+				}
+			};
+
+			std::vector<non_nicked_strand_t> nonNickedStrands;
+			
+			for (std::vector<Model::Base>::iterator base_it(nonNickedBases.begin()); base_it != nonNickedBases.end(); ++base_it) {
+				Model::Strand strand(*base_it);
+				bool found = false;
+				for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
+					bool contains_base;
+					HMEVALUATE_RETURN(contains_base = it->strand.contains_base(*base_it, status), status);
+					if (contains_base) {
+						//HPRINT("Paired with strand of %s", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar());
+						it->add_base(*base_it);
+						found = true;
+					}
+				}
+
+				if (!found)
+					nonNickedStrands.push_back(non_nicked_strand_t(*base_it));
+			}
+
+
+			for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
+				it->strand.rewind();
+				unsigned int length(0);
+				for (Model::Strand::ForwardIterator fit(it->strand.forward_begin()); fit != it->strand.forward_end(); ++fit, ++length) {
+					for (std::vector< std::pair<Model::Base, int> >::iterator bit(it->bases.begin()); bit != it->bases.end(); ++bit) {
+						if (bit->first == *fit)
+							bit->second = length;
+					}
+				}
+
+				const int num_nicks(length / nicking_max_length - 1);
+				//HPRINT("Strand %s with length %u, will be nicked %u times.", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar(), length, num_nicks);
+				for (int i = 0; i < num_nicks; ++i) {
+					const unsigned int offset(i * nicking_max_length);
+
+					Model::Base & base(std::min_element(it->bases.begin(), it->bases.end(), base_offset_comparator_t(offset))->first);
+					for (std::vector< std::pair<Model::Base, int> >::iterator t_it(it->bases.begin()); t_it != it->bases.end(); ++t_it) {
+						std::cerr << "base: " << t_it->first.getDagPath(status).fullPathName().asChar() << " offset: " << t_it->second << std::endl;
+					}
+					//HPRINT("Disconnecting %s at offset: %u", base.getDagPath(status).fullPathName().asChar(), offset);
+					base.disconnect_backward();
+				}
+			}
 
 			return MStatus::kSuccess;
 		}

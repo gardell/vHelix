@@ -48,6 +48,9 @@ namespace DNA {
 				 HONEYCOMB_Y_STRIDE = 2.0 * DNA::HELIX_RADIUS * (1.0 + sin(Helix::toRadians(30))),
 				 HONEYCOMB_Y_OFFSET = 1.0 * DNA::HELIX_RADIUS * sin(Helix::toRadians(30));
 
+	// TODO: Have these as command line arguments.
+	const unsigned int SHORTEST_STAPLE = 14;												// Edges with less than 14 bases aren't necessarily stapled by the TextBasedImporter
+	const unsigned int SHORTEST_LONGEST_STAPLE = 30;										// They are instead cut up trying to have this many bases.
 	/*
 	 * The create base gui allows the user to specify the number of bases per strand and remembers your choice. The default on startup is defined here
 	 */

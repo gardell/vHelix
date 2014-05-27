@@ -21,7 +21,7 @@ namespace Helix {
 	namespace Controller {
 		class VHELIXAPI TextBasedImporter {
 		public:
-			MStatus read(const char *filename);
+			MStatus read(const char *filename, int nicking_min_length = 0, int nicking_max_length = 0);
 
 		private:
 			struct Base {

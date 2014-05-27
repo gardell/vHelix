@@ -36,7 +36,7 @@ namespace Helix {
 			 */
 
 			if (!(status = element.setMaterial(m_material))) {
-				status.perror("Base::setMaterial");
+				//status.perror("Base::setMaterial");
 				return status;
 			}
 
@@ -50,7 +50,7 @@ namespace Helix {
 			element.getMaterial(oldMaterial);
 
 			if (!(status = element.setMaterial(undoData))) {
-				status.perror("Base::setMaterial");
+				//status.perror("Base::setMaterial");
 				return status;
 			}
 
@@ -61,7 +61,7 @@ namespace Helix {
 			MStatus status;
 			
 			if (!(status = element.setMaterial(redoData))) {
-				status.perror("Base::setMaterial");
+				//status.perror("Base::setMaterial");
 				return status;
 			}
 
