@@ -16,6 +16,27 @@
 
 namespace Helix {
 	namespace Controller {
+		struct non_nicked_strand_t {
+			Model::Strand strand;
+			// Bases together with their calculated offset along the strand.
+			std::vector< std::pair<Model::Base, int> > bases;
+
+			inline non_nicked_strand_t(Model::Base & base) : strand(base), bases(1, std::make_pair(base, 0)) {}
+			inline void add_base(Model::Base & base) {
+				bases.push_back(std::make_pair(base, 0));
+			}
+		};
+
+		struct base_offset_comparator_t : public std::binary_function<std::pair<Model::Base, int>, std::pair<Model::Base, int>, bool> {
+			const int offset;
+
+			inline base_offset_comparator_t(int offset) : offset(offset) {}
+
+			inline bool operator() (const std::pair<Model::Base, int> & p1, const std::pair<Model::Base, int> & p2) const {
+				return std::abs(p1.second - offset) < std::abs(p2.second - offset);
+			}
+		};
+
 		TextBasedImporter::Connection::Type TextBasedImporter::Connection::TypeFromString(const char *type) {
 			if (strcmp("f5'", type) == 0)
 				return kForwardFivePrime;
@@ -119,7 +140,7 @@ namespace Helix {
 					for (unsigned int i = 0; i < (it->bases - 1) / 2 + 1; ++i)
 						base = base.forward();
 
-					if (it->bases > unsigned int(nicking_min_length)) {
+					if (it->bases > (unsigned int) nicking_min_length) {
 						disconnectBackwardBases.push_back(base);
 						paintStrandBases.push_back(base);
 					}
@@ -270,27 +291,6 @@ namespace Helix {
 			/*
 			 * Group bases on the same strands.
 			 */
-			struct non_nicked_strand_t {
-				Model::Strand strand;
-				// Bases together with their calculated offset along the strand.
-				std::vector< std::pair<Model::Base, int> > bases;
-
-				inline non_nicked_strand_t(Model::Base & base) : strand(base), bases(1, std::make_pair(base, 0)) {}
-				inline void add_base(Model::Base & base) {
-					bases.push_back(std::make_pair(base, 0));
-				}
-			};
-
-			struct base_offset_comparator_t : public std::binary_function<std::pair<Model::Base, int>, std::pair<Model::Base, int>, bool> {
-				const int offset;
-
-				inline base_offset_comparator_t(int offset) : offset(offset) {}
-
-				inline bool operator() (const std::pair<Model::Base, int> & p1, const std::pair<Model::Base, int> & p2) const {
-					return std::abs(p1.second - offset) < std::abs(p2.second - offset);
-				}
-			};
-
 			std::vector<non_nicked_strand_t> nonNickedStrands;
 			
 			for (std::vector<Model::Base>::iterator base_it(nonNickedBases.begin()); base_it != nonNickedBases.end(); ++base_it) {
