@@ -13,6 +13,12 @@
 		042522B918A8D08F00501A87 /* OxDnaImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */; };
 		042522BA18A8D08F00501A87 /* RoutedMeshImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */; };
 		042522BC18A8D0A700501A87 /* ColorModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 042522BB18A8D0A700501A87 /* ColorModel.cpp */; };
+		048B037C19336B890096D2F4 /* FillStrandGaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B037B19336B890096D2F4 /* FillStrandGaps.cpp */; };
+		048B037F19336BA80096D2F4 /* StrandLengthCount.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B037D19336BA80096D2F4 /* StrandLengthCount.cpp */; };
+		048B038019336BA80096D2F4 /* TextBasedTranslator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B037E19336BA80096D2F4 /* TextBasedTranslator.cpp */; };
+		048B038419336BC00096D2F4 /* FillStrandGapsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B038119336BC00096D2F4 /* FillStrandGapsController.cpp */; };
+		048B038519336BC00096D2F4 /* StrandLengthCountController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B038219336BC00096D2F4 /* StrandLengthCountController.cpp */; };
+		048B038619336BC00096D2F4 /* TextBasedImporterController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 048B038319336BC00096D2F4 /* TextBasedImporterController.cpp */; };
 		AA2990E3158B85CC0077DEFB /* ApplySequenceController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */; };
 		AA2990E4158B85CC0077DEFB /* ExportStrandsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */; };
 		AA2990E5158B85CC0077DEFB /* ExtendStrandController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */; };
@@ -73,6 +79,12 @@
 		042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OxDnaImporterController.cpp; sourceTree = "<group>"; };
 		042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RoutedMeshImporterController.cpp; sourceTree = "<group>"; };
 		042522BB18A8D0A700501A87 /* ColorModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorModel.cpp; sourceTree = "<group>"; };
+		048B037B19336B890096D2F4 /* FillStrandGaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FillStrandGaps.cpp; path = src/FillStrandGaps.cpp; sourceTree = "<group>"; };
+		048B037D19336BA80096D2F4 /* StrandLengthCount.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrandLengthCount.cpp; path = src/StrandLengthCount.cpp; sourceTree = "<group>"; };
+		048B037E19336BA80096D2F4 /* TextBasedTranslator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextBasedTranslator.cpp; path = src/TextBasedTranslator.cpp; sourceTree = "<group>"; };
+		048B038119336BC00096D2F4 /* FillStrandGapsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FillStrandGapsController.cpp; sourceTree = "<group>"; };
+		048B038219336BC00096D2F4 /* StrandLengthCountController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrandLengthCountController.cpp; sourceTree = "<group>"; };
+		048B038319336BC00096D2F4 /* TextBasedImporterController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextBasedImporterController.cpp; sourceTree = "<group>"; };
 		AA2990E0158B85CC0077DEFB /* ApplySequenceController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ApplySequenceController.cpp; sourceTree = "<group>"; };
 		AA2990E1158B85CC0077DEFB /* ExportStrandsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExportStrandsController.cpp; sourceTree = "<group>"; };
 		AA2990E2158B85CC0077DEFB /* ExtendStrandController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ExtendStrandController.cpp; sourceTree = "<group>"; };
@@ -152,6 +164,9 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				048B037D19336BA80096D2F4 /* StrandLengthCount.cpp */,
+				048B037E19336BA80096D2F4 /* TextBasedTranslator.cpp */,
+				048B037B19336B890096D2F4 /* FillStrandGaps.cpp */,
 				042522B318A8D07E00501A87 /* RoutedMeshTranslator.cpp */,
 				042522B118A8D06F00501A87 /* OxDnaTranslator.cpp */,
 				AAA9C57F15C2915900A165A1 /* CreateCurves.cpp */,
@@ -244,6 +259,9 @@
 		AAA285CF15823F5A00F30976 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				048B038119336BC00096D2F4 /* FillStrandGapsController.cpp */,
+				048B038219336BC00096D2F4 /* StrandLengthCountController.cpp */,
+				048B038319336BC00096D2F4 /* TextBasedImporterController.cpp */,
 				042522B518A8D08F00501A87 /* OxDnaExporterController.cpp */,
 				042522B618A8D08F00501A87 /* OxDnaImporterController.cpp */,
 				042522B718A8D08F00501A87 /* RoutedMeshImporterController.cpp */,
@@ -329,10 +347,13 @@
 				AAF468D915820E0800EC064F /* CreatorGui.cpp in Sources */,
 				AAF468DA15820E0800EC064F /* Disconnect.cpp in Sources */,
 				AAF468DB15820E0800EC064F /* DNA.cpp in Sources */,
+				048B037C19336B890096D2F4 /* FillStrandGaps.cpp in Sources */,
 				AAF468DC15820E0800EC064F /* Duplicate.cpp in Sources */,
 				AAF468DD15820E0800EC064F /* ExportStrands.cpp in Sources */,
 				AAF468DE15820E0800EC064F /* ExtendGui.cpp in Sources */,
 				AAF468E015820E0800EC064F /* FindFivePrimeEnds.cpp in Sources */,
+				048B037F19336BA80096D2F4 /* StrandLengthCount.cpp in Sources */,
+				048B038419336BC00096D2F4 /* FillStrandGapsController.cpp in Sources */,
 				AAF468E115820E0800EC064F /* Helix.cpp in Sources */,
 				AAF468E215820E0800EC064F /* HelixBase.cpp in Sources */,
 				AAF468E315820E0800EC064F /* jsoncpp.cpp in Sources */,
@@ -368,12 +389,15 @@
 				042522B818A8D08F00501A87 /* OxDnaExporterController.cpp in Sources */,
 				AA5A581E15AD74FB00604421 /* JSONImporterController.cpp in Sources */,
 				AAA9C55B15BD831100A165A1 /* ConnectSuggestionsContext.cpp in Sources */,
+				048B038519336BC00096D2F4 /* StrandLengthCountController.cpp in Sources */,
 				AAA9C55C15BD831100A165A1 /* ConnectSuggestionsContextCommand.cpp in Sources */,
 				AAA9C55D15BD831100A165A1 /* ConnectSuggestionsLocatorNode.cpp in Sources */,
 				042522B418A8D07E00501A87 /* RoutedMeshTranslator.cpp in Sources */,
+				048B038619336BC00096D2F4 /* TextBasedImporterController.cpp in Sources */,
 				AAA9C55E15BD831100A165A1 /* ConnectSuggestionsToolCommand.cpp in Sources */,
 				AAA9C55F15BD831100A165A1 /* double_arrow.cpp in Sources */,
 				AAA9C56415BD866700A165A1 /* opengl.cpp in Sources */,
+				048B038019336BA80096D2F4 /* TextBasedTranslator.cpp in Sources */,
 				AAA9C56515BD866700A165A1 /* TargetHelixBaseBackward.cpp in Sources */,
 				AAA9C56615BD866700A165A1 /* ToggleShowSuggestedConnections.cpp in Sources */,
 				AAA9C57E15C2914C00A165A1 /* CreateCurvesController.cpp in Sources */,
