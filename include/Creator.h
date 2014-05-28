@@ -50,7 +50,7 @@ namespace Helix {
 		MStatus create(const MVector & origo, int bases, double rotation, Model::Helix & helix, const MString & name = "helix1");
 		MStatus create(const MVector & origo, const MVector & end, double rotation, Model::Helix & helix, const MString & name = "helix1");
 
-		MStatus create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name = "helix1");
+		MStatus create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name = "helix1", bool showProgressBar = true);
 
 	private:
 		/*
@@ -81,7 +81,7 @@ namespace Helix {
 		 * Before calling, the m_materials must be set
 		 */
 
-		MStatus createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform = MTransformationMatrix::identity, const CreateBaseControl & control = CreateBaseControl(), const MString & name = "helix1");
+		MStatus createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform = MTransformationMatrix::identity, const CreateBaseControl & control = CreateBaseControl(), const MString & name = "helix1", bool showProgressBar = true);
 
 		/*
 		 * Create a helix along the line between the two given points

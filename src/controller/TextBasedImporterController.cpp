@@ -11,6 +11,7 @@
 #include <string>
 
 #include <maya/MQuaternion.h>
+#include <maya/MProgressWindow.h>
 
 #define BUFFER_SIZE 1024
 
@@ -101,13 +102,21 @@ namespace Helix {
 			typedef std::tr1::unordered_map<std::string, Model::Helix> string_helix_map_t;
 #endif /* N Windows */
 
+			if (!MProgressWindow::reserve())
+				MGlobal::displayWarning("Failed to reserve the progress window");
+
+			MProgressWindow::setTitle("Import routed polygon");
+			MProgressWindow::setProgressStatus("Creating new helices...");
+			MProgressWindow::setProgressRange(0, int(helices.size()));
+			MProgressWindow::startProgress();
+
 			string_helix_map_t helixStructures;
 			for (std::vector<Helix>::iterator it(helices.begin()); it != helices.end(); ++it) {
 				Model::Helix helix;
 				MTransformationMatrix transform;
 				transform.setTranslation(it->position, MSpace::kTransform);
 				transform.rotateTo(it->orientation);
-				HMEVALUATE_RETURN(status = creator.create(it->bases, transform, helix, it->name.c_str()), status);
+				HMEVALUATE_RETURN(status = creator.create(it->bases, transform, helix, it->name.c_str(), false), status);
 				helixStructures.insert(std::make_pair(it->name, helix));
 
 				if (autostaple && it->bases > 1) {
@@ -126,26 +135,15 @@ namespace Helix {
 					else {
 						// Add this edge to non-nicked strands but only add the strand once.
 
-						HPRINT("Not nicking %s because only %u bases", base.getDagPath(status).fullPathName().asChar(), it->bases);
-
-						/*Model::Strand strand(base);
-						bool found = false;
-						for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
-							bool contains_base;
-							HMEVALUATE_RETURN(contains_base = it->strand.contains_base(base, status), status);
-							if (contains_base) {
-								HPRINT("Paired with strand of %s", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar());
-								it->add_base(base);
-								found = true;
-							}
-						}
-
-						if (!found)
-							nonNickedStrands.push_back(non_nicked_strand_t(base));*/
+						//HPRINT("Not nicking %s because only %u bases", base.getDagPath(status).fullPathName().asChar(), it->bases);
 						nonNickedBases.push_back(base);
 					}
 				}
+
+				MProgressWindow::advanceProgress(1);
 			}
+
+			MProgressWindow::endProgress();
 
 			Controller::PaintMultipleStrandsWithNewColorFunctor functor;
 			HMEVALUATE_RETURN(status = functor.loadMaterials(), status);
@@ -158,114 +156,200 @@ namespace Helix {
 #endif /* N Windows */
 
 			string_base_map_t baseStructures;
-			for (std::vector<Base>::iterator it(explicitBases.begin()); it != explicitBases.end(); ++it) {
-				if (helixStructures.find(it->helixName) == helixStructures.end()) {
-					HPRINT("Unable to find Helix structure \"%s\"", it->helixName.c_str());
-					return MStatus::kFailure;
+
+			if (!explicitBases.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
+
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Creating explicit bases...");
+				MProgressWindow::setProgressRange(0, int(explicitBases.size()));
+				MProgressWindow::startProgress();
+
+				for (std::vector<Base>::iterator it(explicitBases.begin()); it != explicitBases.end(); ++it) {
+					if (helixStructures.find(it->helixName) == helixStructures.end()) {
+						HPRINT("Unable to find Helix structure \"%s\"", it->helixName.c_str());
+						return MStatus::kFailure;
+					}
+					Model::Base base;
+					Model::Helix & helix(helixStructures[it->helixName]);
+					HMEVALUATE_RETURN(status = Model::Base::Create(helix, it->name.c_str(), it->position, base), status);
+					base.setLabel(it->label);
+
+					Model::Material material;
+					HMEVALUATE_RETURN(status = Model::Material::Find(it->materialName.c_str(), material), status);
+					HMEVALUATE(status = base.setMaterial(material), status);
+					baseStructures.insert(std::make_pair(it->name, base));
+
+					MProgressWindow::advanceProgress(1);
 				}
-				Model::Base base;
-				Model::Helix & helix(helixStructures[it->helixName]);
-				HMEVALUATE_RETURN(status = Model::Base::Create(helix, it->name.c_str(), it->position, base), status);
-				base.setLabel(it->label);
-				
-				Model::Material material;
-				HMEVALUATE_RETURN(status = Model::Material::Find(it->materialName.c_str(), material), status);
-				HMEVALUATE(status = base.setMaterial(material), status);
-				baseStructures.insert(std::make_pair(it->name, base));
+
+				MProgressWindow::endProgress();
 			}
 
-			// Set explicit labels
-			for (explicit_base_labels_t::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
-				if (baseStructures.find(it->first) == baseStructures.end()) {
-					HPRINT("Unable to find Base structure \"%s\"", it->first.c_str());
-					return MStatus::kFailure;
-				}
+			if (!explicitBaseLabels.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
 
-				Model::Base & base(baseStructures[it->first]);
-				HMEVALUATE_RETURN(status = base.setLabel(it->second), status);
-			}
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Setting explicit labels...");
+				MProgressWindow::setProgressRange(0, int(explicitBaseLabels.size()));
+				MProgressWindow::startProgress();
 
-			for (std::vector< std::pair<std::string, std::string> >::const_iterator it(paintStrands.begin()); it != paintStrands.end(); ++it) {
-				string_helix_map_t::iterator helixIt(helixStructures.find(it->first));
-
-				if (helixIt == helixStructures.end()) {
-					HPRINT("Failed to find helix named \"%s\"", it->first.c_str());
-					return MStatus::kFailure;
-				}
-
-				Model::Base base;
-				const Connection::Type type(Connection::TypeFromString(it->second.c_str()));
-				switch (type) {
-				case Connection::kNamed:
-				{
-					string_base_map_t::iterator baseIt(baseStructures.find(it->second));
-
-					if (baseIt == baseStructures.end()) {
-						HPRINT("failed to find base \"%s\"", it->second.c_str());
+				// Set explicit labels
+				for (explicit_base_labels_t::iterator it(explicitBaseLabels.begin()); it != explicitBaseLabels.end(); ++it) {
+					if (baseStructures.find(it->first) == baseStructures.end()) {
+						HPRINT("Unable to find Base structure \"%s\"", it->first.c_str());
 						return MStatus::kFailure;
 					}
 
-					base = baseIt->second;
-				}
-					break;
-				default:
-					HMEVALUATE_RETURN(status = getBaseFromConnectionType(helixIt->second, type, base), status);
-					break;
+					Model::Base & base(baseStructures[it->first]);
+					HMEVALUATE_RETURN(status = base.setLabel(it->second), status);
+
+					MProgressWindow::advanceProgress(1);
 				}
 
-				paintStrandBases.push_back(base);
+				MProgressWindow::endProgress();
 			}
 
-			// Create explicit connections
-			Controller::Connect connect;
-			for (std::vector<Connection>::iterator it(connections.begin()); it != connections.end(); ++it) {
-				if (helixStructures.find(it->fromHelixName) == helixStructures.end()) {
-					HPRINT("Failed to find helix named \"%s\"", it->fromHelixName.c_str());
-					return MStatus::kFailure;
-				}
+			if (!paintStrands.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
 
-				if (helixStructures.find(it->toHelixName) == helixStructures.end()) {
-					HPRINT("Failed to find helix named \"%s\"", it->toHelixName.c_str());
-					return MStatus::kFailure;
-				}
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Setting up painting for explicit strands...");
+				MProgressWindow::setProgressRange(0, int(paintStrands.size()));
+				MProgressWindow::startProgress();
 
-				Model::Helix & fromHelix(helixStructures[it->fromHelixName]), & toHelix(helixStructures[it->toHelixName]);
+				for (std::vector< std::pair<std::string, std::string> >::const_iterator it(paintStrands.begin()); it != paintStrands.end(); ++it) {
+					string_helix_map_t::iterator helixIt(helixStructures.find(it->first));
 
-				Model::Base fromBase, toBase;
-
-				if (it->fromType == Connection::kNamed) {
-					string_base_map_t::iterator baseIt(baseStructures.find(it->fromName));
-
-					if (baseIt == baseStructures.end()) {
-						HPRINT("failed to find base \"%s\"", it->fromName.c_str());
+					if (helixIt == helixStructures.end()) {
+						HPRINT("Failed to find helix named \"%s\"", it->first.c_str());
 						return MStatus::kFailure;
 					}
 
-					fromBase = baseIt->second;
-				} else
-					HMEVALUATE_RETURN(status = getBaseFromConnectionType(fromHelix, it->fromType, fromBase), status);
+					Model::Base base;
+					const Connection::Type type(Connection::TypeFromString(it->second.c_str()));
+					switch (type) {
+					case Connection::kNamed:
+					{
+						string_base_map_t::iterator baseIt(baseStructures.find(it->second));
 
-				if (it->toType == Connection::kNamed) {
-					string_base_map_t::iterator baseIt(baseStructures.find(it->toName));
+						if (baseIt == baseStructures.end()) {
+							HPRINT("failed to find base \"%s\"", it->second.c_str());
+							return MStatus::kFailure;
+						}
 
-					if (baseIt == baseStructures.end()) {
-						HPRINT("failed to find base \"%s\"", it->toName.c_str());
+						base = baseIt->second;
+					}
+						break;
+					default:
+						HMEVALUATE_RETURN(status = getBaseFromConnectionType(helixIt->second, type, base), status);
+						break;
+					}
+
+					paintStrandBases.push_back(base);
+					MProgressWindow::advanceProgress(1);
+				}
+
+				MProgressWindow::endProgress();
+			}
+
+
+			if (!connections.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
+
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Making explicit base connections...");
+				MProgressWindow::setProgressRange(0, int(connections.size()));
+				MProgressWindow::startProgress();
+
+				// Create explicit connections
+				Controller::Connect connect;
+				for (std::vector<Connection>::iterator it(connections.begin()); it != connections.end(); ++it) {
+					if (helixStructures.find(it->fromHelixName) == helixStructures.end()) {
+						HPRINT("Failed to find helix named \"%s\"", it->fromHelixName.c_str());
 						return MStatus::kFailure;
 					}
 
-					toBase = baseIt->second;
-				}
-				else
-					HMEVALUATE_RETURN(status = getBaseFromConnectionType(toHelix, it->toType, toBase), status);
+					if (helixStructures.find(it->toHelixName) == helixStructures.end()) {
+						HPRINT("Failed to find helix named \"%s\"", it->toHelixName.c_str());
+						return MStatus::kFailure;
+					}
 
-				HMEVALUATE_RETURN(status = connect.connect(fromBase, toBase), status);
+					Model::Helix & fromHelix(helixStructures[it->fromHelixName]), &toHelix(helixStructures[it->toHelixName]);
+
+					Model::Base fromBase, toBase;
+
+					if (it->fromType == Connection::kNamed) {
+						string_base_map_t::iterator baseIt(baseStructures.find(it->fromName));
+
+						if (baseIt == baseStructures.end()) {
+							HPRINT("failed to find base \"%s\"", it->fromName.c_str());
+							return MStatus::kFailure;
+						}
+
+						fromBase = baseIt->second;
+					}
+					else
+						HMEVALUATE_RETURN(status = getBaseFromConnectionType(fromHelix, it->fromType, fromBase), status);
+
+					if (it->toType == Connection::kNamed) {
+						string_base_map_t::iterator baseIt(baseStructures.find(it->toName));
+
+						if (baseIt == baseStructures.end()) {
+							HPRINT("failed to find base \"%s\"", it->toName.c_str());
+							return MStatus::kFailure;
+						}
+
+						toBase = baseIt->second;
+					}
+					else
+						HMEVALUATE_RETURN(status = getBaseFromConnectionType(toHelix, it->toType, toBase), status);
+
+					HMEVALUATE_RETURN(status = connect.connect(fromBase, toBase), status);
+
+					MProgressWindow::advanceProgress(1);
+				}
+
+				MProgressWindow::endProgress();
 			}
 
-			for (std::vector<Model::Base>::iterator it(disconnectBackwardBases.begin()); it != disconnectBackwardBases.end(); ++it)
-				HMEVALUATE_RETURN(status = it->disconnect_backward(), status);
+			if (!disconnectBackwardBases.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
 
-			for (std::vector<Model::Base>::iterator it(paintStrandBases.begin()); it != paintStrandBases.end(); it++)
-				functor(*it);
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Nicking staples, this might take a while...");
+				MProgressWindow::setProgressRange(0, int(disconnectBackwardBases.size()));
+				MProgressWindow::startProgress();
+
+				for (std::vector<Model::Base>::iterator it(disconnectBackwardBases.begin()); it != disconnectBackwardBases.end(); ++it) {
+					HMEVALUATE_RETURN(status = it->disconnect_backward(), status);
+					MProgressWindow::advanceProgress(1);
+				}
+
+				MProgressWindow::endProgress();
+			}
+
+			if (!paintStrandBases.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
+
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Painting strands, this might take a while...");
+				MProgressWindow::setProgressRange(0, int(paintStrandBases.size()));
+				MProgressWindow::startProgress();
+
+				for (std::vector<Model::Base>::iterator it(paintStrandBases.begin()); it != paintStrandBases.end(); it++) {
+					functor(*it);
+					MProgressWindow::advanceProgress(1);
+				}
+
+				MProgressWindow::endProgress();
+			}
 
 			/*
 			 * Group bases on the same strands.
@@ -292,47 +376,74 @@ namespace Helix {
 			};
 
 			std::vector<non_nicked_strand_t> nonNickedStrands;
-			
-			for (std::vector<Model::Base>::iterator base_it(nonNickedBases.begin()); base_it != nonNickedBases.end(); ++base_it) {
-				Model::Strand strand(*base_it);
-				bool found = false;
-				for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
-					bool contains_base;
-					HMEVALUATE_RETURN(contains_base = it->strand.contains_base(*base_it, status), status);
-					if (contains_base) {
-						//HPRINT("Paired with strand of %s", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar());
-						it->add_base(*base_it);
-						found = true;
+
+			if (!nonNickedBases.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
+
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Grouping non-nicked strands...");
+				MProgressWindow::setProgressRange(0, int(nonNickedBases.size()));
+				MProgressWindow::startProgress();
+
+				for (std::vector<Model::Base>::iterator base_it(nonNickedBases.begin()); base_it != nonNickedBases.end(); ++base_it) {
+					Model::Strand strand(*base_it);
+					bool found = false;
+					for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
+						bool contains_base;
+						HMEVALUATE_RETURN(contains_base = it->strand.contains_base(*base_it, status), status);
+						if (contains_base) {
+							//HPRINT("Paired with strand of %s", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar());
+							it->add_base(*base_it);
+							found = true;
+						}
 					}
+
+					if (!found)
+						nonNickedStrands.push_back(non_nicked_strand_t(*base_it));
+
+					MProgressWindow::advanceProgress(1);
 				}
 
-				if (!found)
-					nonNickedStrands.push_back(non_nicked_strand_t(*base_it));
+				MProgressWindow::endProgress();
 			}
 
+			if (!nonNickedStrands.empty()) {
+				if (!MProgressWindow::reserve())
+					MGlobal::displayWarning("Failed to reserve the progress window");
 
-			for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
-				it->strand.rewind();
-				unsigned int length(0);
-				for (Model::Strand::ForwardIterator fit(it->strand.forward_begin()); fit != it->strand.forward_end(); ++fit, ++length) {
-					for (std::vector< std::pair<Model::Base, int> >::iterator bit(it->bases.begin()); bit != it->bases.end(); ++bit) {
-						if (bit->first == *fit)
-							bit->second = length;
+				MProgressWindow::setTitle("Import routed polygon");
+				MProgressWindow::setProgressStatus("Nicking previously non-nicked strands...");
+				MProgressWindow::setProgressRange(0, int(nonNickedStrands.size()));
+				MProgressWindow::startProgress();
+
+				for (std::vector<non_nicked_strand_t>::iterator it(nonNickedStrands.begin()); it != nonNickedStrands.end(); ++it) {
+					it->strand.rewind();
+					unsigned int length(0);
+					for (Model::Strand::ForwardIterator fit(it->strand.forward_begin()); fit != it->strand.forward_end(); ++fit, ++length) {
+						for (std::vector< std::pair<Model::Base, int> >::iterator bit(it->bases.begin()); bit != it->bases.end(); ++bit) {
+							if (bit->first == *fit)
+								bit->second = length;
+						}
 					}
+
+					const int num_nicks(length / nicking_max_length - 1);
+					//HPRINT("Strand %s with length %u, will be nicked %u times.", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar(), length, num_nicks);
+					for (int i = 0; i < num_nicks; ++i) {
+						const unsigned int offset(i * nicking_max_length);
+
+						Model::Base & base(std::min_element(it->bases.begin(), it->bases.end(), base_offset_comparator_t(offset))->first);
+						for (std::vector< std::pair<Model::Base, int> >::iterator t_it(it->bases.begin()); t_it != it->bases.end(); ++t_it) {
+							std::cerr << "base: " << t_it->first.getDagPath(status).fullPathName().asChar() << " offset: " << t_it->second << std::endl;
+						}
+						//HPRINT("Disconnecting %s at offset: %u", base.getDagPath(status).fullPathName().asChar(), offset);
+						base.disconnect_backward();
+					}
+
+					MProgressWindow::advanceProgress(1);
 				}
 
-				const int num_nicks(length / nicking_max_length - 1);
-				//HPRINT("Strand %s with length %u, will be nicked %u times.", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar(), length, num_nicks);
-				for (int i = 0; i < num_nicks; ++i) {
-					const unsigned int offset(i * nicking_max_length);
-
-					Model::Base & base(std::min_element(it->bases.begin(), it->bases.end(), base_offset_comparator_t(offset))->first);
-					for (std::vector< std::pair<Model::Base, int> >::iterator t_it(it->bases.begin()); t_it != it->bases.end(); ++t_it) {
-						std::cerr << "base: " << t_it->first.getDagPath(status).fullPathName().asChar() << " offset: " << t_it->second << std::endl;
-					}
-					//HPRINT("Disconnecting %s at offset: %u", base.getDagPath(status).fullPathName().asChar(), offset);
-					base.disconnect_backward();
-				}
+				MProgressWindow::endProgress();
 			}
 
 			return MStatus::kSuccess;

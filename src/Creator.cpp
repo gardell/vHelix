@@ -51,21 +51,22 @@ namespace Helix {
 	int Creator::default_bases = DNA::CREATE_DEFAULT_NUM_BASES;
 
 	//MStatus Creator::createHelix(int bases, double rotation, const MVector & origo, Model::Helix & helix, const CreateBaseControl & control) {
-	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform, const CreateBaseControl & control, const MString & name) {
+	MStatus Creator::createHelix(int bases, Model::Helix & helix, const MTransformationMatrix & transform, const CreateBaseControl & control, const MString & name, bool showProgressBar) {
 		default_bases = bases;
 
 		MStatus status;
 
 		// Setup the progress window
 		//
+		if (showProgressBar) {
+			if (!MProgressWindow::reserve())
+				MGlobal::displayWarning("Failed to reserve the progress window");
 
-		if (!MProgressWindow::reserve())
-			MGlobal::displayWarning("Failed to reserve the progress window");
-
-		MProgressWindow::setTitle("Create new helix");
-		MProgressWindow::setProgressStatus("Generating new helix bases...");
-		MProgressWindow::setProgressRange(0, bases * 2);
-		MProgressWindow::startProgress();
+			MProgressWindow::setTitle("Create new helix");
+			MProgressWindow::setProgressStatus("Generating new helix bases...");
+			MProgressWindow::setProgressRange(0, bases * 2);
+			MProgressWindow::startProgress();
+		}
 
 		/*
 		 * Create the helix
@@ -156,7 +157,8 @@ namespace Helix {
 				else
 					base_objects[j] = MObject::kNullObj;
 
-				MProgressWindow::advanceProgress(1);
+				if (showProgressBar)
+					MProgressWindow::advanceProgress(1);
 			}
 
 			/*
@@ -206,7 +208,8 @@ namespace Helix {
 		/*if (!(status = Model::Helix::RefreshCylinderOrBases()))
 			status.perror("Helix::RefreshCylinderOrBases");*/
 
-		MProgressWindow::endProgress();
+		if (showProgressBar)
+			MProgressWindow::endProgress();
 
 		/*
 		 * Select the newly created Helix
@@ -806,7 +809,7 @@ namespace Helix {
 		return createHelix(origo, end, rotation, helix, CreateBaseControl(), name);
 	}
 
-	MStatus Creator::create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name) {
+	MStatus Creator::create(int bases, const MTransformationMatrix & transform, Model::Helix & helix, const MString & name, bool showProgressBar) {
 		MStatus status;
 
 		m_redoMode = CREATE_TRANSFORMED;
@@ -818,6 +821,6 @@ namespace Helix {
 			return status;
 		}
 
-		return createHelix(bases, helix, transform, CreateBaseControl(), name);
+		return createHelix(bases, helix, transform, CreateBaseControl(), name, showProgressBar);
 	}
 }

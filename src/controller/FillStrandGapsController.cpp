@@ -7,11 +7,22 @@
 #include <Helix.h>
 #include <HelixBase.h>
 
+#include <maya/MProgressWindow.h>
+
 namespace Helix {
 	namespace Controller {
 		MStatus FillStrandGaps::redo() {
 			unsigned int num_added_bases(0);
 			MStatus status;
+
+			if (!MProgressWindow::reserve())
+				MGlobal::displayWarning("Failed to reserve the progress window");
+
+			MProgressWindow::setTitle("Auto fill strand gaps");
+			MProgressWindow::setProgressStatus("Filling strand gaps by linear interpolation...");
+			MProgressWindow::setProgressRange(0, int(redoable.size()));
+			MProgressWindow::startProgress();
+
 			for (std::vector<Redoable>::iterator it(redoable.begin()); it != redoable.end(); ++it) {
 
 				MString base_name(it->start.getDagPath(status).partialPathName());
@@ -37,7 +48,7 @@ namespace Helix {
 					for (int i = 0; i < num_additional_bases;) {
 						position = base_translation + direction * ++i;
 						Model::Base current;
-						HMEVALUATE_RETURN(status = Model::Base::Create(it->helix, base_name, position, current), status);
+						HMEVALUATE_RETURN(status = Model::Base::Create(it->helix, base_name, position, current, MSpace::kWorld), status);
 						undoable.push_back(current);
 						HMEVALUATE(status = current.setMaterial(material), status);
 						HMEVALUATE_RETURN(status = previous.connect_forward(current), status);
@@ -47,7 +58,11 @@ namespace Helix {
 
 					HMEVALUATE_RETURN(status = previous.connect_forward(it->end), status);
 				}
+
+				MProgressWindow::advanceProgress(1);
 			}
+
+			MProgressWindow::endProgress();
 
 			HPRINT("Added %u bases.", num_added_bases);
 
