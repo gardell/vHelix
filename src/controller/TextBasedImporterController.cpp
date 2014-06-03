@@ -427,17 +427,23 @@ namespace Helix {
 						}
 					}
 
-					const int num_nicks(length / nicking_max_length - 1);
-					//HPRINT("Strand %s with length %u, will be nicked %u times.", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar(), length, num_nicks);
+					const int num_nicks(int(std::ceil(double(length) / nicking_max_length)) - 1);
+					HPRINT("Strand %s with length %u, will be nicked %u times.", it->strand.getDefiningBase().getDagPath(status).fullPathName().asChar(), length, num_nicks);
 					for (int i = 0; i < num_nicks; ++i) {
 						const unsigned int offset(i * nicking_max_length);
 
-						Model::Base & base(std::min_element(it->bases.begin(), it->bases.end(), base_offset_comparator_t(offset))->first);
-						for (std::vector< std::pair<Model::Base, int> >::iterator t_it(it->bases.begin()); t_it != it->bases.end(); ++t_it) {
-							std::cerr << "base: " << t_it->first.getDagPath(status).fullPathName().asChar() << " offset: " << t_it->second << std::endl;
+						std::vector< std::pair<Model::Base, int> >::iterator base_min_iterator(std::min_element(it->bases.begin(), it->bases.end(), base_offset_comparator_t(offset)));
+						{
+							Model::Base & base(base_min_iterator->first);
+							for (std::vector< std::pair<Model::Base, int> >::iterator t_it(it->bases.begin()); t_it != it->bases.end(); ++t_it) {
+								std::cerr << "base: " << t_it->first.getDagPath(status).fullPathName().asChar() << " offset: " << t_it->second << std::endl;
+							}
+							HPRINT("Disconnecting %s at offset: %u", base.getDagPath(status).fullPathName().asChar(), offset);
+							base.disconnect_backward();
 						}
-						//HPRINT("Disconnecting %s at offset: %u", base.getDagPath(status).fullPathName().asChar(), offset);
-						base.disconnect_backward();
+
+						// Uncomment this to pick nicking sites with replacement.
+						it->bases.erase(base_min_iterator);
 					}
 
 					MProgressWindow::advanceProgress(1);
