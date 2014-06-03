@@ -21,13 +21,13 @@ Notice: If you are not able to install plug-ins in the Autodesk Maya plug-ins di
 * In the box labeled 'MEL' enter the following code:
 
 Windows:
-loadPlugin "C:/<path-to-your-vHelix-plugin-mll-file>/vHelix-Project.mll"
+loadPlugin "C:/[path-to-your-vHelix-plugin-mll-file]/vHelix-Project.mll"
 
-Mac oS X:
-loadPlugin "/Users/<path-to-your-vHelix-plugin-mll-file>/vHelix.bundle"
+Mac OS X:
+loadPlugin "/Users/[path-to-your-vHelix-plugin-mll-file]/vHelix.bundle"
 
 Linux:
-loadPlugin "/home/<path-to-your-vHelix-plugin-mll-file>/libvHelix.so"
+loadPlugin "/home/[path-to-your-vHelix-plugin-mll-file]/libvHelix.so"
 
 * You can save the command entered into a script for easier loading in the future. Enter the code and then click 'File' > 'Save Script to Shelf...' in the 'Script Editor' window.
 
