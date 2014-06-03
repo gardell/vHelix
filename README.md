@@ -10,7 +10,7 @@ Notice that versions hosted on http://www.vhelix.net refer to the ones here and 
 
 To install vHelix using the required files from here, instead of using the prepacked files at http://www.vhelix.net/:
 * Either do a clone from the git repository, or download the files directly from the web site
-** For Linux or Mac OS X builds, navigate to the 'Debug' folder. For Windows builds, navigate to the 'Release' folder. Notice that Windows user can use the Debug builds if they have Visual Studio 2013 installed.
+* For Linux or Mac OS X builds, navigate to the 'Debug' folder. For Windows builds, navigate to the 'Release' folder. Notice that Windows user can use the Debug builds if they have Visual Studio 2013 installed.
 * Windows users: Copy the vHelix.mll file. Mac OS X users: Copy the vHelix.bundle. Linux users: Copy the libvHelix.so.
 * Place the file under your Maya plug-ins folder. Windows: typically 'C:\Program Files\Autodesk\Maya2011\bin\plug-ins'. Mac OS X: typically: '/Applications/Autodesk/maya2011/Maya.app/Contents/MacOS/plug-ins/'. Linux: typically '/usr/autodesk/maya/bin/plug-ins'
 
