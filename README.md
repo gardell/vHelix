@@ -4,13 +4,13 @@ http://www.vhelix.net/
 
 An Autodesk Maya plugin for modelling DNA based structures.
 
-The plugin is available for the 64-bit versions of Autodesk Maya 2011, 2012, 2013 and 2014 for Windows, Linux and Mac OS X. The plugin is not available for other versions of Maya or 32-bit versions. The plugin might work with newer versions of Maya but has to be recompiled for these versions.
+The plugin is available for the 64-bit versions of Autodesk Maya 2011, 2012, 2013 and 2014 for Windows, Linux and Mac OS X. The plugin is not available for other versions of Maya or 32-bit versions. The plugin might work with these or newer versions of Maya but it has to be recompiled specifically for these.
 
-Notice that the versions hosted on vHelix refer to the ones here and can at some times be broken or non-usable as they are being actively developed on.
+Notice that versions hosted on http://www.vhelix.net refer to the ones here and can at some times be broken or non-usable as they are being actively developed on.
 
-To install the required files from here, instead of using the prepacked files at http://www.vhelix.net/:
+To install vHelix using the required files from here, instead of using the prepacked files at http://www.vhelix.net/:
 * Either do a clone from the git repository, or download the files directly from the web site
-* For Linux or Mac OS X builds, navigate to the 'Debug' folder. For Windows builds, navigate to the 'Release' folder. Notice that Windows user can use the Debug builds if they have Visual Studio 2013 installed.
+** For Linux or Mac OS X builds, navigate to the 'Debug' folder. For Windows builds, navigate to the 'Release' folder. Notice that Windows user can use the Debug builds if they have Visual Studio 2013 installed.
 * Windows users: Copy the vHelix.mll file. Mac OS X users: Copy the vHelix.bundle. Linux users: Copy the libvHelix.so.
 * Place the file under your Maya plug-ins folder. Windows: typically 'C:\Program Files\Autodesk\Maya2011\bin\plug-ins'. Mac OS X: typically: '/Applications/Autodesk/maya2011/Maya.app/Contents/MacOS/plug-ins/'. Linux: typically '/usr/autodesk/maya/bin/plug-ins'
 
